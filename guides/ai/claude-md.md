@@ -1,0 +1,783 @@
+# CLAUDE.md Patterns Guide
+
+> [Doctrine](../../README.md) > [AI](../README.md) > CLAUDE.md Patterns
+
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+"SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+document are to be interpreted as described in [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119).
+
+## Table of Contents
+
+1. [What is CLAUDE.md](#what-is-claudemd)
+2. [File Placement Strategies](#file-placement-strategies)
+3. [Essential Sections](#essential-sections)
+4. [Templates by Project Type](#templates-by-project-type)
+5. [Integration with Other Tools](#integration-with-other-tools)
+6. [Maintenance Best Practices](#maintenance-best-practices)
+7. [Anti-Patterns](#anti-patterns)
+8. [Complete Example Templates](#complete-example-templates)
+
+---
+
+## What is CLAUDE.md
+
+### Definition
+
+CLAUDE.md is a markdown file that serves as a structured briefing document for AI assistants working with a codebase[^1]. It provides essential context that AI assistants cannot easily infer from code alone.
+
+### Core Principles
+
+A CLAUDE.md file **MUST**:
+
+1. **Be concise** - Provide necessary context without overwhelming detail (200-500 lines ideal)
+2. **Be actionable** - Include concrete commands and examples
+3. **Be discoverable** - Placed where AI assistants can find it (repository root)
+4. **Be version-controlled** - Tracked in git alongside code
+5. **Be current** - Updated as the project evolves
+
+A CLAUDE.md file **MUST NOT**:
+
+1. **Replace comprehensive documentation** - It's a briefing, not a manual
+2. **Include secrets** - Never include credentials or sensitive data
+3. **Be auto-generated** - Manual curation ensures quality
+4. **Duplicate style guides** - Link to external guides instead
+
+### Why CLAUDE.md Matters
+
+**The Context Problem:** AI assistants lack persistent memory. Without CLAUDE.md, they must infer project structure, guess at conventions, and discover commands through trial and error. This wastes time, introduces errors, and creates inconsistency.
+
+**The Solution:** A well-crafted CLAUDE.md accelerates onboarding, ensures consistency, prevents mistakes, and preserves tribal knowledge.
+
+---
+
+## File Placement Strategies
+
+### Single Project Repository
+
+For a single project, **MUST** place CLAUDE.md at repository root:
+
+```
+my-project/
+├── CLAUDE.md          ← AI context here
+├── README.md          ← Human documentation
+├── src/
+└── tests/
+```
+
+### Monorepo with Multiple Projects
+
+For monorepos, **MUST** use hierarchical placement:
+
+```
+monorepo/
+├── CLAUDE.md          ← Monorepo-level context
+├── services/
+│   ├── api/
+│   │   └── CLAUDE.md  ← API-specific context
+│   └── worker/
+│       └── CLAUDE.md  ← Worker-specific context
+└── libs/
+    └── shared/
+        └── CLAUDE.md  ← Shared library context
+```
+
+**Hierarchical Rules:**
+
+- **Root CLAUDE.md** contains: Monorepo structure, cross-cutting commands, shared conventions
+- **Child CLAUDE.md** contains: Service-specific context, commands, conventions
+- **Child files** link back to parent for shared information
+
+### Microservices Architecture
+
+Each repository **MUST** have its own CLAUDE.md. Include cross-service references:
+
+```markdown
+## Related Services
+
+- **user-service**: Authentication/authorization
+  - Repository: https://github.com/org/user-service
+  - Dependencies: We depend on their User model
+```
+
+---
+
+## Essential Sections
+
+Every CLAUDE.md **MUST** contain these sections:
+
+### 1. Overview
+
+Provide high-level context in 3-5 lines:
+
+```markdown
+## Overview
+
+API gateway for e-commerce platform. Routes requests to microservices, handles
+authentication, and provides rate limiting.
+
+**Stack:** Node.js 20, TypeScript 5.3, Express 4.18, Redis 7.2
+**Purpose:** Centralized entry point for web, mobile, and third-party clients
+```
+
+### 2. Commands
+
+Provide executable commands with expected outcomes:
+
+```markdown
+## Commands
+
+### Development
+```bash
+npm install                    # Install dependencies
+npm run dev                    # Start dev server (port 3000, hot reload)
+npm run typecheck              # Type checking (strict mode)
+```
+
+### Testing
+```bash
+npm test                       # Run all tests
+npm test -- --coverage         # Coverage report (requires 80%)
+```
+```
+
+**MUST** include actual runnable commands with prerequisites.
+
+### 3. Project Structure
+
+Explain non-obvious directory organization:
+
+```markdown
+## Project Structure
+
+```
+src/
+├── api/           # Express route handlers
+├── services/      # Business logic (DI-injectable)
+├── models/        # TypeORM entities
+└── middleware/    # Express middleware
+
+tests/
+├── unit/          # Unit tests (fast, isolated)
+└── integration/   # Integration tests (DB required)
+```
+
+**Key Files:**
+- `src/server.ts` - Application entry point
+- `.env.example` - Required environment variables
+```
+
+### 4. Architecture
+
+Document patterns and decisions:
+
+```markdown
+## Architecture
+
+**Dependency Injection:** Using tsyringe. All services **MUST** be injectable.
+
+**Repository Pattern:** All database access **MUST** go through repositories.
+
+**Data Flow:**
+```
+Client → Middleware → Controller → Service → Repository → Database
+```
+```
+
+### 5. Code Style
+
+Document conventions not captured in linters:
+
+```markdown
+## Code Style
+
+Follows [Doctrine TypeScript Guide](../../guides/languages/typescript.md)
+
+**Naming:**
+- Files: `kebab-case.ts`
+- Classes: `PascalCase`
+- Functions: `camelCase`
+
+**Import Ordering:**
+```typescript
+// 1. Node built-ins
+// 2. External dependencies
+// 3. Internal modules
+// 4. Types
+```
+```
+
+### 6. Common Pitfalls
+
+Warn about known issues:
+
+```markdown
+## Common Pitfalls
+
+### Database Connections
+
+**ISSUE:** TypeORM doesn't automatically release connections
+
+**SOLUTION:**
+```typescript
+const queryRunner = dataSource.createQueryRunner();
+try {
+  await queryRunner.startTransaction();
+  // ... queries
+  await queryRunner.commitTransaction();
+} finally {
+  await queryRunner.release();  // Always release!
+}
+```
+```
+
+### 7. Testing Strategy
+
+Guide AI in writing tests:
+
+```markdown
+## Testing Strategy
+
+- **Unit:** Jest with mocked dependencies (80% coverage minimum)
+- **Integration:** Testcontainers for database tests
+- **E2E:** Supertest for API tests (critical paths only)
+
+**Example:**
+```typescript
+describe('UserService', () => {
+  it('should hash password on creation', async () => {
+    const user = await service.create({ password: 'secret' });
+    expect(user.password).not.toBe('secret');
+  });
+});
+```
+```
+
+### 8. Environment Configuration
+
+Document required variables:
+
+```markdown
+## Environment Configuration
+
+```bash
+# Required
+DATABASE_URL=postgresql://user:pass@localhost:5432/dbname
+JWT_SECRET=your-secret-key-min-32-chars
+
+# Optional
+LOG_LEVEL=info              # debug | info | warn | error
+FEATURE_NEW_UI=false        # Feature flags
+```
+
+**Secrets Management:** Use AWS Secrets Manager in production. Never commit secrets.
+```
+
+---
+
+## Templates by Project Type
+
+### Python (FastAPI)
+
+```markdown
+# CLAUDE.md - [Project Name]
+
+## Overview
+
+[1-2 sentence description]
+
+**Stack:** Python 3.12, FastAPI 0.109, SQLAlchemy 2.0, PostgreSQL 16
+
+## Commands
+
+```bash
+# Development
+uv sync
+uv run uvicorn app.main:app --reload
+
+# Testing
+uv run pytest --cov=src --cov-fail-under=80
+
+# Database
+uv run alembic upgrade head
+```
+
+## Structure
+
+```
+src/
+├── api/          # FastAPI routers
+├── models/       # SQLAlchemy models
+├── schemas/      # Pydantic schemas
+└── services/     # Business logic
+```
+
+## Code Style
+
+Follows [Doctrine Python Guide](../../guides/languages/python.md)
+
+**Type Hints:** **MUST** use on all functions with `from __future__ import annotations`
+
+## Common Pitfalls
+
+**Async/Await:** Never mix sync and async code. Use `AsyncSession` not `Session`.
+
+## Environment
+
+```bash
+DATABASE_URL=postgresql+asyncpg://user:pass@localhost/dbname
+SECRET_KEY=your-secret-key
+```
+```
+
+### TypeScript (Express)
+
+```markdown
+# CLAUDE.md - [Project Name]
+
+## Overview
+
+[1-2 sentence description]
+
+**Stack:** Node.js 20, TypeScript 5.3, Express 4.18, PostgreSQL 16
+
+## Commands
+
+```bash
+# Development
+npm install
+npm run dev
+
+# Testing
+npm test -- --coverage
+```
+
+## Structure
+
+```
+src/
+├── controllers/  # Request handlers
+├── services/     # Business logic
+├── models/       # TypeORM entities
+└── middleware/   # Express middleware
+```
+
+## Code Style
+
+Follows [Doctrine TypeScript Guide](../../guides/languages/typescript.md)
+
+**Naming:** Files: `kebab-case.ts`, Classes: `PascalCase`, Functions: `camelCase`
+
+## Common Pitfalls
+
+**Promise Handling:** Always use try/catch in async route handlers and pass errors to `next()`.
+
+## Environment
+
+```bash
+DATABASE_URL=postgresql://user:pass@localhost:5432/dbname
+JWT_SECRET=your-secret-key
+```
+```
+
+### Go (Gin)
+
+```markdown
+# CLAUDE.md - [Project Name]
+
+## Overview
+
+[1-2 sentence description]
+
+**Stack:** Go 1.22, Gin 1.9, PostgreSQL 16, GORM 1.25
+
+## Commands
+
+```bash
+# Development
+go mod download
+go run cmd/server/main.go
+
+# Testing
+go test ./...
+go test -race ./...  # Race detection
+```
+
+## Structure
+
+```
+cmd/server/       # Application entrypoint
+internal/
+├── api/          # HTTP handlers
+├── service/      # Business logic
+└── repository/   # Data access
+```
+
+## Code Style
+
+Follows [Doctrine Go Guide](../../guides/languages/go.md)
+
+**Error Handling:** Always wrap errors: `fmt.Errorf("get user: %w", err)`
+
+## Common Pitfalls
+
+**Goroutine Leaks:** Use context cancellation. **Pointer Receivers:** Use for methods that modify state.
+
+## Environment
+
+```bash
+DATABASE_URL=postgresql://user:pass@localhost:5432/dbname
+JWT_SECRET=your-secret-key
+```
+```
+
+### Rails
+
+```markdown
+# CLAUDE.md - [Project Name]
+
+## Overview
+
+[1-2 sentence description]
+
+**Stack:** Ruby 3.3, Rails 7.1, PostgreSQL 16, Sidekiq 7
+
+## Commands
+
+```bash
+# Development
+bundle install
+rails db:setup
+rails server
+
+# Testing
+rails test
+COVERAGE=true rails test
+```
+
+## Structure
+
+```
+app/
+├── controllers/  # Request handlers
+├── models/       # ActiveRecord models
+├── services/     # Service objects
+└── jobs/         # Background jobs
+```
+
+## Code Style
+
+Follows [Doctrine Rails Guide](../../guides/frameworks/rails.md)
+
+**Service Objects:** Use for complex business logic outside controllers.
+
+## Common Pitfalls
+
+**N+1 Queries:** Use `includes()` for eager loading. **Mass Assignment:** Use strong parameters.
+
+## Environment
+
+```bash
+DATABASE_URL=postgresql://user:pass@localhost/dbname
+REDIS_URL=redis://localhost:6379/0
+SECRET_KEY_BASE=your-secret-key
+```
+```
+
+---
+
+## Integration with Other Tools
+
+### .cursorrules
+
+CLAUDE.md and .cursorrules serve different purposes[^2]:
+
+- **CLAUDE.md:** Comprehensive project context, commands, architecture
+- **.cursorrules:** IDE-specific rules, linting preferences, code generation
+
+**Best Practice:** Reference CLAUDE.md from .cursorrules:
+
+```
+# .cursorrules
+# Read CLAUDE.md for comprehensive context
+
+- Follow TypeScript strict mode
+- Use async/await, not callbacks
+- See CLAUDE.md for full conventions
+```
+
+### .aider
+
+Aider automatically reads CLAUDE.md in repository root[^3]:
+
+```bash
+aider --read CLAUDE.md src/users/service.ts
+```
+
+Keep CLAUDE.md concise (< 1000 lines) so Aider can include it in context.
+
+### IDE Integration
+
+Add to `.vscode/settings.json`:
+
+```json
+{
+  "files.associations": {
+    "CLAUDE.md": "markdown"
+  }
+}
+```
+
+---
+
+## Maintenance Best Practices
+
+### When to Update
+
+**MUST** update when:
+- Architecture changes (new patterns, refactoring)
+- Commands change (new scripts, tool updates)
+- Conventions change (style guide updates)
+- New pitfalls discovered (production issues)
+- Major dependencies change (framework upgrades)
+
+### Update Process
+
+1. **Review quarterly** - Schedule regular reviews
+2. **Track in git** - Commit CLAUDE.md changes with code changes
+3. **Test with AI** - Verify AI assistants understand updates
+4. **Keep concise** - Remove outdated content, don't just append
+
+### Automated Checks
+
+Add to CI/CD:
+
+```yaml
+# .github/workflows/lint.yml
+- name: Check CLAUDE.md exists
+  run: |
+    if [ ! -f CLAUDE.md ]; then
+      echo "CLAUDE.md not found"
+      exit 1
+    fi
+
+- name: Validate markdown
+  run: npx markdownlint-cli2 CLAUDE.md
+
+- name: Check for secrets
+  run: |
+    if grep -r "password.*=.*[^example]" CLAUDE.md; then
+      echo "Possible secret in CLAUDE.md"
+      exit 1
+    fi
+```
+
+---
+
+## Anti-Patterns
+
+### 1. The Novel (15,000 lines)
+
+**Problem:** CLAUDE.md becomes comprehensive documentation replacement
+
+**Solution:**
+- Keep under 1000 lines (200-500 ideal)
+- Link to comprehensive docs
+- Focus on what AI needs to know
+
+### 2. The Stale Guide
+
+**Problem:** Outdated commands and information
+
+**Solution:**
+- Review quarterly
+- Update with major changes
+- Add to PR checklist
+
+### 3. The Secret Leaker
+
+**Problem:** Contains credentials or sensitive data
+
+**Solution:**
+- Use placeholder values
+- Reference `.env.example`
+- Never commit secrets
+
+### 4. The Copy-Paste Disaster
+
+**Problem:** Duplicates README, docs, style guides
+
+**Solution:**
+- Link to external guides
+- Summarize key points
+- Document only deviations
+
+### 5. The Vague Guide
+
+**Problem:** Lacks specific, actionable information
+
+**Solution:**
+- Provide specific commands
+- Include code examples
+- Be concrete and actionable
+
+### 6. The Assumed Knowledge
+
+**Problem:** Assumes AI knows project-specific context
+
+**Solution:**
+- Be explicit about patterns
+- Include examples
+- Don't assume shared context
+
+### 7. The Auto-Generated Mess
+
+**Problem:** Auto-generated from code comments
+
+**Solution:**
+- Manually curate CLAUDE.md
+- Focus on high-level patterns
+- Link to API docs for details
+
+### 8. The Kitchen Sink
+
+**Problem:** Includes everything tangentially related
+
+**Solution:**
+- Be selective
+- Include only essential information
+- Link to comprehensive sources
+
+---
+
+## Complete Example Templates
+
+### Minimal Example (200 lines)
+
+```markdown
+# CLAUDE.md - Todo API
+
+## Overview
+
+Simple REST API for todo list management. FastAPI backend with SQLite database.
+
+**Stack:** Python 3.12, FastAPI 0.109, SQLAlchemy 2.0, SQLite
+
+## Commands
+
+```bash
+# Development
+uv sync
+uv run uvicorn app.main:app --reload  # Port 8000
+
+# Testing
+uv run pytest
+
+# Linting
+uv run ruff check . --fix
+```
+
+## Structure
+
+```
+app/
+├── main.py       # FastAPI entry point
+├── models.py     # SQLAlchemy models
+├── schemas.py    # Pydantic schemas
+└── database.py   # DB connection
+
+tests/            # Pytest tests
+```
+
+## Key Patterns
+
+**Async by default:**
+```python
+@app.get("/todos")
+async def get_todos(db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(Todo))
+    return result.scalars().all()
+```
+
+**Validation:** All inputs use Pydantic schemas. Never accept raw dicts.
+
+## Common Issues
+
+**Database locking:** SQLite doesn't handle concurrent writes. Use PostgreSQL for production.
+
+**Async session:** Always use `AsyncSession`, not `Session`.
+
+## Environment
+
+```bash
+DATABASE_URL=sqlite:///./todos.db
+ENVIRONMENT=development
+```
+```
+
+### Medium Example (500 lines)
+
+See complete microservices e-commerce example in [Python Template](#python-fastapi) section.
+
+Key additions for medium projects:
+- **Service Dependencies:** Document how services interact
+- **Event Flow:** Show event-driven communication
+- **Common Pitfalls:** More detailed with distributed systems issues
+- **Testing Strategy:** Contract tests, integration tests
+- **Monitoring:** Metrics, logs, tracing
+
+### Large Projects
+
+For large projects (> 5 services), split into:
+
+1. **Main CLAUDE.md** (500 lines) - Overview, quick start, architecture
+2. **Service-specific CLAUDE.md** (200-300 lines each)
+3. **External docs links**
+
+**Main CLAUDE.md structure:**
+
+```markdown
+# CLAUDE.md - [Platform Name]
+
+## Overview
+[High-level description]
+
+## Quick Start
+```bash
+docker-compose up -d
+npm run dev:all
+```
+
+## Architecture
+[System-level architecture diagram]
+
+## Service Navigation
+
+- **API Gateway:** [services/api-gateway/CLAUDE.md](services/api-gateway/CLAUDE.md)
+- **User Service:** [services/users/CLAUDE.md](services/users/CLAUDE.md)
+- **Order Service:** [services/orders/CLAUDE.md](services/orders/CLAUDE.md)
+
+## Cross-Cutting Concerns
+[Shared patterns, auth, logging, monitoring]
+
+## External Documentation
+- [Full Docs](https://docs.example.com)
+- [API Reference](https://api.example.com/docs)
+```
+
+---
+
+## See Also
+
+- [Prompt Engineering Guide](./prompt-engineering.md) - Comprehensive prompt patterns
+- [Testing Guide](../process/testing.md) - Testing strategies
+- [CI/CD Guide](../process/ci.md) - Continuous integration
+- [Markdown Guide](../docs/markdown.md) - Markdown style guide
+- [Language Guides](../languages/README.md) - Python, TypeScript, Go, Ruby
+
+---
+
+## References
+
+[^1]: [Claude Code Documentation](https://docs.anthropic.com/en/docs/claude-code) - Official Anthropic documentation for Claude Code CLI and CLAUDE.md patterns
+[^2]: [Cursor AI Documentation](https://docs.cursor.com/) - Documentation for .cursorrules and Cursor IDE integration
+[^3]: [Aider Documentation](https://aider.chat/docs/usage.html) - Aider AI pair programming tool documentation
