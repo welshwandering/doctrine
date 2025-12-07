@@ -1,0 +1,336 @@
+# Shell Style Guide
+
+> [Doctrine](../../README.md) > [Languages](../README.md) > Shell
+
+The key words "**MUST**", "**MUST NOT**", "**REQUIRED**", "**SHALL**", "**SHALL NOT**", "**SHOULD**", "**SHOULD NOT**", "**RECOMMENDED**", "**MAY**", and "**OPTIONAL**" in this document are to be interpreted as described in [RFC 2119](https://tools.ietf.org/html/rfc2119).
+
+Extends [Google Shell Style Guide](google/shell.md)[^1].
+
+## Quick Reference
+
+| Task | Tool | Command |
+|------|------|---------|
+| Lint | shellcheck[^2] | `shellcheck *.sh` |
+| Format | shfmt[^3] | `shfmt -w *.sh` |
+| Type check | - | - |
+| Semantic | - | - |
+| Dead code | - | - |
+| Coverage | bashcov[^4] | `bashcov ./test.sh` |
+| Complexity | - | - |
+| Fuzz | - | - |
+| Test perf | - | - |
+
+## When to Use Shell
+
+Shell **MAY** be appropriate for:
+- Small utilities under 100 lines
+- Simple wrapper scripts
+- Glue between other programs
+- Build/CI scripts
+
+Scripts **MUST NOT** exceed 100 lines. If your script grows beyond 100 lines or needs complex logic, you **MUST** rewrite it in Python.
+
+## Linting: shellcheck
+
+You **MUST** use shellcheck[^2] for linting shell scripts.
+
+### Why shellcheck
+
+shellcheck is the world-class shell linter, catching bugs and suggesting best practices. It identifies common pitfalls like unquoted variables, incorrect conditionals, and portability issues before they cause runtime failures.
+
+```bash
+# Install
+# macOS
+brew install shellcheck
+
+# Ubuntu/Debian
+apt install shellcheck
+
+# Run
+shellcheck script.sh
+
+# All files
+shellcheck **/*.sh
+```
+
+### Configuration
+
+You **SHOULD** create a `.shellcheckrc` file:
+
+```ini
+# Enable all checks
+enable=all
+
+# Exclude specific rules if needed
+# disable=SC2086
+```
+
+## Formatting: shfmt
+
+You **MUST** use shfmt[^3] for formatting shell scripts.
+
+### Why shfmt
+
+shfmt provides consistent, automated formatting for shell scripts, eliminating style debates and ensuring readability across your codebase. It handles complex cases like heredocs and pipeline formatting correctly.
+
+```bash
+# Install
+go install mvdan.cc/sh/v3/cmd/shfmt@latest
+
+# Format
+shfmt -w script.sh
+
+# Format with specific style
+shfmt -i 2 -ci -bn -w script.sh
+```
+
+You **MUST** use these options:
+- `-i 2`: 2-space indent
+- `-ci`: Indent switch cases
+- `-bn`: Binary ops on newline
+
+## Script Template
+
+All scripts **MUST** follow this template structure:
+
+```bash
+#!/bin/bash
+#
+# Brief description of what this script does.
+
+set -euo pipefail
+
+# Constants
+readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly LOG_FILE="/tmp/script.log"
+
+# Functions
+log() {
+  echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')] $*"
+}
+
+err() {
+  echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')] ERROR: $*" >&2
+}
+
+usage() {
+  cat <<EOF
+Usage: $(basename "$0") [OPTIONS] <argument>
+
+Description of what this script does.
+
+Options:
+  -h, --help     Show this help message
+  -v, --verbose  Enable verbose output
+
+Examples:
+  $(basename "$0") input.txt
+  $(basename "$0") -v input.txt
+EOF
+}
+
+main() {
+  local verbose=false
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -h | --help)
+        usage
+        exit 0
+        ;;
+      -v | --verbose)
+        verbose=true
+        shift
+        ;;
+      *)
+        break
+        ;;
+    esac
+  done
+
+  if [[ $# -lt 1 ]]; then
+    err "Missing required argument"
+    usage
+    exit 1
+  fi
+
+  local input="$1"
+
+  if [[ "$verbose" == true ]]; then
+    log "Processing: ${input}"
+  fi
+
+  # Main logic here
+}
+
+main "$@"
+```
+
+## Key Conventions
+
+### Shebang and Options
+
+All scripts **MUST** include:
+
+```bash
+#!/bin/bash
+set -euo pipefail
+```
+
+- `set -e`: Exit on error (**REQUIRED**)
+- `set -u`: Error on undefined variables (**REQUIRED**)
+- `set -o pipefail`: Pipelines fail on first error (**REQUIRED**)
+
+### Variables
+
+You **MUST** follow these variable conventions:
+
+```bash
+# Use braces and quotes (REQUIRED)
+echo "${variable}"
+
+# Local variables in functions (REQUIRED)
+my_function() {
+  local my_var="value"
+}
+
+# Constants are uppercase (REQUIRED)
+readonly MAX_RETRIES=3
+declare -r CONFIG_FILE="/etc/myapp.conf"
+```
+
+### Tests
+
+You **MUST** use `[[ ]]` for tests, not `[ ]`:
+
+```bash
+# Use [[ ]] not [ ] (REQUIRED)
+if [[ "${var}" == "value" ]]; then
+  echo "match"
+fi
+
+# String tests
+if [[ -z "${var}" ]]; then  # Empty
+if [[ -n "${var}" ]]; then  # Not empty
+
+# File tests
+if [[ -f "${file}" ]]; then  # File exists
+if [[ -d "${dir}" ]]; then   # Directory exists
+```
+
+### Command Substitution
+
+You **MUST** use `$()` for command substitution, not backticks:
+
+```bash
+# Use $() not backticks (REQUIRED)
+result="$(command)"
+nested="$(command "$(other_command)")"
+```
+
+### Arrays
+
+```bash
+# Declare arrays
+declare -a files
+files=("one.txt" "two.txt" "three.txt")
+
+# Append
+files+=("four.txt")
+
+# Iterate
+for file in "${files[@]}"; do
+  echo "${file}"
+done
+
+# Length
+echo "${#files[@]}"
+```
+
+### Error Handling
+
+```bash
+# Check return values
+if ! command; then
+  err "Command failed"
+  exit 1
+fi
+
+# Or with ||
+command || { err "Failed"; exit 1; }
+```
+
+### Pipelines
+
+```bash
+# Split long pipelines
+command1 \
+  | command2 \
+  | command3
+```
+
+## Coverage: bashcov
+
+```bash
+# Install
+gem install bashcov[^4]
+
+# Run
+bashcov ./test.sh
+
+# With simplecov output
+bashcov --root . ./test.sh
+```
+
+## Pre-commit Configuration
+
+You **SHOULD** configure pre-commit hooks[^5]:
+
+```yaml
+repos:
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.10.0.1
+    hooks:
+      - id: shellcheck
+
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.10.0-1
+    hooks:
+      - id: shfmt
+        args: [-i, "2", -ci, -bn]
+```
+
+## CI Pipeline
+
+You **SHOULD** integrate shell linting into your CI pipeline[^6]:
+
+```yaml
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: shellcheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: './scripts'
+      - name: shfmt
+        uses: mvdan/sh@v0.7
+        with:
+          shfmt: true
+```
+
+## See Also
+
+- [CI Guide](../ci.md) - Comprehensive CI/CD pipeline configuration
+- [Google Shell Style Guide](google/shell.md) - Extended style guide
+- [Testing Guide](../testing.md) - Testing practices and patterns
+
+## References
+
+[^1]: [Google Shell Style Guide](https://google.github.io/styleguide/shellguide.html) - Google's comprehensive shell scripting style guide
+[^2]: [ShellCheck](https://www.shellcheck.net/) - A shell script static analysis tool
+[^3]: [shfmt](https://github.com/mvdan/sh) - A shell parser, formatter, and interpreter with bash support
+[^4]: [bashcov](https://github.com/infertux/bashcov) - Code coverage tool for Bash
+[^5]: [pre-commit](https://pre-commit.com/) - A framework for managing and maintaining multi-language pre-commit hooks
+[^6]: [GitHub Actions](https://docs.github.com/en/actions) - GitHub's CI/CD platform documentation

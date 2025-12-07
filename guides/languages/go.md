@@ -1,0 +1,1123 @@
+# Go Style Guide
+
+> [Doctrine](../../README.md) > [Languages](../README.md) > Go
+
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119.html).
+
+Extends [Google Go Style Guide](google/go.md). See also
+[Google Go Decisions](google/go-decisions.md) and
+[Google Go Best Practices](google/go-best-practices.md).
+
+## Quick Reference
+
+| Task | Tool | Command |
+|------|------|---------|
+| Lint | golangci-lint[^1] | `golangci-lint run` |
+| Format | gofmt[^2] | `gofmt -w .` |
+| Format | goimports[^3] | `goimports -w .` |
+| Type check | built-in | `go build ./...` |
+| Semantic | Staticcheck[^4] | via golangci-lint |
+| Dead code | deadcode[^5] | `deadcode ./...` |
+| Coverage | go test[^6] | `go test -cover ./...` |
+| Complexity | gocyclo[^7] | via golangci-lint |
+| Fuzz | native | `go test -fuzz=Fuzz` |
+| Test perf | go test[^6] | `go test -parallel=4` |
+
+## Linting: golangci-lint
+
+Projects **MUST** use golangci-lint[^1] for linting Go code.
+
+### Why golangci-lint?
+
+- **Performance**: 5x faster than running linters separately through parallel execution and shared caching
+- **Comprehensiveness**: Aggregates 120+ linters in a single tool
+- **Industry standard**: De facto standard in the Go ecosystem with widespread adoption
+- **Configuration**: Single YAML file for all linter settings
+- **CI integration**: Official GitHub Actions support with automatic caching
+
+```bash
+# Install
+go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+
+# Run
+golangci-lint run
+
+# Run with auto-fix
+golangci-lint run --fix
+```
+
+### Configuration (.golangci.yml)
+
+```yaml
+run:
+  timeout: 5m
+
+linters:
+  enable:
+    - staticcheck      # Comprehensive static analysis
+    - gosimple         # Simplifications
+    - govet            # Suspicious constructs
+    - errcheck         # Unchecked errors
+    - gosec            # Security issues
+    - revive           # Opinionated linter
+    - gocyclo          # Cyclomatic complexity
+    - misspell         # Spelling
+    - unconvert        # Unnecessary conversions
+    - unparam          # Unused parameters
+    - gocritic         # Highly extensible linter
+    - prealloc         # Slice preallocation
+    - exportloopref    # Loop variable capture
+
+linters-settings:
+  gocyclo:
+    min-complexity: 15
+  govet:
+    enable-all: true
+  revive:
+    rules:
+      - name: blank-imports
+      - name: context-as-argument
+      - name: error-return
+      - name: error-strings
+      - name: exported
+```
+
+## Formatting: gofmt + goimports
+
+Projects **MUST** use gofmt[^2] or goimports[^3] for formatting Go code. Projects **SHOULD** prefer goimports as it provides automatic import management in addition to formatting.
+
+### Why gofmt/goimports?
+
+- **Zero configuration**: Eliminates formatting debates and bike-shedding
+- **Consistency**: Single canonical format across the entire Go ecosystem
+- **Tooling**: Built into the language toolchain, guaranteed compatibility
+- **Automatic**: goimports adds/removes imports automatically, reducing manual work
+
+```bash
+# Format all files
+gofmt -w .
+
+# Format and organize imports
+goimports -w .
+```
+
+There are no configuration options. This is intentional.
+
+## Dead Code Detection
+
+Projects **SHOULD** use deadcode[^5] to identify unused functions and methods.
+
+```bash
+# Install
+go install golang.org/x/tools/cmd/deadcode@latest
+
+# Run
+deadcode ./...
+```
+
+## Code Coverage
+
+Projects **MUST** track code coverage using Go's built-in coverage tools. Projects **SHOULD** enforce minimum coverage thresholds in CI.
+
+```bash
+# Run tests with coverage
+go test -cover ./...
+
+# Generate coverage profile
+go test -coverprofile=coverage.out ./...
+
+# View in browser
+go tool cover -html=coverage.out
+
+# Check coverage threshold (via script)
+go test -coverprofile=coverage.out ./...
+COVERAGE=$(go tool cover -func=coverage.out | grep total | awk '{print $3}' | sed 's/%//')
+if (( $(echo "$COVERAGE < 80" | bc -l) )); then
+  echo "Coverage $COVERAGE% is below 80%"
+  exit 1
+fi
+```
+
+## Cyclomatic Complexity
+
+Projects **SHOULD** monitor cyclomatic complexity using gocyclo[^7] (via golangci-lint). Functions with complexity over 15 **SHOULD** be refactored.
+
+Via golangci-lint with gocyclo enabled:
+
+```yaml
+linters-settings:
+  gocyclo:
+    min-complexity: 15  # Report functions with complexity > 15
+```
+
+Or standalone:
+
+```bash
+go install github.com/fzipp/gocyclo/cmd/gocyclo@latest
+gocyclo -over 15 .
+```
+
+## Fuzzing: Native Go Fuzzing (1.18+)
+
+Projects **SHOULD** use Go's native fuzzing for testing functions that parse untrusted input or have complex edge cases.
+
+### Why Native Go Fuzzing?
+
+- **Built-in**: No external dependencies, part of the standard toolchain since Go 1.18
+- **Integrated**: Works seamlessly with existing `go test` infrastructure
+- **Coverage-guided**: Uses code coverage to discover new execution paths
+- **Corpus management**: Automatically manages and minimizes test corpus
+
+```go
+func FuzzReverse(f *testing.F) {
+    // Seed corpus
+    f.Add("hello")
+    f.Add("world")
+
+    f.Fuzz(func(t *testing.T, s string) {
+        rev := Reverse(s)
+        doubleRev := Reverse(rev)
+        if s != doubleRev {
+            t.Errorf("double reverse mismatch: %q != %q", s, doubleRev)
+        }
+    })
+}
+```
+
+```bash
+# Run fuzzer
+go test -fuzz=FuzzReverse -fuzztime=30s
+
+# Run with specific corpus
+go test -fuzz=FuzzReverse -fuzztime=1m ./...
+```
+
+## Test Performance
+
+Projects **SHOULD** run tests in parallel mode. Projects **MUST** run tests with the race detector in CI.
+
+```bash
+# Parallel tests (default: GOMAXPROCS)
+go test -parallel=8 ./...
+
+# Run specific benchmarks
+go test -bench=. -benchmem ./...
+
+# Short mode for CI
+go test -short ./...
+
+# Race detector (slower but catches data races)
+go test -race ./...
+
+# Compile tests once, run many times
+go test -c -o test.exe ./mypackage
+./test.exe -test.v
+```
+
+### Caching
+
+Go caches test results by default. Force re-run:
+
+```bash
+go clean -testcache
+go test ./...
+```
+
+## Pre-commit Configuration
+
+Projects **SHOULD** use pre-commit hooks to enforce formatting and linting before commits.
+
+```yaml
+repos:
+  - repo: https://github.com/golangci/golangci-lint
+    rev: v1.62.0
+    hooks:
+      - id: golangci-lint
+
+  - repo: https://github.com/dnephin/pre-commit-golang
+    rev: v0.5.1
+    hooks:
+      - id: go-fmt
+      - id: go-imports
+      - id: go-vet
+```
+
+## CI Pipeline
+
+Projects **MUST** run linting and tests in CI. Projects **MUST** include race detection in CI test runs.
+
+```yaml
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+      - uses: golangci/golangci-lint-action@v6
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+      - run: go test -race -coverprofile=coverage.out ./...
+      - run: go tool cover -func=coverage.out
+```
+
+## Dependencies & Package Management
+
+Projects **MUST** use Go modules (go mod) for dependency management. Projects **MUST** commit both `go.mod` and `go.sum` to version control.
+
+### Why Go Modules?
+
+- **Official**: Standard dependency management system since Go 1.11
+- **Reproducible**: MVS algorithm ensures consistent builds across environments
+- **Cryptographic verification**: go.sum checksums prevent supply chain attacks
+- **Version selection**: Automatic minimum version selection prevents dependency conflicts
+- **No external tools**: Built into the Go toolchain
+
+```bash
+# Initialize a new module
+go mod init github.com/user/repo
+
+# Add dependencies (automatically updates go.mod)
+go get github.com/pkg/errors@latest
+go get github.com/pkg/errors@v0.9.1
+
+# Update dependencies
+go get -u ./...
+
+# Tidy up (remove unused, add missing)
+go mod tidy
+
+# Verify dependencies
+go mod verify
+
+# Download dependencies to local cache
+go mod download
+```
+
+### go.mod and go.sum
+
+Both files **MUST** be committed to version control.
+
+```go
+// go.mod
+module github.com/user/repo
+
+go 1.23
+
+require (
+    github.com/pkg/errors v0.9.1
+    golang.org/x/sync v0.8.0
+)
+```
+
+`go.sum` contains cryptographic checksums for dependency verification.
+
+### Minimum Version Selection (MVS)
+
+Go uses MVS algorithm: always selects the minimum required version that satisfies all constraints. This ensures reproducible builds.
+
+```bash
+# View dependency graph
+go mod graph
+
+# See why a dependency is needed
+go mod why github.com/pkg/errors
+```
+
+### Vulnerability Scanning
+
+Projects **SHOULD** use govulncheck[^8] to scan for known vulnerabilities. Projects **SHOULD** run vulnerability scans in CI.
+
+```bash
+# Install govulncheck
+go install golang.org/x/vuln/cmd/govulncheck@latest
+
+# Scan for vulnerabilities
+govulncheck ./...
+
+# JSON output for CI
+govulncheck -json ./...
+```
+
+### Dependabot Configuration
+
+Projects **SHOULD** use Dependabot[^9] or similar tools for automated dependency updates.
+
+```yaml
+# .github/dependabot.yml
+version: 2
+updates:
+  - package-ecosystem: "gomod"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    groups:
+      minor-updates:
+        update-types:
+          - "minor"
+          - "patch"
+```
+
+## E2E & Acceptance Testing
+
+Projects **SHOULD** use appropriate testing tools based on their needs: httptest[^10] for HTTP APIs, chromedp[^11] for browser automation, or godog[^12] for BDD.
+
+### httptest for API Testing
+
+```go
+func TestUserHandler(t *testing.T) {
+    req := httptest.NewRequest("GET", "/users/123", nil)
+    w := httptest.NewRecorder()
+
+    handler := NewUserHandler()
+    handler.ServeHTTP(w, req)
+
+    if w.Code != http.StatusOK {
+        t.Errorf("got %d, want %d", w.Code, http.StatusOK)
+    }
+
+    var user User
+    json.NewDecoder(w.Body).Decode(&user)
+    if user.ID != 123 {
+        t.Errorf("got ID %d, want 123", user.ID)
+    }
+}
+```
+
+### chromedp for Browser Testing
+
+```go
+import "github.com/chromedp/chromedp"[^11]
+
+func TestLoginFlow(t *testing.T) {
+    ctx, cancel := chromedp.NewContext(context.Background())
+    defer cancel()
+
+    var title string
+    err := chromedp.Run(ctx,
+        chromedp.Navigate("http://localhost:8080/login"),
+        chromedp.SendKeys(`input[name="email"]`, "user@example.com"),
+        chromedp.SendKeys(`input[name="password"]`, "secret"),
+        chromedp.Click(`button[type="submit"]`),
+        chromedp.WaitVisible(`#dashboard`),
+        chromedp.Title(&title),
+    )
+
+    if err != nil {
+        t.Fatal(err)
+    }
+    if title != "Dashboard" {
+        t.Errorf("got title %q, want Dashboard", title)
+    }
+}
+```
+
+### godog for BDD/Cucumber
+
+```go
+// features/login.feature
+// Feature: User Login
+//   Scenario: Valid credentials
+//     Given I am on the login page
+//     When I enter valid credentials
+//     Then I should see the dashboard
+
+import "github.com/cucumber/godog"[^12]
+
+func InitializeScenario(ctx *godog.ScenarioContext) {
+    ctx.Step(`^I am on the login page$`, iAmOnLoginPage)
+    ctx.Step(`^I enter valid credentials$`, iEnterValidCredentials)
+    ctx.Step(`^I should see the dashboard$`, iShouldSeeDashboard)
+}
+
+func TestFeatures(t *testing.T) {
+    suite := godog.TestSuite{
+        ScenarioInitializer: InitializeScenario,
+        Options: &godog.Options{
+            Format: "pretty",
+            Paths:  []string{"features"},
+        },
+    }
+
+    if suite.Run() != 0 {
+        t.Fatal("non-zero status returned")
+    }
+}
+```
+
+## Thread Safety Testing
+
+### Race Detector
+
+Projects **MUST** use the race detector when testing concurrent code. The race detector **MUST** be run in CI for all projects with goroutines.
+
+```bash
+# Run tests with race detector
+go test -race ./...
+
+# Build binary with race detector
+go build -race
+
+# Run benchmarks with race detection
+go test -race -bench=. ./...
+```
+
+### Testing Goroutines and Channels
+
+```go
+func TestConcurrentWrites(t *testing.T) {
+    cache := NewCache()
+
+    var wg sync.WaitGroup
+    for i := 0; i < 100; i++ {
+        wg.Add(1)
+        go func(n int) {
+            defer wg.Done()
+            cache.Set(fmt.Sprintf("key%d", n), n)
+        }(i)
+    }
+
+    wg.Wait()
+
+    if cache.Len() != 100 {
+        t.Errorf("got %d items, want 100", cache.Len())
+    }
+}
+
+func TestChannelClose(t *testing.T) {
+    ch := make(chan int)
+
+    go func() {
+        defer close(ch)
+        for i := 0; i < 10; i++ {
+            ch <- i
+        }
+    }()
+
+    sum := 0
+    for v := range ch {
+        sum += v
+    }
+
+    if sum != 45 {
+        t.Errorf("got sum %d, want 45", sum)
+    }
+}
+```
+
+### sync Package Testing Patterns
+
+```go
+func TestMutexProtection(t *testing.T) {
+    var mu sync.Mutex
+    counter := 0
+
+    var wg sync.WaitGroup
+    for i := 0; i < 1000; i++ {
+        wg.Add(1)
+        go func() {
+            defer wg.Done()
+            mu.Lock()
+            counter++
+            mu.Unlock()
+        }()
+    }
+
+    wg.Wait()
+    if counter != 1000 {
+        t.Errorf("race condition: got %d, want 1000", counter)
+    }
+}
+
+func TestOnce(t *testing.T) {
+    var once sync.Once
+    count := 0
+
+    increment := func() { count++ }
+
+    var wg sync.WaitGroup
+    for i := 0; i < 100; i++ {
+        wg.Add(1)
+        go func() {
+            defer wg.Done()
+            once.Do(increment)
+        }()
+    }
+
+    wg.Wait()
+    if count != 1 {
+        t.Errorf("Once failed: got %d executions, want 1", count)
+    }
+}
+```
+
+## Idempotence Testing
+
+### Testing Retry-Safe Handlers
+
+```go
+func TestIdempotentCreate(t *testing.T) {
+    handler := NewUserHandler()
+    user := User{ID: "123", Email: "test@example.com"}
+
+    // First request
+    req1 := newCreateRequest(user, "request-id-1")
+    w1 := httptest.NewRecorder()
+    handler.ServeHTTP(w1, req1)
+
+    if w1.Code != http.StatusCreated {
+        t.Fatalf("first request failed: %d", w1.Code)
+    }
+
+    // Retry with same idempotency key
+    req2 := newCreateRequest(user, "request-id-1")
+    w2 := httptest.NewRecorder()
+    handler.ServeHTTP(w2, req2)
+
+    if w2.Code != http.StatusOK {
+        t.Errorf("retry should return 200, got %d", w2.Code)
+    }
+
+    // Verify only one user created
+    count := countUsers(t)
+    if count != 1 {
+        t.Errorf("expected 1 user, got %d", count)
+    }
+}
+```
+
+### Database Operation Idempotence
+
+```go
+func TestIdempotentUpdate(t *testing.T) {
+    db := setupTestDB(t)
+    repo := NewRepository(db)
+
+    initial := &User{ID: 1, Version: 1, Name: "Alice"}
+    repo.Create(initial)
+
+    // Multiple identical updates
+    update := &User{ID: 1, Version: 1, Name: "Bob"}
+
+    for i := 0; i < 5; i++ {
+        err := repo.Update(update)
+        if err != nil {
+            t.Fatalf("update %d failed: %v", i, err)
+        }
+    }
+
+    // Verify final state
+    result := repo.FindByID(1)
+    if result.Name != "Bob" {
+        t.Errorf("got name %q, want Bob", result.Name)
+    }
+    if result.Version != 2 {
+        t.Errorf("got version %d, want 2", result.Version)
+    }
+}
+```
+
+## Reliability & Resilience Testing
+
+### Chaos Testing Patterns
+
+```go
+func TestFailureRecovery(t *testing.T) {
+    failureRate := 0.3
+    service := &UnreliableService{
+        FailureRate: failureRate,
+        Random:      rand.New(rand.NewSource(42)),
+    }
+
+    client := NewRetryClient(service, 3)
+
+    successes := 0
+    attempts := 100
+
+    for i := 0; i < attempts; i++ {
+        err := client.Call(context.Background())
+        if err == nil {
+            successes++
+        }
+    }
+
+    // With retries, success rate should be high
+    successRate := float64(successes) / float64(attempts)
+    if successRate < 0.95 {
+        t.Errorf("success rate %.2f too low", successRate)
+    }
+}
+```
+
+### Testing with Context Cancellation
+
+```go
+func TestGracefulCancellation(t *testing.T) {
+    ctx, cancel := context.WithCancel(context.Background())
+
+    done := make(chan struct{})
+    var processed int32
+
+    go func() {
+        defer close(done)
+        worker(ctx, &processed)
+    }()
+
+    time.Sleep(100 * time.Millisecond)
+    cancel()
+
+    select {
+    case <-done:
+        // Worker stopped gracefully
+    case <-time.After(time.Second):
+        t.Fatal("worker did not stop after context cancellation")
+    }
+
+    if atomic.LoadInt32(&processed) == 0 {
+        t.Error("worker should have processed some items")
+    }
+}
+
+func TestTimeout(t *testing.T) {
+    ctx, cancel := context.WithTimeout(context.Background(), 50*time.Millisecond)
+    defer cancel()
+
+    err := slowOperation(ctx)
+    if err != context.DeadlineExceeded {
+        t.Errorf("got error %v, want DeadlineExceeded", err)
+    }
+}
+```
+
+### Circuit Breaker Testing
+
+```go
+import "github.com/sony/gobreaker"[^15]
+
+func TestCircuitBreaker(t *testing.T) {
+    cb := gobreaker.NewCircuitBreaker(gobreaker.Settings{
+        MaxRequests: 3,
+        Interval:    time.Second,
+        Timeout:     time.Second,
+    })
+
+    failingService := func() (interface{}, error) {
+        return nil, errors.New("service unavailable")
+    }
+
+    // Trigger circuit breaker to open
+    for i := 0; i < 5; i++ {
+        cb.Execute(failingService)
+    }
+
+    // Circuit should be open now
+    _, err := cb.Execute(failingService)
+    if err != gobreaker.ErrOpenState {
+        t.Errorf("got error %v, want ErrOpenState", err)
+    }
+}
+```
+
+## Compatibility Testing
+
+### Multi-Version Testing with CI Matrix
+
+```yaml
+# .github/workflows/test.yml
+jobs:
+  test:
+    strategy:
+      matrix:
+        go-version: ['1.22', '1.23', '1.24']
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go-version }}
+      - run: go test ./...
+```
+
+### GOOS/GOARCH Cross-Compilation Testing
+
+```bash
+# Test builds for different platforms
+GOOS=linux GOARCH=amd64 go build -o build/app-linux-amd64
+GOOS=darwin GOARCH=arm64 go build -o build/app-darwin-arm64
+GOOS=windows GOARCH=amd64 go build -o build/app-windows-amd64.exe
+
+# Test all supported platforms
+for GOOS in darwin linux windows; do
+  for GOARCH in amd64 arm64; do
+    echo "Building $GOOS/$GOARCH"
+    GOOS=$GOOS GOARCH=$GOARCH go build -o /dev/null
+  done
+done
+```
+
+```go
+// Platform-specific tests
+//go:build linux
+// +build linux
+
+func TestLinuxSpecific(t *testing.T) {
+    // Linux-only test
+}
+```
+
+```go
+//go:build windows
+// +build windows
+
+func TestWindowsSpecific(t *testing.T) {
+    // Windows-only test
+}
+```
+
+## Internationalization Testing
+
+### UTF-8 String Handling (Runes)
+
+```go
+func TestUnicodeHandling(t *testing.T) {
+    tests := []struct {
+        input string
+        want  int
+    }{
+        {"hello", 5},
+        {"世界", 2},        // Chinese characters
+        {"🚀🌟", 2},        // Emoji
+        {"café", 4},       // Accented characters
+    }
+
+    for _, tt := range tests {
+        got := len([]rune(tt.input))
+        if got != tt.want {
+            t.Errorf("len(%q) = %d, want %d", tt.input, got, tt.want)
+        }
+    }
+}
+
+func TestRuneIteration(t *testing.T) {
+    s := "Go语言"
+
+    // Wrong: iterates over bytes
+    byteCount := 0
+    for i := 0; i < len(s); i++ {
+        byteCount++
+    }
+
+    // Correct: iterates over runes
+    runeCount := 0
+    for range s {
+        runeCount++
+    }
+
+    if runeCount != 4 {
+        t.Errorf("got %d runes, want 4", runeCount)
+    }
+}
+```
+
+### golang.org/x/text for i18n
+
+```go
+import (
+    "golang.org/x/text/language"[^13]
+    "golang.org/x/text/message"[^13]
+)
+
+func TestMessageFormatting(t *testing.T) {
+    p := message.NewPrinter(language.English)
+    msg := p.Sprintf("You have %d new messages", 42)
+
+    want := "You have 42 new messages"
+    if msg != want {
+        t.Errorf("got %q, want %q", msg, want)
+    }
+}
+
+func TestPluralization(t *testing.T) {
+    tests := []struct {
+        lang  language.Tag
+        count int
+        want  string
+    }{
+        {language.English, 1, "1 item"},
+        {language.English, 5, "5 items"},
+    }
+
+    for _, tt := range tests {
+        p := message.NewPrinter(tt.lang)
+        got := p.Sprintf("%d item(s)", tt.count)
+        if got != tt.want {
+            t.Errorf("%v: got %q, want %q", tt.lang, got, tt.want)
+        }
+    }
+}
+```
+
+### Unicode Normalization Tests
+
+```go
+import "golang.org/x/text/unicode/norm"[^13]
+
+func TestNormalization(t *testing.T) {
+    // "é" can be represented two ways
+    composed := "\u00e9"     // Single codepoint
+    decomposed := "e\u0301" // e + combining accent
+
+    if composed == decomposed {
+        t.Error("strings should not be equal before normalization")
+    }
+
+    // Normalize to NFC (composed form)
+    nfc1 := norm.NFC.String(composed)
+    nfc2 := norm.NFC.String(decomposed)
+
+    if nfc1 != nfc2 {
+        t.Error("normalized strings should be equal")
+    }
+}
+```
+
+## Data Integrity Testing
+
+### Database Transaction Testing
+
+```go
+func TestTransactionRollback(t *testing.T) {
+    db := setupTestDB(t)
+
+    tx, err := db.Begin()
+    if err != nil {
+        t.Fatal(err)
+    }
+
+    // Create user in transaction
+    _, err = tx.Exec("INSERT INTO users (name) VALUES (?)", "Alice")
+    if err != nil {
+        t.Fatal(err)
+    }
+
+    // Rollback
+    tx.Rollback()
+
+    // Verify user was not created
+    var count int
+    db.QueryRow("SELECT COUNT(*) FROM users WHERE name = ?", "Alice").Scan(&count)
+    if count != 0 {
+        t.Error("user should not exist after rollback")
+    }
+}
+
+func TestTransactionCommit(t *testing.T) {
+    db := setupTestDB(t)
+
+    err := withTransaction(db, func(tx *sql.Tx) error {
+        _, err := tx.Exec("INSERT INTO users (name) VALUES (?)", "Bob")
+        if err != nil {
+            return err
+        }
+
+        _, err = tx.Exec("INSERT INTO posts (user_id, title) VALUES (?, ?)", 1, "Hello")
+        return err
+    })
+
+    if err != nil {
+        t.Fatal(err)
+    }
+
+    // Verify both inserts succeeded
+    var userCount, postCount int
+    db.QueryRow("SELECT COUNT(*) FROM users").Scan(&userCount)
+    db.QueryRow("SELECT COUNT(*) FROM posts").Scan(&postCount)
+
+    if userCount != 1 || postCount != 1 {
+        t.Error("transaction did not commit both operations")
+    }
+}
+```
+
+### Migration Testing
+
+```go
+import "github.com/golang-migrate/migrate/v4"[^14]
+
+func TestMigrations(t *testing.T) {
+    db := setupTestDB(t)
+
+    m, err := migrate.New(
+        "file://migrations",
+        "postgres://localhost/testdb",
+    )
+    if err != nil {
+        t.Fatal(err)
+    }
+
+    // Migrate up
+    if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+        t.Fatal(err)
+    }
+
+    // Verify schema
+    var tableCount int
+    db.QueryRow("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public'").Scan(&tableCount)
+    if tableCount == 0 {
+        t.Error("no tables created")
+    }
+
+    // Test rollback
+    if err := m.Down(); err != nil {
+        t.Fatal(err)
+    }
+}
+
+func TestMigrationIdempotence(t *testing.T) {
+    db := setupTestDB(t)
+    m := setupMigrate(t)
+
+    // Run migrations twice
+    m.Up()
+    version1, _, _ := m.Version()
+
+    m.Up()
+    version2, _, _ := m.Version()
+
+    if version1 != version2 {
+        t.Error("migrations should be idempotent")
+    }
+}
+```
+
+## A/B Testing & Feature Flags
+
+### Feature Flag Patterns
+
+```go
+type FeatureFlags struct {
+    mu    sync.RWMutex
+    flags map[string]bool
+}
+
+func (f *FeatureFlags) IsEnabled(flag string, userID string) bool {
+    f.mu.RLock()
+    defer f.mu.RUnlock()
+    return f.flags[flag]
+}
+
+func TestFeatureFlag(t *testing.T) {
+    flags := &FeatureFlags{
+        flags: map[string]bool{
+            "new_checkout": true,
+            "beta_ui":      false,
+        },
+    }
+
+    if !flags.IsEnabled("new_checkout", "user123") {
+        t.Error("new_checkout should be enabled")
+    }
+
+    if flags.IsEnabled("beta_ui", "user123") {
+        t.Error("beta_ui should be disabled")
+    }
+}
+
+// Percentage-based rollout
+func TestGradualRollout(t *testing.T) {
+    rollout := NewPercentageRollout("feature_x", 20) // 20% of users
+
+    enabled := 0
+    total := 1000
+
+    for i := 0; i < total; i++ {
+        userID := fmt.Sprintf("user%d", i)
+        if rollout.IsEnabled(userID) {
+            enabled++
+        }
+    }
+
+    percentage := float64(enabled) / float64(total) * 100
+    if percentage < 15 || percentage > 25 {
+        t.Errorf("got %.1f%% enabled, want ~20%%", percentage)
+    }
+}
+```
+
+### Testing with Build Tags
+
+```go
+//go:build feature_x
+// +build feature_x
+
+func NewHandler() http.Handler {
+    return &NewHandlerV2{} // Feature flag enabled
+}
+```
+
+```go
+//go:build !feature_x
+// +build !feature_x
+
+func NewHandler() http.Handler {
+    return &OldHandler{} // Feature flag disabled
+}
+```
+
+```bash
+# Build with feature enabled
+go build -tags=feature_x
+
+# Test with feature enabled
+go test -tags=feature_x ./...
+
+# Test both configurations in CI
+go test ./...
+go test -tags=feature_x ./...
+```
+
+```go
+func TestFeatureBehavior(t *testing.T) {
+    handler := NewHandler()
+
+    req := httptest.NewRequest("GET", "/", nil)
+    w := httptest.NewRecorder()
+
+    handler.ServeHTTP(w, req)
+
+    // Behavior differs based on build tag
+    // Assert based on expected variant
+}
+```
+
+## References
+
+[^1]: [golangci-lint](https://golangci-lint.run/) - Fast Go linters aggregator with parallel execution and shared caching
+[^2]: [gofmt](https://pkg.go.dev/cmd/gofmt) - Official Go code formatter, part of the Go toolchain
+[^3]: [goimports](https://pkg.go.dev/golang.org/x/tools/cmd/goimports) - Go formatter that also manages imports automatically
+[^4]: [Staticcheck](https://staticcheck.io/) - Advanced Go static analysis tool for finding bugs and improving code quality
+[^5]: [deadcode](https://pkg.go.dev/golang.org/x/tools/cmd/deadcode) - Tool to detect unused functions and methods in Go code
+[^6]: [go test](https://pkg.go.dev/cmd/go#hdr-Test_packages) - Built-in Go testing command with coverage, benchmarking, and fuzzing support
+[^7]: [gocyclo](https://github.com/fzipp/gocyclo) - Cyclomatic complexity analyzer for Go code
+[^8]: [govulncheck](https://pkg.go.dev/golang.org/x/vuln/cmd/govulncheck) - Go vulnerability scanner from the Go security team
+[^9]: [Dependabot](https://docs.github.com/en/code-security/dependabot) - GitHub's automated dependency update tool
+[^10]: [httptest](https://pkg.go.dev/net/http/httptest) - Built-in Go package for testing HTTP handlers
+[^11]: [chromedp](https://github.com/chromedp/chromedp) - Chrome DevTools Protocol driver for browser automation in Go
+[^12]: [godog](https://github.com/cucumber/godog) - Cucumber/BDD framework for Go with Gherkin support
+[^13]: [golang.org/x/text](https://pkg.go.dev/golang.org/x/text) - Go supplementary text processing packages for internationalization
+[^14]: [golang-migrate](https://github.com/golang-migrate/migrate) - Database migration tool with support for multiple databases
+[^15]: [gobreaker](https://github.com/sony/gobreaker) - Circuit breaker implementation for Go
+
+## See Also
+
+- [Testing Guide](../testing.md) - General testing principles and practices
+- [CI Guide](../ci.md) - Continuous Integration setup and best practices
