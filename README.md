@@ -1,3 +1,5 @@
+![Doctrine Style Guide](banner.svg)
+
 # Doctrine Style Guide
 
 **Version: 2.0.0** | [Changelog](CHANGELOG.md) | [CLAUDE.md](CLAUDE.md)
