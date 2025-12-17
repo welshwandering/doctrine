@@ -51,7 +51,7 @@ You SHOULD pin SDK version per solution using `global.json`:
 ```json
 {
   "sdk": {
-    "version": "8.0.100",
+    "version": "10.0.100",
     "rollForward": "latestPatch"
   }
 }
@@ -60,7 +60,7 @@ You SHOULD pin SDK version per solution using `global.json`:
 **Do:**
 ```bash
 # Create global.json at solution root
-dotnet new globaljson --sdk-version 8.0.100
+dotnet new globaljson --sdk-version 10.0.100
 ```
 
 **Don't:**
@@ -89,7 +89,7 @@ dotnet new nunit -n MyTests                   # NUnit test project[^8]
 dotnet new mstest -n MyTests                  # MSTest test project[^9]
 
 # With framework targeting
-dotnet new webapi -n MyApi -f net8.0
+dotnet new webapi -n MyApi -f net10.0
 
 # Create solution
 dotnet new sln -n MySolution
@@ -261,7 +261,7 @@ dotnet ef migrations add Initial  # Shorthand
   "isRoot": true,
   "tools": {
     "dotnet-ef": {
-      "version": "8.0.0",
+      "version": "10.0.0",
       "commands": ["dotnet-ef"]
     },
     "dotnet-format": {
@@ -320,8 +320,8 @@ You SHOULD use `Directory.Build.props` for shared MSBuild properties:
 ```xml
 <Project>
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>14</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -439,8 +439,8 @@ You SHOULD use Central Package Management for solutions with multiple projects:
     <!-- Package versions defined once -->
     <PackageVersion Include="Serilog" Version="3.1.1" />
     <PackageVersion Include="Serilog.Sinks.Console" Version="5.0.1" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.0" />
     <PackageVersion Include="xUnit" Version="2.6.6" />
     <PackageVersion Include="Moq" Version="4.20.70" />
   </ItemGroup>
@@ -2102,7 +2102,7 @@ on:
     branches: [ main ]
 
 env:
-  DOTNET_VERSION: '8.0.x'
+  DOTNET_VERSION: '10.0.x'
 
 jobs:
   build:
@@ -2177,7 +2177,7 @@ You SHOULD use multi-stage Docker builds[^23] for optimal image size and securit
 **Dockerfile:**
 ```dockerfile
 # Stage 1: Build
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
 # Copy csproj and restore dependencies (cached layer)
@@ -2195,7 +2195,7 @@ FROM build AS publish
 RUN dotnet publish "MyApi.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 # Stage 3: Runtime
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 WORKDIR /app
 
 # Create non-root user
@@ -2548,6 +2548,83 @@ public class OrderService
 }
 ```
 
+## .NET Aspire
+
+You **SHOULD** use .NET Aspire[^30] for cloud-native distributed applications.
+
+### Why .NET Aspire
+
+- Opinionated stack for building observable, production-ready distributed apps
+- Built-in service discovery, health checks, and telemetry
+- Simplified local development with orchestration
+- First-class support for containers and cloud deployment
+
+### Getting Started
+
+```bash
+# Install Aspire workload
+dotnet workload install aspire
+
+# Create new Aspire project
+dotnet new aspire-starter -n MyApp
+```
+
+### AppHost Configuration
+
+```csharp
+// MyApp.AppHost/Program.cs
+var builder = DistributedApplication.CreateBuilder(args);
+
+// Add PostgreSQL container
+var postgres = builder.AddPostgres("postgres")
+    .WithPgAdmin();
+
+var db = postgres.AddDatabase("mydb");
+
+// Add Redis for caching
+var redis = builder.AddRedis("redis")
+    .WithRedisCommander();
+
+// Add API project with dependencies
+var api = builder.AddProject<Projects.MyApp_Api>("api")
+    .WithReference(db)
+    .WithReference(redis);
+
+// Add web frontend
+builder.AddProject<Projects.MyApp_Web>("web")
+    .WithReference(api);
+
+builder.Build().Run();
+```
+
+### Service Defaults
+
+```csharp
+// MyApp.ServiceDefaults/Extensions.cs
+public static class Extensions
+{
+    public static IHostApplicationBuilder AddServiceDefaults(this IHostApplicationBuilder builder)
+    {
+        builder.ConfigureOpenTelemetry();
+        builder.AddDefaultHealthChecks();
+        builder.Services.AddServiceDiscovery();
+        builder.Services.ConfigureHttpClientDefaults(http =>
+        {
+            http.AddStandardResilienceHandler();
+            http.AddServiceDiscovery();
+        });
+
+        return builder;
+    }
+}
+
+// Usage in API project
+var builder = WebApplication.CreateBuilder(args);
+builder.AddServiceDefaults();
+builder.AddNpgsqlDbContext<AppDbContext>("mydb");
+builder.AddRedisClient("redis");
+```
+
 ## Cross-References
 
 See [C# Style Guide](csharp.md) for:
@@ -2599,3 +2676,4 @@ See [Docker Guide](../infrastructure/docker.md) for:
 [^27]: [Serilog](https://serilog.net/) - Structured logging library for .NET
 [^28]: [OpenTelemetry for .NET](https://opentelemetry.io/docs/languages/net/) - Observability framework
 [^29]: [Application Insights](https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview) - Application performance management service
+[^30]: [.NET Aspire](https://learn.microsoft.com/en-us/dotnet/aspire/) - Cloud-native stack for building distributed applications

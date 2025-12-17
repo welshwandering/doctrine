@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.6.0] - 2025-12-17
+
+### Changed
+
+- **C# Guide Updates**
+  - C# 13 and .NET 9 features (params collections, partial properties, ref struct interfaces)
+  - Enhanced pattern matching and collection expressions
+  - Updated analyzer and formatting configurations
+- **dotnet Guide Updates**
+  - .NET 9 SDK tooling and configuration
+  - Native AOT compilation guidance
+  - Updated CI/CD patterns
+
 ## [2.5.0] - 2025-12-17
 
 ### Added

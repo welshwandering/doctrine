@@ -21,6 +21,192 @@ Extends [Google C# Style Guide](google/csharp.md) and
 | Fuzz | SharpFuzz[^5] | `sharpfuzz` |
 | Test perf | dotnet test | `dotnet test -- RunConfiguration.MaxCpuCount=0` |
 
+## C# 14 Features
+
+Projects targeting .NET 10 **SHOULD** adopt C# 14 features where they improve clarity and reduce boilerplate.
+
+### Extension Members
+
+C# 14 introduces extension blocks that allow defining properties, static members, and operators on existing types:
+
+**Do:**
+```csharp
+// Extension properties and methods in a single block
+extension(IEnumerable<T> source) where T : struct
+{
+    public bool IsEmpty => !source.Any();
+    public int SafeCount => source?.Count() ?? 0;
+
+    public static IEnumerable<T> Empty => Enumerable.Empty<T>();
+}
+
+// Usage
+var numbers = new[] { 1, 2, 3 };
+if (!numbers.IsEmpty)
+{
+    Console.WriteLine($"Count: {numbers.SafeCount}");
+}
+```
+
+**Don't:**
+```csharp
+// Don't use extension blocks for single simple methods
+// - use traditional extension methods instead
+extension(string s)
+{
+    public bool IsNullOrEmpty => string.IsNullOrEmpty(s);
+}
+
+// Better as traditional extension method
+public static bool IsNullOrEmpty(this string s) => string.IsNullOrEmpty(s);
+```
+
+### Field Keyword
+
+The `field` keyword provides direct access to auto-property backing fields:
+
+**Do:**
+```csharp
+public class User
+{
+    // Validate on set while keeping auto-property syntax
+    public string Email
+    {
+        get;
+        set => field = value?.ToLowerInvariant()
+            ?? throw new ArgumentNullException(nameof(value));
+    }
+
+    // Lazy initialization with backing field
+    public DateTime CreatedAt
+    {
+        get => field ??= DateTime.UtcNow;
+    }
+
+    // Notify on change
+    public string Name
+    {
+        get;
+        set
+        {
+            if (field != value)
+            {
+                field = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+}
+```
+
+**Don't:**
+```csharp
+// Don't use field keyword for simple validation that can use init
+public string Id
+{
+    get;
+    set => field = value ?? throw new ArgumentNullException(nameof(value));
+}
+
+// Better: use init accessor
+public required string Id { get; init; }
+```
+
+### Null-Conditional Assignment
+
+The `?.=` operator assigns only if the left side is non-null:
+
+**Do:**
+```csharp
+public class OrderProcessor
+{
+    public void UpdateOrder(Order? order, string status)
+    {
+        // Only assigns if order is not null
+        order?.Status = status;
+        order?.UpdatedAt = DateTime.UtcNow;
+
+        // Equivalent to:
+        // if (order is not null) { order.Status = status; }
+    }
+
+    public void ConfigureOptions(Options? options)
+    {
+        options?.Timeout = TimeSpan.FromSeconds(30);
+        options?.RetryCount = 3;
+    }
+}
+```
+
+### Partial Constructors and Events
+
+Partial classes can now split constructor and event definitions:
+
+**Do:**
+```csharp
+// Generated code (e.g., source generator)
+public partial class ViewModel
+{
+    public partial event PropertyChangedEventHandler? PropertyChanged;
+
+    public partial ViewModel(ILogger logger);
+}
+
+// Hand-written implementation
+public partial class ViewModel
+{
+    private readonly ILogger _logger;
+
+    public partial ViewModel(ILogger logger)
+    {
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    }
+
+    public partial event PropertyChangedEventHandler? PropertyChanged
+    {
+        add => _propertyChanged += value;
+        remove => _propertyChanged -= value;
+    }
+    private PropertyChangedEventHandler? _propertyChanged;
+}
+```
+
+### nameof with Unbound Generics
+
+`nameof` now works with unbound generic types:
+
+**Do:**
+```csharp
+// Get type name without specifying type argument
+public void LogGenericUsage<T>()
+{
+    _logger.LogDebug("Using {TypeName}", nameof(List<>));      // "List"
+    _logger.LogDebug("Using {TypeName}", nameof(Dictionary<,>)); // "Dictionary"
+}
+
+// Useful for attributes and reflection
+[TypeConverter(typeof(GenericConverter<>))]
+public class MyType { }
+```
+
+### Simple Lambda Parameters with Modifiers
+
+Lambda parameters can now have modifiers without explicit types:
+
+**Do:**
+```csharp
+// ref, out, in modifiers on lambda parameters
+Span<int> numbers = stackalloc int[] { 1, 2, 3 };
+numbers.Sort((ref x, ref y) => x.CompareTo(y));
+
+// scoped modifier
+ReadOnlySpan<char> Process(ReadOnlySpan<char> input) =>
+    Transform(input, (scoped text) => text.Trim());
+
+// params modifier
+var sum = Aggregate((params values) => values.Sum());
+```
+
 ## Linting: Roslynator + SonarAnalyzer
 
 C# projects **MUST** use Roslynator[^1] and SonarAnalyzer[^3] for static analysis.
@@ -239,7 +425,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '10.0.x'
 
       - run: dotnet restore
       - run: dotnet build --no-restore /p:TreatWarningsAsErrors=true
@@ -251,7 +437,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '10.0.x'
 
       - run: dotnet test --collect:"XPlat Code Coverage"
       - uses: codecov/codecov-action@v4
@@ -573,11 +759,11 @@ Libraries **SHOULD** test against multiple .NET versions using multi-targeting.
 ```xml
 <!-- MyLibrary.csproj -->
 <PropertyGroup>
-  <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+  <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
 </PropertyGroup>
 
-<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-  <PackageReference Include="System.Text.Json" Version="6.0.0" />
+<ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+  <PackageReference Include="System.Text.Json" Version="8.0.0" />
 </ItemGroup>
 ```
 
@@ -588,7 +774,7 @@ jobs:
   test:
     strategy:
       matrix:
-        dotnet: ['6.0.x', '7.0.x', '8.0.x']
+        dotnet: ['8.0.x', '9.0.x', '10.0.x']
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
