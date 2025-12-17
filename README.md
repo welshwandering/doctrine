@@ -38,6 +38,7 @@ See [versioning guide](guides/process/versioning.md) for details.
 
 | Framework | Guide | Language |
 |-----------|-------|----------|
+| Axum | [guides/frameworks/axum.md](guides/frameworks/axum.md) | Rust |
 | Django | [guides/frameworks/django.md](guides/frameworks/django.md) | Python |
 | FastAPI | [guides/frameworks/fastapi.md](guides/frameworks/fastapi.md) | Python |
 | Flask | [guides/frameworks/flask.md](guides/frameworks/flask.md) | Python |
@@ -45,7 +46,10 @@ See [versioning guide](guides/process/versioning.md) for details.
 | Hanami | [guides/frameworks/hanami.md](guides/frameworks/hanami.md) | Ruby |
 | Next.js | [guides/frameworks/nextjs.md](guides/frameworks/nextjs.md) | TypeScript |
 | Rails | [guides/frameworks/rails.md](guides/frameworks/rails.md) | Ruby |
+| React | [guides/frameworks/react.md](guides/frameworks/react.md) | TypeScript |
 | Sinatra | [guides/frameworks/sinatra.md](guides/frameworks/sinatra.md) | Ruby |
+| Strawberry | [guides/frameworks/strawberry.md](guides/frameworks/strawberry.md) | Python (GraphQL) |
+| Tailwind CSS | [guides/frameworks/tailwind.md](guides/frameworks/tailwind.md) | CSS |
 
 ## AI-Assisted Development
 
@@ -82,8 +86,9 @@ See [versioning guide](guides/process/versioning.md) for details.
 
 ## Infrastructure Guides
 
-| Tool | Guide |
-|------|-------|
+| Topic | Guide |
+|-------|-------|
+| Overview | [guides/infrastructure/README.md](guides/infrastructure/README.md) |
 | Ansible | [guides/infrastructure/ansible.md](guides/infrastructure/ansible.md) |
 | Docker | [guides/infrastructure/docker.md](guides/infrastructure/docker.md) |
 
@@ -91,7 +96,9 @@ See [versioning guide](guides/process/versioning.md) for details.
 
 | Topic | Guide |
 |-------|-------|
+| Overview | [guides/docs/README.md](guides/docs/README.md) |
 | Markdown | [guides/docs/markdown.md](guides/docs/markdown.md) |
+| Specifications | [guides/docs/specifications.md](guides/docs/specifications.md) |
 
 ---
 
@@ -156,11 +163,12 @@ Ready-to-copy configuration files:
 
 | Config | Path | Purpose |
 |--------|------|---------|
-| EditorConfig | [configs/editorconfig/.editorconfig](configs/editorconfig/.editorconfig) | Editor settings |
-| Prettier | [configs/prettier/.prettierrc](configs/prettier/.prettierrc) | Code formatting |
-| Pre-commit | [configs/pre-commit/.pre-commit-config.yaml](configs/pre-commit/.pre-commit-config.yaml) | Git hooks |
+| Ansible | [configs/ansible/](configs/ansible/) | Ansible configuration templates |
 | CLAUDE.md | [configs/claude/CLAUDE.md.template](configs/claude/CLAUDE.md.template) | AI assistant context |
 | Cursor | [configs/cursor/.cursorrules.template](configs/cursor/.cursorrules.template) | Cursor AI rules |
+| EditorConfig | [configs/editorconfig/.editorconfig](configs/editorconfig/.editorconfig) | Editor settings |
+| Pre-commit | [configs/pre-commit/.pre-commit-config.yaml](configs/pre-commit/.pre-commit-config.yaml) | Git hooks |
+| Prettier | [configs/prettier/.prettierrc](configs/prettier/.prettierrc) | Code formatting |
 
 ---
 
