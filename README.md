@@ -2,7 +2,7 @@
 
 # Doctrine Style Guide
 
-**Version: 2.0.1** | [Changelog](CHANGELOG.md) | [CLAUDE.md](CLAUDE.md)
+**Version: 2.1.0** | [Changelog](CHANGELOG.md) | [CLAUDE.md](CLAUDE.md)
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
@@ -38,8 +38,14 @@ See [versioning guide](guides/process/versioning.md) for details.
 
 | Framework | Guide | Language |
 |-----------|-------|----------|
-| Rails | [guides/frameworks/rails.md](guides/frameworks/rails.md) | Ruby |
 | Django | [guides/frameworks/django.md](guides/frameworks/django.md) | Python |
+| FastAPI | [guides/frameworks/fastapi.md](guides/frameworks/fastapi.md) | Python |
+| Flask | [guides/frameworks/flask.md](guides/frameworks/flask.md) | Python |
+| Gin | [guides/frameworks/gin.md](guides/frameworks/gin.md) | Go |
+| Hanami | [guides/frameworks/hanami.md](guides/frameworks/hanami.md) | Ruby |
+| Next.js | [guides/frameworks/nextjs.md](guides/frameworks/nextjs.md) | TypeScript |
+| Rails | [guides/frameworks/rails.md](guides/frameworks/rails.md) | Ruby |
+| Sinatra | [guides/frameworks/sinatra.md](guides/frameworks/sinatra.md) | Ruby |
 
 ## AI-Assisted Development
 
@@ -63,6 +69,23 @@ See [versioning guide](guides/process/versioning.md) for details.
 | Versioning | [guides/process/versioning.md](guides/process/versioning.md) |
 | CI/CD | [guides/process/ci.md](guides/process/ci.md) |
 | GitHub Templates | [guides/process/github-templates.md](guides/process/github-templates.md) |
+
+## Design Guides
+
+| Topic | Guide | Description |
+|-------|-------|-------------|
+| Overview | [guides/design/README.md](guides/design/README.md) | Design principles and process |
+| Design Systems | [guides/design/design-systems.md](guides/design/design-systems.md) | Tokens, typography, color, spacing |
+| Components | [guides/design/components.md](guides/design/components.md) | Reusable component patterns |
+| Accessibility | [guides/design/accessibility.md](guides/design/accessibility.md) | WCAG compliance and inclusive design |
+| Motion | [guides/design/motion.md](guides/design/motion.md) | Animation and interaction feedback |
+
+## Infrastructure Guides
+
+| Tool | Guide |
+|------|-------|
+| Ansible | [guides/infrastructure/ansible.md](guides/infrastructure/ansible.md) |
+| Docker | [guides/infrastructure/docker.md](guides/infrastructure/docker.md) |
 
 ## Documentation
 

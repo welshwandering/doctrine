@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] - 2025-12-17
+
+### Added
+
+- **Design Guides** (NEW SECTION)
+  - `guides/design/README.md` - Design principles and process overview
+  - `guides/design/design-systems.md` - Design tokens, typography, color systems, spacing, theming
+  - `guides/design/components.md` - Reusable component patterns (buttons, inputs, cards, modals, tables)
+  - `guides/design/accessibility.md` - WCAG 2.1 AA compliance, ARIA patterns, testing strategies
+  - `guides/design/motion.md` - Animation principles, motion tokens, interaction feedback
+- Design Guides section in README with navigation table
+
 ## [2.0.1] - 2025-12-07
 
 ### Added
@@ -70,7 +82,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Vendored Google style guides (Python, Markdown, Shell, C#, HTML/CSS, Go,
   TypeScript)
 
-[Unreleased]: https://github.com/agh/doctrine/compare/v2.0.1...HEAD
+[Unreleased]: https://github.com/agh/doctrine/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/agh/doctrine/compare/v2.0.1...v2.1.0
 [2.0.1]: https://github.com/agh/doctrine/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/agh/doctrine/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/agh/doctrine/releases/tag/v1.0.0
