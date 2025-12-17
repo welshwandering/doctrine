@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.0] - 2025-12-17
+
+### Added
+
+- **Go Framework Guide**
+  - `guides/frameworks/gin.md` - Gin HTTP web framework
+- **Rust Framework Guide**
+  - `guides/frameworks/axum.md` - Axum async web framework
+
 ## [2.3.0] - 2025-12-17
 
 ### Added
