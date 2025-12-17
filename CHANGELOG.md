@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.7.0] - 2025-12-17
+
+### Added
+
+- **Infrastructure Guides** (NEW SECTION)
+  - `guides/infrastructure/README.md` - Infrastructure overview
+  - `guides/infrastructure/ansible.md` - Ansible automation and configuration management
+  - `guides/infrastructure/docker.md` - Docker containerization best practices
+- **Ansible Configuration Templates**
+  - `configs/ansible/` - ansible.cfg, .ansible-lint, .yamllint, .sops.yaml, requirements.yml
+
 ## [2.6.0] - 2025-12-17
 
 ### Changed

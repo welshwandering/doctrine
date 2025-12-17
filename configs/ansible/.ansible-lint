@@ -1,0 +1,59 @@
+---
+# ansible-lint configuration
+# Copy to project root as .ansible-lint
+# See: https://ansible-lint.readthedocs.io/
+
+# Require minimum ansible-core version
+min_ansible_version: "2.18"
+
+# Enable all rules by default, opt-out problematic ones
+skip_list:
+  - yaml[line-length]  # Allow longer lines for readability
+  - role-name[path]    # Allow flexible role naming
+
+# Enable opt-in rules
+enable_list:
+  - args                 # Check task arguments
+  - empty-string-compare # Avoid comparing to empty strings
+  - no-log-password     # Ensure no_log for passwords
+  - no-same-owner       # Avoid redundant owner/group
+  - name[prefix]        # Require task name prefixes
+
+# Use production profile (strictest)
+profile: production
+
+# Exclude paths
+exclude_paths:
+  - .github/
+  - .ansible_cache/
+  - molecule/
+  - vault/
+  - venv/
+  - .venv/
+
+# Task name prefix rules
+task_name_prefix:
+  add_at_start: true
+
+# Offline mode (don't check Galaxy)
+offline: false
+
+# Write list of rules and exit
+# listrules: false
+
+# Write list of tags and exit
+# listtags: false
+
+# Mock modules or roles
+mock_modules: []
+mock_roles: []
+
+# Enable or disable specific rules
+warn_list:
+  - experimental  # Warn on experimental features
+
+# Rules configuration
+rules:
+  name:
+    # Require task names to start with uppercase
+    prefix: ""

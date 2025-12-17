@@ -1,0 +1,48 @@
+---
+# yamllint configuration for Ansible projects
+# Copy to project root as .yamllint
+# See: https://yamllint.readthedocs.io/
+
+extends: default
+
+rules:
+  line-length:
+    max: 120
+    level: warning
+
+  indentation:
+    spaces: 2
+    indent-sequences: true
+
+  comments:
+    min-spaces-from-content: 1
+
+  comments-indentation: {}
+
+  braces:
+    max-spaces-inside: 1
+
+  brackets:
+    max-spaces-inside: 1
+
+  truthy:
+    allowed-values: ['true', 'false', 'yes', 'no']
+    check-keys: false
+
+  # Ansible-specific: Allow octal values for file modes
+  octal-values:
+    forbid-implicit-octal: true
+    forbid-explicit-octal: false
+
+  # Allow empty values (null)
+  empty-values:
+    forbid-in-block-mappings: false
+    forbid-in-flow-mappings: true
+
+ignore: |
+  .github/
+  .ansible_cache/
+  vault/
+  venv/
+  .venv/
+  molecule/
