@@ -10,13 +10,14 @@ document are to be interpreted as described in [RFC 2119](https://datatracker.ie
 
 1. [What is AGENTS.md](#what-is-agentsmd)
 2. [Tool Compatibility via Symlinks](#tool-compatibility-via-symlinks)
-3. [File Placement Strategies](#file-placement-strategies)
-4. [Essential Sections](#essential-sections)
-5. [Templates by Project Type](#templates-by-project-type)
-6. [Integration with Other Tools](#integration-with-other-tools)
-7. [Maintenance Best Practices](#maintenance-best-practices)
-8. [Anti-Patterns](#anti-patterns)
-9. [Complete Example Templates](#complete-example-templates)
+3. [DRY Pattern: Reference Doctrine](#dry-pattern-reference-doctrine)
+4. [File Placement Strategies](#file-placement-strategies)
+5. [Essential Sections](#essential-sections)
+6. [Templates by Project Type](#templates-by-project-type)
+7. [Integration with Other Tools](#integration-with-other-tools)
+8. [Maintenance Best Practices](#maintenance-best-practices)
+9. [Anti-Patterns](#anti-patterns)
+10. [Complete Example Templates](#complete-example-templates)
 
 ---
 
@@ -95,6 +96,59 @@ my-project/
 | Aider | `CLAUDE.md`, `.aider` |
 | Cursor | `.cursorrules` |
 | Gemini | `GEMINI.md`, `AGENTS.md` |
+
+---
+
+## DRY Pattern: Reference Doctrine
+
+Project AGENTS.md files **MUST** reference [Doctrine](https://github.com/welshwandering/doctrine) as the source of truth for coding standards. This creates a "DRY for AI" pattern where:
+
+- **Doctrine** contains canonical style guides, tooling choices, and conventions
+- **Project AGENTS.md** contains only project-specific context
+
+### Why This Matters
+
+Without central standards, each project's AGENTS.md would duplicate:
+- Language style guides (naming, formatting, patterns)
+- Framework conventions (architecture, testing approaches)
+- Tooling configuration (linters, formatters, CI)
+
+This leads to drift, inconsistency, and maintenance burden.
+
+### Required Standards Section
+
+Every project AGENTS.md **MUST** begin with a Standards section:
+
+```markdown
+## Standards
+
+This project follows [Doctrine](https://github.com/welshwandering/doctrine):
+
+| Concern | Guide |
+|---------|-------|
+| Python | [guides/languages/python.md](https://github.com/welshwandering/doctrine/blob/main/guides/languages/python.md) |
+| Django | [guides/frameworks/django.md](https://github.com/welshwandering/doctrine/blob/main/guides/frameworks/django.md) |
+| Testing | [guides/process/testing.md](https://github.com/welshwandering/doctrine/blob/main/guides/process/testing.md) |
+
+**Do not duplicate Doctrine guidance here.** This file contains only project-specific context.
+```
+
+### What Belongs in Doctrine vs Project AGENTS.md
+
+| In Doctrine | In Project AGENTS.md |
+|-------------|---------------------|
+| Python naming conventions | This project's directory structure |
+| Django architecture patterns | Commands to run this project |
+| Testing strategies | Environment variables needed |
+| Tool versions and configs | Project-specific pitfalls |
+| RFC 2119 requirements | Architecture decisions unique to this project |
+
+### Benefits
+
+1. **Single source of truth** — Update once, benefit everywhere
+2. **Reduced maintenance** — Project files stay small and focused
+3. **Consistency** — All projects follow identical standards
+4. **AI efficiency** — AI can learn Doctrine once, apply everywhere
 
 ---
 

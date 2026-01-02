@@ -1,158 +1,95 @@
 # AGENTS.md - {Project Name}
 
+## Standards
+
+This project follows [Doctrine](https://github.com/welshwandering/doctrine) for all coding standards:
+
+| Concern | Guide |
+|---------|-------|
+| {Language} | [guides/languages/{language}.md](https://github.com/welshwandering/doctrine/blob/main/guides/languages/{language}.md) |
+| {Framework} | [guides/frameworks/{framework}.md](https://github.com/welshwandering/doctrine/blob/main/guides/frameworks/{framework}.md) |
+| Testing | [guides/process/testing.md](https://github.com/welshwandering/doctrine/blob/main/guides/process/testing.md) |
+| CI/CD | [guides/process/ci.md](https://github.com/welshwandering/doctrine/blob/main/guides/process/ci.md) |
+
+**Do not duplicate Doctrine guidance here.** This file contains only project-specific context.
+
+---
+
 ## Overview
 
 {Brief description of what this project does, its purpose, and key technologies.}
 
-## Tech Stack
+**Stack:** {Language} {version}, {Framework} {version}, {Database} {version}
 
-- **Language**: {e.g., Python 3.12, TypeScript 5.x, Go 1.23}
-- **Framework**: {e.g., Django 5.x, Next.js 15, Gin}
-- **Database**: {e.g., PostgreSQL 16, Redis 7}
-- **Infrastructure**: {e.g., Docker, Kubernetes, AWS}
-
-## Repository Structure
-
-```
-{project}/
-├── src/              # Source code
-├── tests/            # Test files
-├── docs/             # Documentation
-├── scripts/          # Build/deploy scripts
-└── ...
-```
-
-## Quick Start
+## Commands
 
 ```bash
-# Install dependencies
-{package_manager} install
+# Development
+{install_command}
+{dev_command}
 
-# Run development server
-{command}
-
-# Run tests
+# Testing
 {test_command}
 
-# Run linters
+# Linting & Formatting
 {lint_command}
 ```
 
-## Common Commands
+## Structure
 
-| Task | Command |
-|------|---------|
-| Install deps | `{install_command}` |
-| Run dev | `{dev_command}` |
-| Run tests | `{test_command}` |
-| Lint | `{lint_command}` |
-| Format | `{format_command}` |
-| Type check | `{typecheck_command}` |
-| Build | `{build_command}` |
+```
+{project}/
+├── src/              # {description}
+├── tests/            # {description}
+└── ...
+```
 
-## Code Style
-
-This project follows the [{Language} Style Guide](https://github.com/welshwandering/doctrine/blob/main/guides/languages/{language}.md).
-
-Key conventions:
-- {Convention 1}
-- {Convention 2}
-- {Convention 3}
+**Key Files:**
+- `{file}` — {purpose}
+- `{file}` — {purpose}
 
 ## Architecture
 
-### Key Patterns
+{Brief architecture description or diagram reference}
 
-- **{Pattern 1}**: {Brief explanation}
-- **{Pattern 2}**: {Brief explanation}
+**Patterns:**
+- **{Pattern}**: {Why we use it in this project}
 
-### Data Flow
+## Project-Specific Conventions
 
-{Describe how data flows through the system, or include a diagram reference.}
+{Only document conventions that DIFFER from or EXTEND Doctrine standards}
 
-### External Dependencies
+- {Convention unique to this project}
+- {Convention unique to this project}
+
+## Common Pitfalls
+
+{Document gotchas specific to THIS codebase, not general language/framework issues}
+
+### {Pitfall}
+
+**Problem**: {What happens}
+**Solution**: {How to fix}
+
+## Environment
+
+```bash
+# Required
+{VAR}={example}
+
+# Optional
+{VAR}={example}  # {description}
+```
+
+## External Dependencies
 
 | Service | Purpose | Docs |
 |---------|---------|------|
 | {Service} | {Purpose} | {Link} |
 
-## Testing
-
-### Running Tests
-
-```bash
-# All tests
-{test_command}
-
-# Specific test file
-{test_command} path/to/test_file.py
-
-# With coverage
-{coverage_command}
-```
-
-### Test Categories
-
-- **Unit tests**: `tests/unit/` - Fast, isolated tests
-- **Integration tests**: `tests/integration/` - Tests with real dependencies
-- **E2E tests**: `tests/e2e/` - Full system tests
-
-## Common Pitfalls
-
-### {Pitfall 1}
-
-**Problem**: {Description of the issue}
-
-**Solution**: {How to avoid or fix it}
-
-### {Pitfall 2}
-
-**Problem**: {Description of the issue}
-
-**Solution**: {How to avoid or fix it}
-
-## Environment Variables
-
-| Variable | Required | Description | Default |
-|----------|----------|-------------|---------|
-| `{VAR_1}` | Yes | {Description} | - |
-| `{VAR_2}` | No | {Description} | `{default}` |
-
-## Deployment
-
-### Staging
-
-```bash
-{staging_deploy_command}
-```
-
-### Production
-
-```bash
-{production_deploy_command}
-```
-
-## Troubleshooting
-
-### {Common Issue 1}
-
-**Symptom**: {What you see}
-
-**Cause**: {Why it happens}
-
-**Fix**: {How to resolve}
-
-## Additional Resources
-
-- [Project Documentation]({link})
-- [API Reference]({link})
-- [Contributing Guide]({link})
-
 ---
 
 ## Tool Compatibility
-
-Create symlinks for AI tool discovery:
 
 ```bash
 ln -s AGENTS.md CLAUDE.md   # Claude Code, Aider
