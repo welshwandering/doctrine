@@ -41,12 +41,12 @@ jobs:
 
     steps:
       - name: Checkout project
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Checkout Doctrine
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: ${{ env.DOCTRINE_REPO }}
           ref: ${{ env.DOCTRINE_BRANCH }}
@@ -107,7 +107,7 @@ jobs:
 
       - name: Create Pull Request
         if: steps.sync.outputs.changes == 'true' && inputs.dry_run != 'true'
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "chore: sync Claude configs from Doctrine ${{ steps.version.outputs.version }}"

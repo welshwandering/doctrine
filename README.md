@@ -62,8 +62,6 @@ See [versioning guide](guides/process/versioning.md) for details.
 | **Code Agents** | [guides/ai/code-agents.md](guides/ai/code-agents.md) | 8 agents: review, perf, a11y, API |
 | **Security Agents** | [guides/ai/security-agents.md](guides/ai/security-agents.md) | 16 agents: threat modeling, compliance |
 | **System Agents** | [guides/ai/system-agents.md](guides/ai/system-agents.md) | 14 agents: Docker, Ansible, networking |
-| OpenAI | [guides/ai/openai.md](guides/ai/openai.md) | GPT-4 and OpenAI API patterns |
-| Gemini | [guides/ai/gemini.md](guides/ai/gemini.md) | Google Gemini best practices |
 | Local LLMs | [guides/ai/local-llms.md](guides/ai/local-llms.md) | Ollama, vLLM, Docker Model Runner |
 | AGENTS.md | [guides/ai/agents-md.md](guides/ai/agents-md.md) | Project instruction files |
 | Security | [guides/ai/security.md](guides/ai/security.md) | LLM security considerations |
@@ -99,6 +97,15 @@ See [versioning guide](guides/process/versioning.md) for details.
 | Topic | Guide |
 |-------|-------|
 | Overview | [guides/infrastructure/README.md](guides/infrastructure/README.md) |
+| **Operating Systems** | |
+| Linux (Debian) | [guides/infrastructure/os/linux.md](guides/infrastructure/os/linux.md) |
+| **Services** | |
+| SSH | [guides/infrastructure/services/ssh.md](guides/infrastructure/services/ssh.md) |
+| NTP | [guides/infrastructure/services/ntp.md](guides/infrastructure/services/ntp.md) |
+| DNS | [guides/infrastructure/services/dns.md](guides/infrastructure/services/dns.md) |
+| Firewall (nftables) | [guides/infrastructure/services/nftables.md](guides/infrastructure/services/nftables.md) |
+| Logging | [guides/infrastructure/services/logging.md](guides/infrastructure/services/logging.md) |
+| **Infrastructure as Code** | |
 | Ansible | [guides/infrastructure/ansible.md](guides/infrastructure/ansible.md) |
 | Docker | [guides/infrastructure/docker.md](guides/infrastructure/docker.md) |
 
@@ -173,10 +180,10 @@ Ready-to-copy configuration files:
 
 | Config | Path | Purpose |
 |--------|------|---------|
+| **Agents** | [agents/](agents/) | 53 agents across 6 families |
 | Ansible | [configs/ansible/](configs/ansible/) | Ansible configuration templates |
 | AGENTS.md | [configs/agents/AGENTS.md.template](configs/agents/AGENTS.md.template) | AI assistant context |
-| **Claude Code** | [configs/claude/](configs/claude/) | 53 agents across 6 families, hooks |
-| Cursor | [configs/cursor/.cursorrules.template](configs/cursor/.cursorrules.template) | Cursor AI rules |
+| **Claude Code** | [configs/claude/](configs/claude/) | Hooks, settings, MCP config |
 | EditorConfig | [configs/editorconfig/.editorconfig](configs/editorconfig/.editorconfig) | Editor settings |
 | Pre-commit | [configs/pre-commit/.pre-commit-config.yaml](configs/pre-commit/.pre-commit-config.yaml) | Git hooks |
 | Prettier | [configs/prettier/.prettierrc](configs/prettier/.prettierrc) | Code formatting |
