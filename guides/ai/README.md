@@ -2999,6 +2999,100 @@ Please:
 
 ---
 
+## Documentation Agent Suite
+
+Doctrine includes a comprehensive multi-agent documentation system - the most advanced open-source AI documentation suite available.
+
+### Agent Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                   Documentation Agent Suite                      │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐      │
+│  │ doc-architect│ →  │  doc-writer  │ →  │ doc-reviewer │      │
+│  │  (planning)  │    │ (generation) │    │ (validation) │      │
+│  └──────────────┘    └──────────────┘    └──────────────┘      │
+│         │                   │                   │               │
+│         ▼                   ▼                   ▼               │
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐      │
+│  │   doc-sync   │ ←  │doc-publisher │ ←  │  Feedback    │      │
+│  │  (freshness) │    │  (formats)   │    │    Loop      │      │
+│  └──────────────┘    └──────────────┘    └──────────────┘      │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Agents
+
+| Agent | Purpose | Invocation |
+|-------|---------|------------|
+| **doc-architect** | Analyze codebase, create documentation plan | `/doc-plan` |
+| **doc-writer** | Generate documentation with diagrams | `/doc` |
+| **doc-reviewer** | Review docs for accuracy and completeness | `/doc-review` |
+| **doc-sync** | Detect stale documentation | `/doc-sync` |
+| **doc-publisher** | Transform to llms.txt, MCP, Mermaid | `/doc-publish` |
+
+### Commands
+
+| Command | Description |
+|---------|-------------|
+| `/doc [target]` | Generate documentation for file, function, or class |
+| `/doc-plan [dir]` | Create prioritized documentation plan |
+| `/doc-review [file]` | Review documentation for accuracy |
+| `/doc-sync` | Check if docs are synchronized with code |
+| `/doc-sync --pr` | Check docs for files in current PR |
+| `/doc-publish --all` | Generate llms.txt, MCP, and diagrams |
+| `/doc-status` | Show documentation coverage metrics |
+
+### Output Formats
+
+The doc-publisher agent generates documentation in multiple formats:
+
+- **Markdown** - Standard GitHub-flavored for human developers
+- **llms.txt** - Token-efficient format for AI assistants
+- **MCP** - Model Context Protocol for AI tool integration
+- **Mermaid** - Architecture, sequence, state, and ER diagrams
+
+### CI Integration
+
+Documentation workflows integrate with GitHub Actions:
+
+```yaml
+# .github/workflows/doc-sync.yml
+# Automatically checks documentation freshness on every PR
+```
+
+### Configuration
+
+Agents are configured in `configs/claude/agents/`:
+
+```
+configs/claude/
+├── agents/
+│   ├── doc-architect.md   # Documentation planning
+│   ├── doc-writer.md      # Documentation generation
+│   ├── doc-reviewer.md    # Documentation review
+│   ├── doc-sync.md        # Staleness detection
+│   └── doc-publisher.md   # Multi-format output
+├── commands/
+│   ├── doc.md             # /doc command
+│   ├── doc-plan.md        # /doc-plan command
+│   ├── doc-review.md      # /doc-review command
+│   ├── doc-sync.md        # /doc-sync command
+│   ├── doc-publish.md     # /doc-publish command
+│   └── doc-status.md      # /doc-status command
+└── settings.json          # Claude Code configuration
+```
+
+## See Also
+
+- **[AI Workflows](./ai-workflows.md)** - Hero Flow, TDD/3-Way Compare, Visual Iteration, Long-Running Tasks
+- **[Claude Code Configuration](./claude-code.md)** - Hooks, Permissions, Subagents, Commands, MCP
+- **[AGENTS.md Guide](./agents-md.md)** - Project instruction files for AI assistants
+- **[Release Manager Agent](./release-manager-agent.md)** - AI-powered release management, quality gates, changelog generation
+
 ## References
 
 [^1]: [Claude/Anthropic Best Practices Guide](./claude.md)

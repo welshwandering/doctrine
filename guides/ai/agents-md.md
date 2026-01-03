@@ -589,6 +589,306 @@ SECRET_KEY_BASE=your-secret-key
 ```
 ```
 
+### Django
+
+```markdown
+# AGENTS.md - [Project Name]
+
+## Overview
+
+[1-2 sentence description]
+
+**Stack:** Python 3.12, Django 5.1, PostgreSQL 16, Celery 5.4, Redis 7
+
+## Commands
+
+```bash
+# Development
+uv sync
+uv run python manage.py migrate
+uv run python manage.py runserver
+
+# Testing
+uv run pytest --cov=apps --cov-fail-under=80
+
+# Linting
+uv run ruff check . --fix
+uv run mypy apps/
+```
+
+## Structure
+
+```
+config/
+├── settings/         # Split settings (base, local, production)
+│   ├── base.py
+│   └── local.py
+└── urls.py
+
+apps/
+├── users/            # User management app
+│   ├── models.py
+│   ├── views.py
+│   ├── services.py   # Business logic
+│   └── selectors.py  # Query logic
+└── core/             # Shared utilities
+```
+
+## Code Style
+
+Follows [Doctrine Django Guide](../../guides/frameworks/django.md)
+
+**Fat Models, Thin Views:** Business logic in services, not views.
+
+**Selectors Pattern:** Query logic in selectors, not views or models.
+
+## Common Pitfalls
+
+**N+1 Queries:** Use `select_related()` and `prefetch_related()`. Check with django-debug-toolbar.
+
+**Signals:** Use sparingly. Prefer explicit service calls for business logic.
+
+**Async Views:** Use `async def` only with async ORM operations. Don't mix sync/async.
+
+## Environment
+
+```bash
+DATABASE_URL=postgresql://user:pass@localhost:5432/dbname
+SECRET_KEY=your-secret-key-min-50-chars
+CELERY_BROKER_URL=redis://localhost:6379/0
+```
+```
+
+### Flask
+
+```markdown
+# AGENTS.md - [Project Name]
+
+## Overview
+
+[1-2 sentence description]
+
+**Stack:** Python 3.12, Flask 3.1, SQLAlchemy 2.0, PostgreSQL 16, Celery 5.4
+
+## Commands
+
+```bash
+# Development
+uv sync
+uv run flask db upgrade
+uv run flask run --debug
+
+# Testing
+uv run pytest --cov=src --cov-fail-under=80
+
+# Linting
+uv run ruff check . --fix
+```
+
+## Structure
+
+```
+src/
+├── __init__.py       # Application factory
+├── models/           # SQLAlchemy models
+├── routes/           # Blueprint route handlers
+├── services/         # Business logic
+├── schemas/          # Marshmallow/Pydantic schemas
+└── extensions.py     # Flask extensions (db, migrate, etc.)
+
+tests/
+├── conftest.py       # Fixtures
+└── test_*.py
+```
+
+## Code Style
+
+Follows [Doctrine Flask Guide](../../guides/frameworks/flask.md)
+
+**Application Factory:** Always use `create_app()` pattern.
+
+**Blueprints:** Organize routes by domain (auth, users, api).
+
+## Common Pitfalls
+
+**Circular Imports:** Use application factory and import extensions from `extensions.py`.
+
+**Request Context:** Access `current_app` and `g` only within request context.
+
+**SQLAlchemy Sessions:** Use `db.session` from Flask-SQLAlchemy, not raw sessions.
+
+## Environment
+
+```bash
+DATABASE_URL=postgresql://user:pass@localhost:5432/dbname
+SECRET_KEY=your-secret-key
+FLASK_ENV=development
+```
+```
+
+### Rust (Axum)
+
+```markdown
+# AGENTS.md - [Project Name]
+
+## Overview
+
+[1-2 sentence description]
+
+**Stack:** Rust 1.83, Axum 0.8, SQLx 0.8, PostgreSQL 16, Tokio 1.43
+
+## Commands
+
+```bash
+# Development
+cargo build
+cargo run
+
+# Testing
+cargo test
+cargo test -- --nocapture  # See output
+
+# Linting
+cargo clippy -- -D warnings
+cargo fmt --check
+
+# Database
+sqlx database create
+sqlx migrate run
+```
+
+## Structure
+
+```
+src/
+├── main.rs           # Entry point, server setup
+├── app.rs            # Router and state setup
+├── config.rs         # Configuration loading
+├── handlers/         # Request handlers
+│   ├── mod.rs
+│   └── users.rs
+├── models/           # Domain models
+├── repositories/     # Database access (SQLx)
+├── services/         # Business logic
+└── error.rs          # Error types and handling
+
+migrations/           # SQLx migrations
+tests/                # Integration tests
+```
+
+## Code Style
+
+Follows [Doctrine Axum Guide](../../guides/frameworks/axum.md)
+
+**Extractors:** Use typed extractors for request data. Validate with `validator` crate.
+
+**Error Handling:** Use `thiserror` for domain errors, implement `IntoResponse`.
+
+**State:** Use `AppState` with `Arc` for shared state.
+
+## Common Pitfalls
+
+**Async Runtime:** Always use `#[tokio::main]`. Don't block the runtime with sync I/O.
+
+**SQLx Compile-Time Checks:** Run `cargo sqlx prepare` before CI builds without database.
+
+**Ownership in Handlers:** Clone `Arc<AppState>` fields, don't fight the borrow checker.
+
+**Tower Middleware Order:** Middleware wraps in reverse order. Add logging last (runs first).
+
+## Environment
+
+```bash
+DATABASE_URL=postgresql://user:pass@localhost:5432/dbname
+JWT_SECRET=your-secret-key-min-32-chars
+RUST_LOG=info,tower_http=debug
+```
+```
+
+### Next.js
+
+```markdown
+# AGENTS.md - [Project Name]
+
+## Overview
+
+[1-2 sentence description]
+
+**Stack:** Next.js 15, React 19, TypeScript 5.7, PostgreSQL 16, Prisma 6
+
+## Commands
+
+```bash
+# Development
+pnpm install
+pnpm dev
+
+# Testing
+pnpm test
+pnpm test:e2e
+
+# Linting
+pnpm lint
+pnpm typecheck
+
+# Database
+pnpm prisma migrate dev
+pnpm prisma generate
+```
+
+## Structure
+
+```
+app/
+├── (auth)/           # Auth route group (shared layout)
+│   ├── login/
+│   └── register/
+├── (dashboard)/      # Dashboard route group
+│   └── settings/
+├── api/              # API routes
+│   └── users/
+├── layout.tsx        # Root layout
+└── page.tsx          # Home page
+
+components/
+├── ui/               # Shadcn/UI components
+└── features/         # Feature-specific components
+
+lib/
+├── db.ts             # Prisma client
+├── auth.ts           # Auth.js config
+└── actions/          # Server Actions
+```
+
+## Code Style
+
+Follows [Doctrine Next.js Guide](../../guides/frameworks/nextjs.md)
+
+**Server Components:** Default. Only add `'use client'` when needed.
+
+**Server Actions:** Use for mutations. Validate with Zod.
+
+**Data Fetching:** Fetch in Server Components, not useEffect.
+
+## Common Pitfalls
+
+**Hydration Mismatch:** Don't use `Date.now()` or `Math.random()` in Server Components.
+
+**Client/Server Boundary:** Can't pass functions or classes from Server to Client Components.
+
+**Caching:** `fetch()` caches by default. Use `{ cache: 'no-store' }` for dynamic data.
+
+**Server Actions Security:** Always validate input. Actions are public endpoints.
+
+## Environment
+
+```bash
+DATABASE_URL=postgresql://user:pass@localhost:5432/dbname
+NEXTAUTH_SECRET=your-secret-key
+NEXTAUTH_URL=http://localhost:3000
+```
+```
+
 ---
 
 ## Integration with Other Tools
@@ -892,7 +1192,6 @@ npm run dev:all
 
 ## See Also
 
-- [Prompt Engineering Guide](./prompt-engineering.md) - Comprehensive prompt patterns
 - [Testing Guide](../process/testing.md) - Testing strategies
 - [CI/CD Guide](../process/ci.md) - Continuous integration
 - [Markdown Guide](../docs/markdown.md) - Markdown style guide
