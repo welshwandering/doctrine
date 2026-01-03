@@ -12,10 +12,11 @@ Extends [Google Shell Style Guide](google/shell.md)[^1].
 |------|------|---------|
 | Lint | shellcheck[^2] | `shellcheck *.sh` |
 | Format | shfmt[^3] | `shfmt -w *.sh` |
+| Test | bats[^4] | `bats tests/` |
 | Type check | - | - |
 | Semantic | - | - |
 | Dead code | - | - |
-| Coverage | bashcov[^4] | `bashcov ./test.sh` |
+| Coverage | bashcov[^5] | `bashcov bats tests/` |
 | Complexity | - | - |
 | Fuzz | - | - |
 | Test perf | - | - |
@@ -319,6 +320,129 @@ check_deps jq curl git
 
 **Note**: Use `command -v` instead of `which`—it's a shell builtin and more portable.
 
+## Testing: bats
+
+You **SHOULD** use bats[^4] (Bash Automated Testing System) for testing shell scripts.
+
+### Why bats
+
+bats provides a simple, TAP-compliant testing framework purpose-built for shell scripts. It offers clean syntax, setup/teardown hooks, and integrates with CI systems out of the box.
+
+```bash
+# Install
+# macOS
+brew install bats-core
+
+# npm
+npm install --global bats
+
+# Verify
+bats --version
+```
+
+### Project Structure
+
+```
+project/
+├── bin/
+│   └── script.sh
+├── tests/
+│   ├── script.bats
+│   ├── test_helper.sh
+│   └── fixtures/
+└── README.md
+```
+
+### Basic Test File
+
+```bash
+#!/usr/bin/env bats
+
+setup() {
+  # Runs before each test
+  source "${BATS_TEST_DIRNAME}/../bin/script.sh"
+}
+
+teardown() {
+  # Runs after each test
+  rm -rf "${BATS_TEST_TMPDIR:-}"
+}
+
+@test "script prints usage with --help" {
+  run script.sh --help
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Usage:"* ]]
+}
+
+@test "script fails with missing argument" {
+  run script.sh
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"Missing"* ]]
+}
+```
+
+### Assertions
+
+```bash
+# Exit code
+[ "$status" -eq 0 ]      # Success
+[ "$status" -ne 0 ]      # Failure
+[ "$status" -eq 1 ]      # Specific code
+
+# Output matching
+[ "$output" = "exact match" ]
+[[ "$output" == *"substring"* ]]
+[[ "$output" =~ ^pattern$ ]]
+
+# Line-by-line output
+[ "${lines[0]}" = "first line" ]
+[ "${#lines[@]}" -eq 3 ]  # Line count
+
+# File assertions
+[ -f "$file" ]            # Exists
+[ -s "$file" ]            # Non-empty
+diff "$file" expected.txt # Content match
+```
+
+### Mocking Commands
+
+```bash
+@test "handles curl failure" {
+  # Mock curl to fail
+  curl() { return 1; }
+  export -f curl
+
+  run fetch_data
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"fetch failed"* ]]
+}
+```
+
+### Skipping Tests
+
+```bash
+@test "requires jq" {
+  command -v jq >/dev/null 2>&1 || skip "jq not installed"
+  run process_json
+  [ "$status" -eq 0 ]
+}
+```
+
+### CI Integration
+
+```yaml
+# .github/workflows/test.yml
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install bats
+        run: npm install --global bats
+      - name: Run tests
+        run: bats tests/
+```
+
 ### Pipelines
 
 ```bash
@@ -330,20 +454,22 @@ command1 \
 
 ## Coverage: bashcov
 
+You **MAY** use bashcov[^5] for code coverage of shell scripts.
+
 ```bash
 # Install
-gem install bashcov[^4]
+gem install bashcov
 
-# Run
-bashcov ./test.sh
+# Run with bats
+bashcov bats tests/
 
 # With simplecov output
-bashcov --root . ./test.sh
+bashcov --root . bats tests/
 ```
 
 ## Pre-commit Configuration
 
-You **SHOULD** configure pre-commit hooks[^5]:
+You **SHOULD** configure pre-commit hooks[^6]:
 
 ```yaml
 repos:
@@ -361,7 +487,7 @@ repos:
 
 ## CI Pipeline
 
-You **SHOULD** integrate shell linting into your CI pipeline[^6]:
+You **SHOULD** integrate shell linting into your CI pipeline[^7]:
 
 ```yaml
 jobs:
@@ -390,6 +516,7 @@ jobs:
 [^1]: [Google Shell Style Guide](https://google.github.io/styleguide/shellguide.html) - Google's comprehensive shell scripting style guide
 [^2]: [ShellCheck](https://www.shellcheck.net/) - A shell script static analysis tool
 [^3]: [shfmt](https://github.com/mvdan/sh) - A shell parser, formatter, and interpreter with bash support
-[^4]: [bashcov](https://github.com/infertux/bashcov) - Code coverage tool for Bash
-[^5]: [pre-commit](https://pre-commit.com/) - A framework for managing and maintaining multi-language pre-commit hooks
-[^6]: [GitHub Actions](https://docs.github.com/en/actions) - GitHub's CI/CD platform documentation
+[^4]: [bats-core](https://github.com/bats-core/bats-core) - Bash Automated Testing System
+[^5]: [bashcov](https://github.com/infertux/bashcov) - Code coverage tool for Bash
+[^6]: [pre-commit](https://pre-commit.com/) - A framework for managing and maintaining multi-language pre-commit hooks
+[^7]: [GitHub Actions](https://docs.github.com/en/actions) - GitHub's CI/CD platform documentation
