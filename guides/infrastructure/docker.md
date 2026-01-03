@@ -43,6 +43,62 @@ project/
     └── api_key
 ```
 
+### Per-Service Subdirectories
+
+Projects with multiple services **SHOULD** namespace configuration files under service subdirectories.
+
+**Why**: Multiple services often need similar file names (`config.yaml`, `settings.json`). Flat structures create conflicts. Per-service subdirectories provide clear namespacing, enable service-specific data directories, and keep compose files readable.
+
+```
+stacks/platform/
+├── compose.yml              # Service definitions
+├── images.yml               # Pinned digests per architecture (optional)
+├── traefik/
+│   ├── traefik.yml          # Static config
+│   ├── config/              # Dynamic config
+│   │   └── security.yml
+│   └── data/                # Persistent data (if using bind mounts)
+├── alloy/
+│   └── config.alloy
+└── prometheus/
+    ├── prometheus.yml
+    └── rules/
+        └── alerts.yml
+```
+
+**Service Directory Pattern**:
+| Subdirectory | Purpose | Mount Type |
+|--------------|---------|------------|
+| `{service}/config/` | Configuration files | `:ro` bind mount |
+| `{service}/data/` | Persistent state | Read-write bind mount |
+| `{service}/secrets/` | Service-specific secrets | `:ro` bind mount |
+
+**Volume Mounting**:
+```yaml
+services:
+  traefik:
+    volumes:
+      - ./traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./traefik/config:/etc/traefik/dynamic:ro
+      - traefik-certs:/letsencrypt  # Docker volume for certs
+```
+
+### Volume Strategy
+
+Projects **SHOULD** choose volume types based on access patterns.
+
+| Volume Type | Example | Use Case |
+|-------------|---------|----------|
+| Docker Volume | `traefik-certs:/letsencrypt` | Infrastructure state (certs, databases) |
+| Bind Mount | `./service/data:/app/data` | Data that snapshots with stack |
+| External Path | `${MEDIA_PATH}:/media:ro` | Large storage on separate pools |
+
+**Guidelines**:
+- Use Docker volumes for single-instance infrastructure services
+- Use bind mounts when data should be visible alongside compose files
+- Use environment variable paths for large external storage (photos, video)
+- With ZFS storage driver, Docker volumes are on ZFS automatically
+
 ### Main Compose File with Include
 
 ```yaml
@@ -201,6 +257,45 @@ docker inspect nginx:1.25.3 --format='{{.RepoDigests}}'
 
 # Or use crane (faster, no download)
 crane digest nginx:1.25.3
+```
+
+### Multi-Architecture Image Pinning
+
+Projects deploying to multiple architectures **SHOULD** maintain per-architecture digests.
+
+**Why**: Multi-arch images have different SHA256 digests per platform. Pinning a single digest fails on other architectures with "exec format error". Maintaining per-architecture digests ensures reproducible deployments across ARM64 and AMD64 hosts.
+
+**images.yml Pattern**:
+```yaml
+# stacks/platform/images.yml
+images:
+  traefik:
+    version: "3.6.5"
+    pinned_at: "2025-12-24T22:00:00Z"
+    digests:
+      amd64: "sha256:d944e3693bbf5a..."
+      arm64: "sha256:088e42947073..."
+```
+
+**Compose Integration**:
+```yaml
+# compose.yml - use environment variable for digest
+services:
+  traefik:
+    image: ${TRAEFIK_IMAGE:-traefik:v3.6}
+
+# .env (templated by deployment tooling)
+TRAEFIK_IMAGE=traefik@sha256:d944e3693bbf5a...
+```
+
+**Finding Per-Architecture Digests**:
+```bash
+# Get manifest for all platforms
+docker manifest inspect traefik:v3.6.5
+
+# Get specific platform digest
+docker manifest inspect traefik:v3.6.5 | \
+  jq -r '.manifests[] | select(.platform.architecture=="amd64") | .digest'
 ```
 
 ### Security Options
