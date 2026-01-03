@@ -1,0 +1,331 @@
+# Documentation Lint Workflow
+#
+# Validates documentation files for formatting, broken links, and structure.
+
+name: Documentation Lint
+
+on:
+  pull_request:
+    paths:
+      - '**.md'
+      - 'docs/**'
+  push:
+    branches: [main]
+    paths:
+      - '**.md'
+      - 'docs/**'
+
+jobs:
+  lint:
+    name: Lint Documentation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install linters
+        run: |
+          npm install -g markdownlint-cli2
+          npm install -g markdown-link-check
+
+      - name: Lint Markdown
+        run: |
+          markdownlint-cli2 "**/*.md" "#node_modules" "#reference/**"
+
+      - name: Check links in README
+        run: |
+          markdown-link-check README.md --quiet
+        continue-on-error: true
+
+      - name: Validate AGENTS.md structure
+        run: |
+          echo "Checking AGENTS.md structure..."
+
+          # Check required sections
+          required_sections=("Overview" "Commands" "Structure")
+
+          for section in "${required_sections[@]}"; do
+            if ! grep -q "## $section\|## .*$section" CLAUDE.md 2>/dev/null; then
+              echo "⚠️  Missing section: $section"
+            else
+              echo "✅ Found section: $section"
+            fi
+          done
+
+      - name: Check for secrets
+        run: |
+          echo "Checking for potential secrets..."
+
+          # Patterns that might indicate secrets
+          if grep -rn "password.*=.*['\"][^'\"]*['\"]" --include="*.md" .; then
+            echo "⚠️  Potential hardcoded password found"
+            exit 1
+          fi
+
+          if grep -rn "api_key.*=.*['\"][^'\"]*['\"]" --include="*.md" .; then
+            echo "⚠️  Potential hardcoded API key found"
+            exit 1
+          fi
+
+          echo "✅ No obvious secrets found"
+
+      - name: Verify symlinks
+        run: |
+          echo "Checking documentation symlinks..."
+
+          if [ -f "CLAUDE.md" ]; then
+            if [ -L "CLAUDE.md" ]; then
+              target=$(readlink CLAUDE.md)
+              echo "✅ CLAUDE.md is symlink → $target"
+            else
+              echo "⚠️  CLAUDE.md exists but is not a symlink"
+              echo "Consider: ln -sf AGENTS.md CLAUDE.md"
+            fi
+          fi
+
+  # Quick Win #1: Executable Code Examples
+  code-examples:
+    name: Validate Code Examples
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Extract and test Python examples
+        run: |
+          echo "## Python Code Example Validation" >> $GITHUB_STEP_SUMMARY
+
+          # Find all Python code blocks in markdown files
+          python3 << 'EOF'
+          import re
+          import subprocess
+          import sys
+          from pathlib import Path
+
+          failed = []
+          passed = 0
+
+          for md_file in Path('.').rglob('*.md'):
+              # Skip vendored/reference files
+              if 'reference/' in str(md_file) or 'node_modules/' in str(md_file):
+                  continue
+
+              content = md_file.read_text()
+
+              # Find Python code blocks with # doctest: verify marker
+              pattern = r'```python\s*\n#\s*doctest:\s*verify\s*\n(.*?)```'
+              matches = re.findall(pattern, content, re.DOTALL)
+
+              for code in matches:
+                  try:
+                      # Syntax check only (compile, don't execute)
+                      compile(code, str(md_file), 'exec')
+                      passed += 1
+                  except SyntaxError as e:
+                      failed.append(f"{md_file}: {e}")
+
+          print(f"✅ {passed} Python examples validated")
+          if failed:
+              print(f"❌ {len(failed)} examples failed:")
+              for f in failed:
+                  print(f"  - {f}")
+              sys.exit(1)
+          EOF
+
+      - name: Extract and test JavaScript/TypeScript examples
+        run: |
+          echo "## JavaScript Code Example Validation" >> $GITHUB_STEP_SUMMARY
+
+          # Install TypeScript for syntax checking
+          npm install -g typescript
+
+          python3 << 'EOF'
+          import re
+          import subprocess
+          import sys
+          import tempfile
+          from pathlib import Path
+
+          failed = []
+          passed = 0
+
+          for md_file in Path('.').rglob('*.md'):
+              if 'reference/' in str(md_file) or 'node_modules/' in str(md_file):
+                  continue
+
+              content = md_file.read_text()
+
+              # Find JS/TS code blocks with doctest marker
+              pattern = r'```(?:javascript|typescript|js|ts)\s*\n//\s*doctest:\s*verify\s*\n(.*?)```'
+              matches = re.findall(pattern, content, re.DOTALL)
+
+              for code in matches:
+                  with tempfile.NamedTemporaryFile(suffix='.ts', delete=False, mode='w') as f:
+                      f.write(code)
+                      f.flush()
+
+                      # Syntax check with tsc --noEmit
+                      result = subprocess.run(
+                          ['tsc', '--noEmit', '--allowJs', '--checkJs', f.name],
+                          capture_output=True, text=True
+                      )
+
+                      if result.returncode == 0:
+                          passed += 1
+                      else:
+                          failed.append(f"{md_file}: {result.stderr[:200]}")
+
+          print(f"✅ {passed} JS/TS examples validated")
+          if failed:
+              print(f"❌ {len(failed)} examples failed:")
+              for f in failed:
+                  print(f"  - {f}")
+              sys.exit(1)
+          EOF
+        continue-on-error: true
+
+      - name: Check shell examples syntax
+        run: |
+          echo "## Shell Example Validation" >> $GITHUB_STEP_SUMMARY
+
+          python3 << 'EOF'
+          import re
+          import subprocess
+          import sys
+          from pathlib import Path
+
+          failed = []
+          passed = 0
+
+          for md_file in Path('.').rglob('*.md'):
+              if 'reference/' in str(md_file) or 'node_modules/' in str(md_file):
+                  continue
+
+              content = md_file.read_text()
+
+              # Find bash/shell code blocks with doctest marker
+              pattern = r'```(?:bash|shell|sh)\s*\n#\s*doctest:\s*verify\s*\n(.*?)```'
+              matches = re.findall(pattern, content, re.DOTALL)
+
+              for code in matches:
+                  # Syntax check with bash -n
+                  result = subprocess.run(
+                      ['bash', '-n'],
+                      input=code, capture_output=True, text=True
+                  )
+
+                  if result.returncode == 0:
+                      passed += 1
+                  else:
+                      failed.append(f"{md_file}: {result.stderr[:200]}")
+
+          print(f"✅ {passed} shell examples validated")
+          if failed:
+              print(f"❌ {len(failed)} examples failed:")
+              for f in failed:
+                  print(f"  - {f}")
+              sys.exit(1)
+          EOF
+
+  # Quick Win #2: Version Drift Detection
+  version-drift:
+    name: Detect Version Drift
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check version consistency
+        run: |
+          echo "## Version Drift Detection" >> $GITHUB_STEP_SUMMARY
+
+          python3 << 'EOF'
+          import re
+          import json
+          from pathlib import Path
+
+          drift_detected = []
+
+          # Common version patterns to check
+          version_files = {
+              'package.json': lambda c: json.loads(c).get('dependencies', {}),
+              'pyproject.toml': None,  # Would need toml parser
+              'go.mod': None,
+              'Cargo.toml': None,
+          }
+
+          # Find version mentions in markdown
+          version_pattern = r'(?:version|v)?(\d+\.\d+(?:\.\d+)?)'
+
+          # Check if VERSION file exists and matches docs
+          version_file = Path('VERSION')
+          if version_file.exists():
+              current_version = version_file.read_text().strip()
+
+              # Check README mentions same version
+              readme = Path('README.md')
+              if readme.exists():
+                  content = readme.read_text()
+                  # Look for version badges or explicit version mentions
+                  if current_version not in content:
+                      print(f"⚠️  VERSION ({current_version}) not found in README.md")
+
+              # Check CHANGELOG has entry for current version
+              changelog = Path('CHANGELOG.md')
+              if changelog.exists():
+                  content = changelog.read_text()
+                  if f"[{current_version}]" not in content and f"## {current_version}" not in content:
+                      drift_detected.append(f"CHANGELOG.md missing entry for {current_version}")
+
+          # Check for tool version consistency
+          tool_versions = {}
+          for md_file in Path('.').rglob('*.md'):
+              if 'reference/' in str(md_file) or 'node_modules/' in str(md_file):
+                  continue
+
+              content = md_file.read_text()
+
+              # Look for specific tool versions mentioned
+              tools = ['Python', 'Node', 'Go', 'Rust', 'Ruby', 'Java']
+              for tool in tools:
+                  pattern = rf'{tool}\s+(\d+\.\d+(?:\.\d+)?)'
+                  matches = re.findall(pattern, content, re.IGNORECASE)
+                  for version in matches:
+                      key = f"{tool}:{version}"
+                      if key not in tool_versions:
+                          tool_versions[key] = []
+                      tool_versions[key].append(str(md_file))
+
+          # Report findings
+          print("### Version Consistency Report\n")
+
+          if drift_detected:
+              print("❌ **Drift Detected:**")
+              for d in drift_detected:
+                  print(f"  - {d}")
+          else:
+              print("✅ No version drift detected")
+
+          # Show tool version mentions
+          print("\n### Tool Versions Mentioned:")
+          for tool_ver, files in sorted(tool_versions.items()):
+              print(f"  - {tool_ver}: {len(files)} files")
+          EOF
