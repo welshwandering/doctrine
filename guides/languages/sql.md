@@ -2,7 +2,7 @@
 
 > [Doctrine](../../README.md) > [Languages](../README.md) > SQL
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC 2119](https://www.ietf.org/rfc/rfc2119.txt).
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119).
 
 Based on [SQL Style Guide](https://www.sqlstyle.guide/)[^1] with PostgreSQL focus.
 Conventions work across PostgreSQL[^2], MySQL[^3], and SQLite[^4].

@@ -2246,7 +2246,7 @@ appropriate safeguards at every layer.
 
 [^9]: **CWE Top 25 Most Dangerous Software Weaknesses**: Annual list of most common and impactful software security weaknesses. Essential reference for secure coding practices. [CWE Top 25](https://cwe.mitre.org/top25/archive/2024/2024_cwe_top25.html) | [CWE Database](https://cwe.mitre.org/)
 
-[^10]: **RFC 2119**: "Key words for use in RFCs to Indicate Requirement Levels" - Defines the meaning of requirement level keywords (MUST, SHOULD, MAY, etc.) used throughout this document. [RFC 2119](https://www.ietf.org/rfc/rfc2119.txt) | [IETF Tools](https://tools.ietf.org/html/rfc2119)
+[^10]: **RFC 2119**: "Key words for use in RFCs to Indicate Requirement Levels" - Defines the meaning of requirement level keywords (MUST, SHOULD, MAY, etc.) used throughout this document. [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119) | [IETF Tools](https://datatracker.ietf.org/doc/html/rfc2119)
 
 [^11]: **Trivy**: Comprehensive open-source security scanner for vulnerabilities in container images, file systems, and git repositories. Detects CVEs, misconfigurations, secrets, and license issues. [Trivy GitHub](https://github.com/aquasecurity/trivy) | [Trivy Documentation](https://aquasecurity.github.io/trivy/)
 

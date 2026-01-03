@@ -10,7 +10,7 @@
 
 ## RFC 2119 Key Words
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC 2119](https://www.ietf.org/rfc/rfc2119.txt).
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119).
 
 ---
 
@@ -2312,7 +2312,7 @@ This section contains all footnoted references to OpenAI documentation and exter
 
 - [Pydantic](https://docs.pydantic.dev/) - Data validation library for Structured Outputs
 - [Prompt Engineering Guide](https://www.promptingguide.ai/) - Comprehensive prompt engineering techniques
-- [RFC 2119](https://www.ietf.org/rfc/rfc2119.txt) - Key words for use in RFCs to indicate requirement levels
+- [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119) - Key words for use in RFCs to indicate requirement levels
 
 ---
 
