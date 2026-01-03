@@ -671,6 +671,187 @@ if flags.has_feature("new_checkout"):
     return new_checkout_flow()
 ```
 
+## Profiling
+
+Projects **SHOULD** profile code before optimizing and **MUST** profile production workloads to identify actual bottlenecks.
+
+**Why**: Premature optimization wastes time on non-critical paths. Profiling identifies where time is actually spent, enabling targeted optimization with measurable impact.
+
+### CPU Profiling
+
+```python
+# Built-in cProfile
+import cProfile
+import pstats
+
+with cProfile.Profile() as pr:
+    expensive_function()
+
+stats = pstats.Stats(pr)
+stats.sort_stats("cumulative").print_stats(20)
+```
+
+```bash
+# py-spy for production profiling (no code changes)
+uv add --dev py-spy
+py-spy top --pid 12345
+py-spy record -o profile.svg --pid 12345  # Flame graph
+```
+
+### Memory Profiling
+
+```python
+from memory_profiler import profile
+
+@profile
+def memory_intensive() -> None:
+    data = [i ** 2 for i in range(1000000)]
+    return sum(data)
+```
+
+```bash
+# Line-by-line memory usage
+uv add --dev memory-profiler
+python -m memory_profiler script.py
+
+# Object tracking
+uv add --dev objgraph
+python -c "import objgraph; objgraph.show_most_common_types()"
+```
+
+### Async Profiling
+
+```bash
+# aiomonitor for async introspection
+uv add --dev aiomonitor
+```
+
+```python
+import aiomonitor
+
+async def main() -> None:
+    with aiomonitor.start_monitor():
+        await run_server()
+```
+
+### Continuous Profiling
+
+For production, **SHOULD** use continuous profiling services:
+
+```python
+# Pyroscope integration
+import pyroscope
+
+pyroscope.configure(
+    application_name="myapp",
+    server_address="http://pyroscope:4040",
+)
+```
+
+## Async Patterns
+
+Projects using async/await **MUST** follow these patterns to avoid common pitfalls.
+
+### Event Loop Management
+
+```python
+import asyncio
+
+# MUST use asyncio.run() at top level
+async def main() -> None:
+    await do_work()
+
+if __name__ == "__main__":
+    asyncio.run(main())
+
+# MUST NOT create event loops manually in library code
+# BAD: loop = asyncio.get_event_loop()
+```
+
+### Concurrent Execution
+
+```python
+import asyncio
+
+async def fetch_all(urls: list[str]) -> list[Response]:
+    # Use gather for concurrent execution
+    async with aiohttp.ClientSession() as session:
+        tasks = [fetch(session, url) for url in urls]
+        return await asyncio.gather(*tasks)
+
+# Use TaskGroup (Python 3.11+) for structured concurrency
+async def fetch_all_safe(urls: list[str]) -> list[Response]:
+    results: list[Response] = []
+    async with asyncio.TaskGroup() as tg:
+        for url in urls:
+            tg.create_task(fetch_and_append(url, results))
+    return results
+```
+
+### Timeouts
+
+```python
+import asyncio
+
+# MUST use timeouts for external calls
+async def fetch_with_timeout(url: str) -> Response:
+    async with asyncio.timeout(30):  # Python 3.11+
+        return await fetch(url)
+
+# Or with wait_for
+result = await asyncio.wait_for(fetch(url), timeout=30)
+```
+
+### Resource Cleanup
+
+```python
+# MUST use async context managers for cleanup
+async with aiohttp.ClientSession() as session:
+    response = await session.get(url)
+
+# MUST NOT leave connections open
+# BAD: session = aiohttp.ClientSession()  # Never closed
+```
+
+### Blocking Code
+
+```python
+import asyncio
+from concurrent.futures import ThreadPoolExecutor
+
+# MUST NOT block the event loop
+# BAD: time.sleep(1)  # Blocks entire loop
+
+# Use run_in_executor for blocking operations
+async def run_blocking() -> None:
+    loop = asyncio.get_running_loop()
+    with ThreadPoolExecutor() as pool:
+        result = await loop.run_in_executor(pool, blocking_function)
+```
+
+### Testing Async Code
+
+```python
+import pytest
+
+# Use pytest-asyncio
+@pytest.mark.asyncio
+async def test_fetch() -> None:
+    result = await fetch("https://example.com")
+    assert result.status == 200
+
+# Or anyio for backend-agnostic testing
+@pytest.mark.anyio
+async def test_with_anyio() -> None:
+    async with asyncio.TaskGroup() as tg:
+        tg.create_task(background_task())
+```
+
+```toml
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+```
+
 ## See Also
 
 - [Django Guide](../frameworks/django.md) - Full-featured Python web framework
