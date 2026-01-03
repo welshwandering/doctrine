@@ -1,0 +1,259 @@
+{
+  "name": "OWASP Mobile Top 10 2024",
+  "version": "2024",
+  "released": "2024-12-01",
+  "source": "https://owasp.org/www-project-mobile-top-10/",
+  "license": "CC-BY-SA-4.0",
+  "description": "Top 10 security risks for mobile applications (iOS and Android)",
+  "changelog": {
+    "v2024": {
+      "changes": [
+        "Complete restructure from 2016 version",
+        "Focus on modern mobile architectures",
+        "Cloud backend integration risks",
+        "Enhanced privacy considerations"
+      ]
+    }
+  },
+  "risks": [
+    {
+      "id": "M1",
+      "name": "Improper Credential Usage",
+      "rank": 1,
+      "description": "Hardcoded credentials, insecure credential storage, or improper handling of authentication tokens",
+      "detection_patterns": [
+        "Hardcoded API keys in source/binary",
+        "Credentials in SharedPreferences/NSUserDefaults without encryption",
+        "OAuth tokens stored in plain text",
+        "Refresh tokens with excessive lifetime"
+      ],
+      "prevention": [
+        "Use secure storage (Keychain, EncryptedSharedPreferences)",
+        "Never hardcode credentials",
+        "Implement proper token lifecycle management",
+        "Use biometric authentication for sensitive operations"
+      ],
+      "cwes": ["CWE-798", "CWE-522", "CWE-312"]
+    },
+    {
+      "id": "M2",
+      "name": "Inadequate Supply Chain Security",
+      "rank": 2,
+      "description": "Risks from third-party SDKs, libraries, and components",
+      "detection_patterns": [
+        "Outdated dependencies with known CVEs",
+        "SDKs with excessive permissions",
+        "Unsigned or unverified libraries",
+        "Malicious SDK injection"
+      ],
+      "prevention": [
+        "Audit all third-party dependencies",
+        "Use SCA tools (Snyk, Dependabot)",
+        "Verify SDK signatures",
+        "Monitor SDK behavior and permissions",
+        "Maintain SBOM for mobile apps"
+      ],
+      "cwes": ["CWE-829", "CWE-494"]
+    },
+    {
+      "id": "M3",
+      "name": "Insecure Authentication/Authorization",
+      "rank": 3,
+      "description": "Flaws in authentication flows or access control mechanisms",
+      "detection_patterns": [
+        "Client-side authentication checks only",
+        "Bypassable biometric authentication",
+        "Missing MFA for sensitive operations",
+        "Improper session management"
+      ],
+      "prevention": [
+        "Server-side authentication validation",
+        "Implement proper session handling",
+        "Use platform biometrics correctly",
+        "Enforce MFA for high-risk actions",
+        "Implement proper authorization checks"
+      ],
+      "cwes": ["CWE-287", "CWE-306", "CWE-862"]
+    },
+    {
+      "id": "M4",
+      "name": "Insufficient Input/Output Validation",
+      "rank": 4,
+      "description": "Missing or improper validation of data from all sources",
+      "detection_patterns": [
+        "WebView JavaScript injection",
+        "Deep link parameter injection",
+        "Intent/URL scheme manipulation",
+        "Clipboard data injection"
+      ],
+      "prevention": [
+        "Validate all input sources",
+        "Sanitize data for WebViews",
+        "Validate deep link parameters",
+        "Use parameterized queries",
+        "Implement output encoding"
+      ],
+      "cwes": ["CWE-20", "CWE-79", "CWE-89"]
+    },
+    {
+      "id": "M5",
+      "name": "Insecure Communication",
+      "rank": 5,
+      "description": "Unprotected network communications exposing sensitive data",
+      "detection_patterns": [
+        "HTTP used for sensitive data",
+        "Certificate validation disabled",
+        "Missing certificate pinning",
+        "Insecure WebSocket connections"
+      ],
+      "prevention": [
+        "Enforce TLS 1.2+ for all connections",
+        "Implement certificate pinning",
+        "Use Network Security Configuration (Android)",
+        "Validate server certificates properly",
+        "Disable cleartext traffic"
+      ],
+      "cwes": ["CWE-319", "CWE-295"]
+    },
+    {
+      "id": "M6",
+      "name": "Inadequate Privacy Controls",
+      "rank": 6,
+      "description": "Improper handling of user personal data and privacy",
+      "detection_patterns": [
+        "Excessive data collection",
+        "PII in logs or analytics",
+        "Missing consent mechanisms",
+        "Data shared with third parties without disclosure"
+      ],
+      "prevention": [
+        "Implement data minimization",
+        "Proper consent management",
+        "Privacy by design approach",
+        "Audit analytics and third-party SDKs",
+        "Follow platform privacy guidelines"
+      ],
+      "regulations": ["GDPR", "CCPA", "COPPA"]
+    },
+    {
+      "id": "M7",
+      "name": "Insufficient Binary Protections",
+      "rank": 7,
+      "description": "Lack of protections against reverse engineering and tampering",
+      "detection_patterns": [
+        "No code obfuscation",
+        "Debug symbols in release builds",
+        "Missing root/jailbreak detection",
+        "No integrity checks"
+      ],
+      "prevention": [
+        "Implement code obfuscation (ProGuard, R8, SwiftShield)",
+        "Use anti-tampering measures",
+        "Implement runtime integrity checks",
+        "Detect emulators and rooted devices",
+        "Strip debug symbols"
+      ],
+      "note": "Defense in depth - not a replacement for server-side security"
+    },
+    {
+      "id": "M8",
+      "name": "Security Misconfiguration",
+      "rank": 8,
+      "description": "Incorrect security settings or using insecure defaults",
+      "detection_patterns": [
+        "Debug mode in production",
+        "Exported components without protection",
+        "Insecure WebView settings",
+        "Backup enabled with sensitive data"
+      ],
+      "prevention": [
+        "Review all exported components",
+        "Disable backup for sensitive data",
+        "Configure WebViews securely",
+        "Disable debugging in release builds",
+        "Follow platform security best practices"
+      ],
+      "cwes": ["CWE-16"]
+    },
+    {
+      "id": "M9",
+      "name": "Insecure Data Storage",
+      "rank": 9,
+      "description": "Sensitive data stored insecurely on the device",
+      "detection_patterns": [
+        "Sensitive data in plain text files",
+        "Credentials in SQLite databases",
+        "PII in application logs",
+        "Sensitive data in screenshots/backups"
+      ],
+      "prevention": [
+        "Use platform secure storage",
+        "Encrypt sensitive data at rest",
+        "Exclude sensitive screens from screenshots",
+        "Clear sensitive data from memory",
+        "Disable backup for sensitive data"
+      ],
+      "cwes": ["CWE-312", "CWE-922"]
+    },
+    {
+      "id": "M10",
+      "name": "Insufficient Cryptography",
+      "rank": 10,
+      "description": "Weak or improperly implemented cryptographic protections",
+      "detection_patterns": [
+        "Deprecated algorithms (MD5, SHA1, DES)",
+        "Hardcoded encryption keys",
+        "Custom cryptography implementations",
+        "Weak key derivation"
+      ],
+      "prevention": [
+        "Use platform cryptography APIs",
+        "AES-256-GCM for encryption",
+        "Proper key management (Keystore/Keychain)",
+        "Secure random number generation",
+        "No custom crypto implementations"
+      ],
+      "cwes": ["CWE-327", "CWE-328", "CWE-330"]
+    }
+  ],
+  "platform_specific": {
+    "android": {
+      "secure_storage": "EncryptedSharedPreferences, Android Keystore",
+      "network_security": "network_security_config.xml",
+      "obfuscation": "R8, ProGuard",
+      "testing_tools": ["MobSF", "JADX", "Frida", "drozer"]
+    },
+    "ios": {
+      "secure_storage": "Keychain Services, Secure Enclave",
+      "network_security": "App Transport Security (ATS)",
+      "obfuscation": "SwiftShield, commercial tools",
+      "testing_tools": ["MobSF", "Hopper", "Frida", "objection"]
+    }
+  },
+  "testing_approach": {
+    "static_analysis": [
+      "MobSF (Mobile Security Framework)",
+      "QARK (Android)",
+      "Oversecured",
+      "Semgrep mobile rules"
+    ],
+    "dynamic_analysis": [
+      "Frida for runtime instrumentation",
+      "Burp Suite for traffic interception",
+      "objection for iOS testing",
+      "drozer for Android testing"
+    ],
+    "masvs_testing_guide": "https://mas.owasp.org/MASTG/"
+  },
+  "cross_references": {
+    "owasp_masvs": "OWASP Mobile Application Security Verification Standard",
+    "owasp_mastg": "OWASP Mobile Application Security Testing Guide",
+    "web_top10": "reference/security/owasp/top10-web-2025.json"
+  },
+  "agent_usage": {
+    "mobile_security_review": "Use as checklist for mobile app security assessment",
+    "threat_modeling": "Identify mobile-specific threats",
+    "code_review": "Focus areas for mobile code review",
+    "testing_scope": "Define mobile penetration testing scope"
+  }
+}

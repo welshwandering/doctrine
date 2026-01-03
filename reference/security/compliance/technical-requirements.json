@@ -1,0 +1,306 @@
+{
+  "name": "Technical Compliance Requirements",
+  "version": "1.0.0",
+  "description": "Actionable technical checks for Compliance Assessor agents",
+  "last_updated": "2025-01-02",
+  "usage": "Security agents can use these patterns to detect compliance gaps in code and configuration",
+  "checks": {
+    "encryption_at_rest": {
+      "description": "Data encrypted at rest using strong algorithms",
+      "severity_if_missing": "HIGH",
+      "frameworks": {
+        "soc_2": "CC6.1, CC6.7",
+        "iso_27001": "A.10.1.1",
+        "pci_dss": "3.4, 3.5",
+        "hipaa": "164.312(a)(2)(iv)",
+        "gdpr": "Art. 32(1)(a)"
+      },
+      "detection": {
+        "positive_patterns": ["aes-256", "aes-gcm", "encrypt", "kms", "vault", "seal", "ENCRYPTION=", "encrypted=true", "SSE-S3", "SSE-KMS", "SSE-C"],
+        "config_checks": ["database.encryption=true", "s3.encryption=AES256", "rds.storage_encrypted=true", "disk.encryption=enabled"],
+        "negative_patterns": ["password.*plain", "store.*unencrypted", "encryption.*disabled", "encryption.*false", "noencrypt"]
+      },
+      "remediation": "Enable encryption at rest for all data stores. Use AES-256-GCM or equivalent."
+    },
+    "encryption_in_transit": {
+      "description": "Data encrypted in transit using TLS 1.2+",
+      "severity_if_missing": "HIGH",
+      "frameworks": {
+        "soc_2": "CC6.1, CC6.7",
+        "iso_27001": "A.10.1.1, A.13.2.1",
+        "pci_dss": "4.1, 4.2",
+        "hipaa": "164.312(e)(1), 164.312(e)(2)(ii)",
+        "gdpr": "Art. 32"
+      },
+      "detection": {
+        "positive_patterns": ["https://", "tls", "ssl", "wss://", "TLS_1_2", "TLS_1_3", "REQUIRE SSL", "sslmode=require", "sslmode=verify-full"],
+        "config_checks": ["ssl_enabled=true", "tls_version>=1.2", "force_ssl=true", "redirect_http_to_https=true"],
+        "negative_patterns": ["http://(?!localhost|127\\.0\\.0\\.1)", "ssl=false", "verify=false", "VERIFY_NONE", "InsecureSkipVerify", "NODE_TLS_REJECT_UNAUTHORIZED=0", "sslmode=disable"]
+      },
+      "remediation": "Enforce TLS 1.2 or higher for all network communications. Disable legacy protocols."
+    },
+    "mfa_enabled": {
+      "description": "Multi-factor authentication enabled for privileged access",
+      "severity_if_missing": "HIGH",
+      "frameworks": {
+        "soc_2": "CC6.1",
+        "iso_27001": "A.9.4.2",
+        "pci_dss": "8.4.1, 8.4.2, 8.4.3",
+        "hipaa": "164.312(d)",
+        "fedramp": "IA-2(1), IA-2(2)"
+      },
+      "detection": {
+        "positive_patterns": ["mfa", "2fa", "totp", "otp", "second_factor", "multi.?factor", "authenticator", "u2f", "fido", "webauthn"],
+        "config_checks": ["mfa_enabled=true", "require_mfa=true", "enforce_mfa=true"],
+        "negative_patterns": ["mfa.*disabled", "mfa.*false", "skip.*mfa", "bypass.*mfa"]
+      },
+      "remediation": "Require MFA for all administrative access and sensitive operations."
+    },
+    "rbac_implemented": {
+      "description": "Role-based access control with least privilege",
+      "severity_if_missing": "MEDIUM",
+      "frameworks": {
+        "soc_2": "CC6.1, CC6.2, CC6.3",
+        "iso_27001": "A.9.1.2, A.9.2.3",
+        "pci_dss": "7.1, 7.2",
+        "hipaa": "164.312(a)(1)"
+      },
+      "detection": {
+        "positive_patterns": ["role", "permission", "policy", "rbac", "acl", "authorize", "can\\(", "ability", "grant", "privilege"],
+        "config_checks": ["default_role=none", "deny_by_default=true"],
+        "negative_patterns": ["admin.*all", "role.*\\*", "permission.*\\*", "grant.*all", "sudo.*NOPASSWD.*ALL"]
+      },
+      "remediation": "Implement RBAC with deny-by-default. Audit and minimize privileges regularly."
+    },
+    "audit_logging": {
+      "description": "Comprehensive audit logging of security events",
+      "severity_if_missing": "HIGH",
+      "frameworks": {
+        "soc_2": "CC7.2",
+        "iso_27001": "A.12.4.1, A.12.4.2, A.12.4.3",
+        "pci_dss": "10.1, 10.2, 10.3",
+        "hipaa": "164.312(b)"
+      },
+      "detection": {
+        "positive_patterns": ["audit", "log", "siem", "cloudtrail", "cloudwatch", "stackdriver", "splunk", "datadog", "elk", "security.log"],
+        "config_checks": ["audit_logging=true", "log_level=INFO", "cloudtrail.enabled=true"],
+        "log_events": ["login", "logout", "failed_auth", "access_denied", "privilege_escalation", "data_access", "configuration_change"]
+      },
+      "remediation": "Enable audit logging for all security-relevant events. Retain logs per compliance requirements."
+    },
+    "log_retention": {
+      "description": "Audit logs retained for required duration",
+      "severity_if_missing": "MEDIUM",
+      "frameworks": {
+        "soc_2": "CC7.2",
+        "iso_27001": "A.12.4.1",
+        "pci_dss": "10.7",
+        "hipaa": "164.312(b)"
+      },
+      "detection": {
+        "positive_patterns": ["retention", "archive", "backup.*log"],
+        "config_checks": ["log_retention_days>=365", "log_retention_days>=90"],
+        "required_retention": {
+          "pci_dss": "1 year minimum (3 months immediately available)",
+          "hipaa": "6 years",
+          "soc_2": "Organization-defined (typically 1 year)",
+          "gdpr": "As long as necessary for processing purpose"
+        }
+      },
+      "remediation": "Configure log retention to meet the most stringent applicable framework requirement."
+    },
+    "password_policy": {
+      "description": "Strong password policy enforced",
+      "severity_if_missing": "MEDIUM",
+      "frameworks": {
+        "soc_2": "CC6.1",
+        "iso_27001": "A.9.4.3",
+        "pci_dss": "8.3.6, 8.3.7, 8.3.9",
+        "hipaa": "164.308(a)(5)(ii)(D)"
+      },
+      "detection": {
+        "positive_patterns": ["password.*policy", "min.*length", "complexity", "bcrypt", "argon2", "scrypt", "pbkdf2"],
+        "config_checks": ["password_min_length>=12", "password_require_uppercase=true", "password_require_number=true", "password_require_special=true"],
+        "negative_patterns": ["md5", "sha1(?!\\d)", "plaintext", "password.*=.*password", "pass123", "admin123"]
+      },
+      "remediation": "Enforce minimum 12 characters with complexity. Use modern password hashing (Argon2, bcrypt)."
+    },
+    "session_management": {
+      "description": "Secure session handling with timeouts",
+      "severity_if_missing": "MEDIUM",
+      "frameworks": {
+        "soc_2": "CC6.1",
+        "iso_27001": "A.9.4.2",
+        "pci_dss": "8.2.8",
+        "hipaa": "164.312(a)(2)(iii)"
+      },
+      "detection": {
+        "positive_patterns": ["session.*timeout", "idle.*timeout", "max.*age", "expir", "invalidate.*session"],
+        "config_checks": ["session_timeout_minutes<=15", "idle_timeout_minutes<=30", "session_secure=true", "session_httponly=true"],
+        "negative_patterns": ["session.*never.*expire", "timeout.*0", "remember.*forever"]
+      },
+      "remediation": "Implement session timeouts (15 min idle for sensitive apps). Use secure, HttpOnly cookies."
+    },
+    "input_validation": {
+      "description": "Input validation and output encoding to prevent injection",
+      "severity_if_missing": "HIGH",
+      "frameworks": {
+        "soc_2": "CC6.1",
+        "iso_27001": "A.14.2.5",
+        "pci_dss": "6.5.1",
+        "owasp": "A03:2021 Injection"
+      },
+      "detection": {
+        "positive_patterns": ["sanitize", "escape", "encode", "validate", "parameterized", "prepared.*statement", "bind.*param", "htmlspecialchars", "html.escape"],
+        "negative_patterns": ["eval\\(", "exec\\(.*\\+", "system\\(.*\\$", "innerHTML.*=.*\\+", "\\$\\{.*\\}.*sql", "string.*format.*sql", "f\".*{.*}.*sql"]
+      },
+      "remediation": "Use parameterized queries, escape/encode output, validate all inputs on server side."
+    },
+    "vulnerability_scanning": {
+      "description": "Regular vulnerability scanning of systems and applications",
+      "severity_if_missing": "MEDIUM",
+      "frameworks": {
+        "soc_2": "CC7.1, CC3.2",
+        "iso_27001": "A.12.6.1",
+        "pci_dss": "11.3.1, 11.3.2",
+        "hipaa": "164.308(a)(1)(ii)(A)"
+      },
+      "detection": {
+        "positive_patterns": ["nessus", "qualys", "rapid7", "tenable", "trivy", "snyk", "dependabot", "renovate", "semgrep", "sonarqube", "codeql"],
+        "ci_patterns": ["scan", "vulnerability", "security.*check", "sast", "dast", "dependency.*audit"],
+        "config_checks": ["scan_frequency<=weekly", "auto_remediation=true"]
+      },
+      "remediation": "Implement automated vulnerability scanning in CI/CD. Scan weekly at minimum."
+    },
+    "secrets_management": {
+      "description": "Secrets stored securely, not hardcoded",
+      "severity_if_missing": "CRITICAL",
+      "frameworks": {
+        "soc_2": "CC6.1",
+        "iso_27001": "A.10.1.2",
+        "pci_dss": "3.5, 3.6",
+        "cis": "Multiple controls"
+      },
+      "detection": {
+        "positive_patterns": ["vault", "secrets.*manager", "parameter.*store", "key.*management", "kms", "environment.*variable"],
+        "negative_patterns": ["password\\s*=\\s*[\"'][^\"']+[\"']", "api.?key\\s*=\\s*[\"'][A-Za-z0-9]+", "secret\\s*=\\s*[\"'][^\"']+", "BEGIN.*PRIVATE.*KEY", "AKIA[0-9A-Z]{16}"],
+        "file_patterns": [".env", "credentials", "secrets.yaml", "config.json"]
+      },
+      "remediation": "Use secrets management (Vault, AWS Secrets Manager). Never commit secrets to source control."
+    },
+    "backup_encryption": {
+      "description": "Backups encrypted and tested",
+      "severity_if_missing": "HIGH",
+      "frameworks": {
+        "soc_2": "A1.2, CC6.7",
+        "iso_27001": "A.12.3.1",
+        "pci_dss": "9.4.1",
+        "hipaa": "164.308(a)(7)(ii)(A)"
+      },
+      "detection": {
+        "positive_patterns": ["backup.*encrypt", "encrypted.*backup", "backup.*kms"],
+        "config_checks": ["backup_encryption=true", "backup_retention_days>=30"],
+        "negative_patterns": ["backup.*unencrypted", "backup.*plain"]
+      },
+      "remediation": "Encrypt all backups. Test restoration procedures regularly. Document RTO/RPO."
+    },
+    "data_classification": {
+      "description": "Data classified and labeled appropriately",
+      "severity_if_missing": "LOW",
+      "frameworks": {
+        "soc_2": "C1.1",
+        "iso_27001": "A.8.2.1, A.8.2.2",
+        "gdpr": "Art. 30",
+        "hipaa": "164.308(a)(1)(ii)(A)"
+      },
+      "detection": {
+        "positive_patterns": ["classification", "sensitivity", "pii", "phi", "pci", "confidential", "public", "internal", "restricted"],
+        "schema_patterns": ["data_type", "sensitivity_level", "classification"],
+        "documentation": ["data_inventory", "data_flow", "data_map"]
+      },
+      "remediation": "Implement data classification scheme. Label data in schemas and documentation."
+    },
+    "incident_response_plan": {
+      "description": "Documented incident response procedures",
+      "severity_if_missing": "MEDIUM",
+      "frameworks": {
+        "soc_2": "CC7.4, CC7.5",
+        "iso_27001": "A.16.1.1, A.16.1.5",
+        "pci_dss": "12.10",
+        "hipaa": "164.308(a)(6)",
+        "dora": "Art. 17",
+        "gdpr": "Art. 33"
+      },
+      "detection": {
+        "documentation": ["incident.*response", "runbook", "playbook", "escalation", "on.?call"],
+        "config_patterns": ["alert", "page", "notify", "webhook", "slack.*alert", "pagerduty", "opsgenie"]
+      },
+      "remediation": "Document incident response plan. Include detection, containment, eradication, recovery, lessons learned."
+    },
+    "network_segmentation": {
+      "description": "Network properly segmented with least privilege",
+      "severity_if_missing": "MEDIUM",
+      "frameworks": {
+        "soc_2": "CC6.6",
+        "iso_27001": "A.13.1.3",
+        "pci_dss": "1.3, 1.4",
+        "hipaa": "164.312(e)(1)"
+      },
+      "detection": {
+        "positive_patterns": ["vpc", "subnet", "security.*group", "firewall", "network.*policy", "ingress", "egress", "nacl", "calico", "istio"],
+        "config_checks": ["default_deny=true", "ingress.*limited", "egress.*limited"],
+        "negative_patterns": ["0\\.0\\.0\\.0/0.*all", "cidr.*0\\.0\\.0\\.0/0", "allow.*all.*all"]
+      },
+      "remediation": "Segment networks by function/sensitivity. Implement default-deny firewall rules."
+    },
+    "change_management": {
+      "description": "Documented change management process",
+      "severity_if_missing": "MEDIUM",
+      "frameworks": {
+        "soc_2": "CC8.1",
+        "iso_27001": "A.12.1.2, A.14.2.2",
+        "pci_dss": "6.4, 6.5",
+        "hipaa": "164.308(a)(8)"
+      },
+      "detection": {
+        "positive_patterns": ["pull.*request", "merge.*request", "code.*review", "approval", "ci/cd", "deploy.*pipeline"],
+        "config_checks": ["require_approvals>=1", "branch_protection=true", "require_review=true"],
+        "negative_patterns": ["push.*main", "force.*push", "skip.*review"]
+      },
+      "remediation": "Require code reviews and approvals. Use CI/CD pipelines. Protect main branches."
+    },
+    "privacy_controls": {
+      "description": "Privacy by design and data subject rights",
+      "severity_if_missing": "MEDIUM",
+      "frameworks": {
+        "gdpr": "Art. 17, Art. 20, Art. 25",
+        "ccpa": "1798.100, 1798.105, 1798.110",
+        "iso_27001": "A.18.1.4",
+        "soc_2": "P1-P8"
+      },
+      "detection": {
+        "positive_patterns": ["gdpr", "ccpa", "privacy", "consent", "data.*subject.*request", "dsr", "right.*erasure", "right.*deletion", "data.*export", "opt.?out"],
+        "config_patterns": ["consent_required=true", "data_retention_policy", "deletion_workflow"],
+        "api_patterns": ["/privacy", "/consent", "/data-export", "/delete-account"]
+      },
+      "remediation": "Implement consent management, data export, deletion workflows. Document data processing."
+    }
+  },
+  "agent_usage": {
+    "compliance_assessor": {
+      "workflow": [
+        "1. Identify applicable frameworks based on business context",
+        "2. Scan codebase using detection patterns from this file",
+        "3. Map findings to control_domains from control-mappings.json",
+        "4. Generate gap report with framework-specific remediation",
+        "5. Prioritize by severity_if_missing"
+      ],
+      "output_format": {
+        "findings": "List of detected/missing controls",
+        "compliance_score": "Percentage of applicable controls implemented",
+        "gaps_by_framework": "Grouped by framework requirement",
+        "remediation_plan": "Prioritized action items"
+      }
+    }
+  }
+}

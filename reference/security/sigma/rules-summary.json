@@ -1,0 +1,180 @@
+{
+  "name": "Sigma Rules Index",
+  "version": "r2024-12-15",
+  "source": "https://github.com/SigmaHQ/sigma",
+  "license": "LGPL-2.1",
+  "description": "Portable detection format for SIEM systems",
+  "rule_format": {
+    "title": "Human-readable rule name",
+    "status": "experimental | test | stable | deprecated",
+    "description": "What the rule detects",
+    "logsource": {
+      "category": "process_creation | network_connection | file_event | ...",
+      "product": "windows | linux | macos | ...",
+      "service": "sysmon | security | ..."
+    },
+    "detection": {
+      "selection": "Field matching conditions",
+      "filter": "Exclusions",
+      "condition": "Boolean logic combining selections and filters"
+    },
+    "level": "informational | low | medium | high | critical",
+    "tags": ["attack.t1059", "attack.execution"]
+  },
+  "categories": {
+    "windows": {
+      "process_creation": {
+        "count": 850,
+        "examples": [
+          "Suspicious PowerShell Execution",
+          "Mimikatz Command Line",
+          "Encoded PowerShell Command"
+        ],
+        "key_fields": ["CommandLine", "ParentCommandLine", "Image", "User"]
+      },
+      "registry": {
+        "count": 200,
+        "examples": [
+          "Persistence via Run Key",
+          "Disable Windows Defender",
+          "UAC Bypass via Registry"
+        ],
+        "key_fields": ["TargetObject", "Details", "EventType"]
+      },
+      "file_event": {
+        "count": 150,
+        "examples": [
+          "Suspicious Executable in Temp",
+          "Web Shell Detection",
+          "Ransomware File Extension"
+        ],
+        "key_fields": ["TargetFilename", "Image", "CreationUtcTime"]
+      },
+      "network": {
+        "count": 100,
+        "examples": [
+          "Suspicious Outbound RDP",
+          "DNS Query to Known C2",
+          "BITS Transfer to Suspicious Domain"
+        ],
+        "key_fields": ["DestinationIp", "DestinationPort", "Image"]
+      }
+    },
+    "linux": {
+      "process_creation": {
+        "count": 200,
+        "examples": [
+          "Suspicious Curl Usage",
+          "Reverse Shell Detection",
+          "Privilege Escalation via Sudo"
+        ],
+        "key_fields": ["CommandLine", "User", "ParentImage"]
+      },
+      "auditd": {
+        "count": 100,
+        "examples": [
+          "Unauthorized SSH Key Addition",
+          "Suspicious Cron Job",
+          "Container Escape Attempt"
+        ]
+      }
+    },
+    "cloud": {
+      "aws": {
+        "count": 75,
+        "examples": [
+          "S3 Bucket Made Public",
+          "CloudTrail Logging Disabled",
+          "IAM User Created with Admin Rights"
+        ]
+      },
+      "azure": {
+        "count": 60,
+        "examples": [
+          "Conditional Access Policy Disabled",
+          "Guest User Added",
+          "Storage Account Key Accessed"
+        ]
+      },
+      "gcp": {
+        "count": 40,
+        "examples": [
+          "Service Account Key Created",
+          "Firewall Rule Modified",
+          "Audit Logging Disabled"
+        ]
+      }
+    }
+  },
+  "high_priority_rules": [
+    {
+      "title": "Mimikatz Command Line Detection",
+      "id": "a642964e-bead-4bed-8910-1bb4d63e3b4d",
+      "level": "critical",
+      "attack_techniques": ["T1003.001"],
+      "detection_summary": "Detects Mimikatz execution via command line patterns"
+    },
+    {
+      "title": "Suspicious Encoded PowerShell Command",
+      "id": "f26c6093-6f14-4b12-800f-0fcb46f5ffd0",
+      "level": "high",
+      "attack_techniques": ["T1059.001"],
+      "detection_summary": "Base64 encoded PowerShell commands"
+    },
+    {
+      "title": "Cobalt Strike Named Pipe",
+      "id": "85adeb13-4fc9-4e68-8571-1bf5a3e9a5f8",
+      "level": "critical",
+      "attack_techniques": ["T1055"],
+      "detection_summary": "Default Cobalt Strike named pipes"
+    },
+    {
+      "title": "Suspicious Remote Thread Created",
+      "id": "66d31e5f-52d6-40a4-9615-002d3789a119",
+      "level": "high",
+      "attack_techniques": ["T1055"],
+      "detection_summary": "Process injection via remote thread creation"
+    },
+    {
+      "title": "LSASS Memory Dump",
+      "id": "ffa6861c-4461-4f59-8a41-578c39f3f23e",
+      "level": "critical",
+      "attack_techniques": ["T1003.001"],
+      "detection_summary": "LSASS process memory access"
+    },
+    {
+      "title": "Ransomware File Extension",
+      "id": "6a122f75-5f8c-4bcc-ab18-5f6c3e8bb5b5",
+      "level": "critical",
+      "attack_techniques": ["T1486"],
+      "detection_summary": "Known ransomware file extensions"
+    },
+    {
+      "title": "Web Shell Detection",
+      "id": "4f3b4d9e-8f1a-4c6e-9d2b-3a5c6f8e1d7b",
+      "level": "critical",
+      "attack_techniques": ["T1505.003"],
+      "detection_summary": "Web shell indicators in web directories"
+    },
+    {
+      "title": "Suspicious Scheduled Task Creation",
+      "id": "7a3c5d2e-9f0b-4c8a-b1e6-5d7f2a4c9e3b",
+      "level": "high",
+      "attack_techniques": ["T1053.005"],
+      "detection_summary": "Persistence via scheduled tasks"
+    }
+  ],
+  "siem_backends": {
+    "splunk": "sigma-cli backend splunk",
+    "elastic": "sigma-cli backend elasticsearch",
+    "microsoft_sentinel": "sigma-cli backend azure_monitor",
+    "chronicle": "sigma-cli backend chronicle",
+    "qradar": "sigma-cli backend qradar",
+    "crowdstrike": "sigma-cli backend crowdstrike"
+  },
+  "usage": {
+    "convert_rule": "sigma-cli convert -t splunk -p sysmon rule.yml",
+    "validate_rule": "sigma-cli check rule.yml",
+    "test_rule": "Use pySigma for unit testing rules"
+  }
+}

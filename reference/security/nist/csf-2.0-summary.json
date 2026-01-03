@@ -1,0 +1,271 @@
+{
+  "name": "NIST Cybersecurity Framework 2.0",
+  "version": "2.0",
+  "released": "2024-02-26",
+  "source": "https://csrc.nist.gov/pubs/cswp/29/the-nist-cybersecurity-framework-20/final",
+  "license": "Public Domain",
+  "description": "Framework for improving critical infrastructure cybersecurity",
+  "functions": {
+    "govern": {
+      "id": "GV",
+      "name": "Govern",
+      "description": "Establish and monitor cybersecurity risk management strategy, expectations, and policy",
+      "new_in_2.0": true,
+      "categories": [
+        {
+          "id": "GV.OC",
+          "name": "Organizational Context",
+          "outcomes": [
+            "GV.OC-01: Mission is understood and informs cybersecurity risk management",
+            "GV.OC-02: Internal and external stakeholders are identified",
+            "GV.OC-03: Legal and regulatory requirements are understood",
+            "GV.OC-04: Critical objectives, capabilities, and services are determined",
+            "GV.OC-05: Outcomes and priorities are established and communicated"
+          ]
+        },
+        {
+          "id": "GV.RM",
+          "name": "Risk Management Strategy",
+          "outcomes": [
+            "GV.RM-01: Risk management objectives are established and agreed upon",
+            "GV.RM-02: Risk appetite and tolerance statements are established",
+            "GV.RM-03: Strategic direction is informed by cybersecurity risk",
+            "GV.RM-04: Resource allocation includes cybersecurity risk",
+            "GV.RM-05: Criteria for escalation are established"
+          ]
+        },
+        {
+          "id": "GV.SC",
+          "name": "Supply Chain Risk Management",
+          "outcomes": [
+            "GV.SC-01: Supply chain risk management program is established",
+            "GV.SC-02: Roles and responsibilities are defined",
+            "GV.SC-03: Supply chain risk management is integrated",
+            "GV.SC-04: Suppliers are known and prioritized by criticality"
+          ]
+        }
+      ]
+    },
+    "identify": {
+      "id": "ID",
+      "name": "Identify",
+      "description": "Understand cybersecurity risks to systems, people, assets, data, and capabilities",
+      "categories": [
+        {
+          "id": "ID.AM",
+          "name": "Asset Management",
+          "outcomes": [
+            "ID.AM-01: Hardware inventories are maintained",
+            "ID.AM-02: Software inventories are maintained",
+            "ID.AM-03: Network mapping is documented",
+            "ID.AM-04: External information systems are catalogued",
+            "ID.AM-05: Resources are prioritized based on criticality"
+          ]
+        },
+        {
+          "id": "ID.RA",
+          "name": "Risk Assessment",
+          "outcomes": [
+            "ID.RA-01: Vulnerabilities are identified and documented",
+            "ID.RA-02: Threat intelligence is received and analyzed",
+            "ID.RA-03: Threats are identified and documented",
+            "ID.RA-04: Potential impacts are identified",
+            "ID.RA-05: Risks are assessed and prioritized"
+          ]
+        },
+        {
+          "id": "ID.IM",
+          "name": "Improvement",
+          "outcomes": [
+            "ID.IM-01: Improvements are identified from evaluations",
+            "ID.IM-02: Improvements are identified from testing",
+            "ID.IM-03: Improvements are identified from incidents"
+          ]
+        }
+      ]
+    },
+    "protect": {
+      "id": "PR",
+      "name": "Protect",
+      "description": "Use safeguards to prevent or reduce cybersecurity risk",
+      "categories": [
+        {
+          "id": "PR.AA",
+          "name": "Identity Management, Authentication, and Access Control",
+          "outcomes": [
+            "PR.AA-01: Identities and credentials are managed",
+            "PR.AA-02: Identities are proofed and bound",
+            "PR.AA-03: Users, devices, and services are authenticated",
+            "PR.AA-04: Identity assertions are protected",
+            "PR.AA-05: Access permissions are managed"
+          ]
+        },
+        {
+          "id": "PR.AT",
+          "name": "Awareness and Training",
+          "outcomes": [
+            "PR.AT-01: Personnel are provided awareness and training",
+            "PR.AT-02: Personnel understand their roles"
+          ]
+        },
+        {
+          "id": "PR.DS",
+          "name": "Data Security",
+          "outcomes": [
+            "PR.DS-01: Data-at-rest is protected",
+            "PR.DS-02: Data-in-transit is protected",
+            "PR.DS-10: Data-in-use is protected",
+            "PR.DS-11: Backups are performed and protected"
+          ]
+        },
+        {
+          "id": "PR.PS",
+          "name": "Platform Security",
+          "outcomes": [
+            "PR.PS-01: Configuration management is established",
+            "PR.PS-02: Software is maintained and replaced",
+            "PR.PS-03: Hardware is maintained and replaced",
+            "PR.PS-04: Logs are collected and analyzed",
+            "PR.PS-05: Installation and execution of unauthorized software is prevented"
+          ]
+        },
+        {
+          "id": "PR.IR",
+          "name": "Technology Infrastructure Resilience",
+          "outcomes": [
+            "PR.IR-01: Networks and environments are protected",
+            "PR.IR-02: Assets are protected against exploitation",
+            "PR.IR-03: Assets are protected against unauthorized access",
+            "PR.IR-04: Adequate resource capacity is maintained"
+          ]
+        }
+      ]
+    },
+    "detect": {
+      "id": "DE",
+      "name": "Detect",
+      "description": "Find and analyze possible cybersecurity attacks and compromises",
+      "categories": [
+        {
+          "id": "DE.CM",
+          "name": "Continuous Monitoring",
+          "outcomes": [
+            "DE.CM-01: Networks are monitored for potential attacks",
+            "DE.CM-02: Physical environment is monitored",
+            "DE.CM-03: Personnel activity is monitored",
+            "DE.CM-06: External service provider activity is monitored",
+            "DE.CM-09: Computing hardware is monitored"
+          ]
+        },
+        {
+          "id": "DE.AE",
+          "name": "Adverse Event Analysis",
+          "outcomes": [
+            "DE.AE-02: Potentially adverse events are analyzed",
+            "DE.AE-03: Events are correlated",
+            "DE.AE-04: Impact of events is estimated",
+            "DE.AE-06: Information on adverse events is provided",
+            "DE.AE-07: Threat hunting is performed",
+            "DE.AE-08: Incidents are declared"
+          ]
+        }
+      ]
+    },
+    "respond": {
+      "id": "RS",
+      "name": "Respond",
+      "description": "Take action regarding a detected cybersecurity incident",
+      "categories": [
+        {
+          "id": "RS.MA",
+          "name": "Incident Management",
+          "outcomes": [
+            "RS.MA-01: Incident response plan is executed",
+            "RS.MA-02: Incidents are triaged and validated",
+            "RS.MA-03: Incidents are categorized",
+            "RS.MA-04: Incidents are escalated",
+            "RS.MA-05: Incident data are analyzed"
+          ]
+        },
+        {
+          "id": "RS.AN",
+          "name": "Incident Analysis",
+          "outcomes": [
+            "RS.AN-03: Forensic analysis is performed",
+            "RS.AN-06: Root cause is determined",
+            "RS.AN-07: Incidents are assessed for broader impact"
+          ]
+        },
+        {
+          "id": "RS.CO",
+          "name": "Incident Response Reporting and Communication",
+          "outcomes": [
+            "RS.CO-02: Internal stakeholders are notified",
+            "RS.CO-03: External stakeholders are notified"
+          ]
+        },
+        {
+          "id": "RS.MI",
+          "name": "Incident Mitigation",
+          "outcomes": [
+            "RS.MI-01: Incidents are contained",
+            "RS.MI-02: Incidents are eradicated"
+          ]
+        }
+      ]
+    },
+    "recover": {
+      "id": "RC",
+      "name": "Recover",
+      "description": "Restore capabilities or services impaired by a cybersecurity incident",
+      "categories": [
+        {
+          "id": "RC.RP",
+          "name": "Incident Recovery Plan Execution",
+          "outcomes": [
+            "RC.RP-01: Recovery plan is executed",
+            "RC.RP-02: Recovery actions are selected and scoped",
+            "RC.RP-03: Integrity of backups is verified",
+            "RC.RP-04: Critical functions are restored",
+            "RC.RP-05: Integrity of restored assets is verified",
+            "RC.RP-06: End of incident is declared"
+          ]
+        },
+        {
+          "id": "RC.CO",
+          "name": "Incident Recovery Communication",
+          "outcomes": [
+            "RC.CO-03: Recovery activities are communicated",
+            "RC.CO-04: Public updates on recovery are shared"
+          ]
+        }
+      ]
+    }
+  },
+  "tiers": {
+    "tier_1": {
+      "name": "Partial",
+      "description": "Ad hoc, reactive risk management"
+    },
+    "tier_2": {
+      "name": "Risk Informed",
+      "description": "Risk management practices approved but not organization-wide"
+    },
+    "tier_3": {
+      "name": "Repeatable",
+      "description": "Formally approved and expressed as policy"
+    },
+    "tier_4": {
+      "name": "Adaptive",
+      "description": "Adapts based on lessons learned and predictive indicators"
+    }
+  },
+  "changes_from_1.1": [
+    "Added GOVERN function (central to 2.0)",
+    "Expanded supply chain risk management",
+    "Updated for cloud, mobile, IoT",
+    "Added outcomes for each subcategory",
+    "Renamed and reorganized categories",
+    "Added improvement category under Identify"
+  ]
+}

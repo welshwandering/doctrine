@@ -1,0 +1,241 @@
+{
+  "name": "Doctrine Security References",
+  "description": "Vendored security reference data for offline agent operation",
+  "version": "3.1.0",
+  "last_updated": "2025-01-02",
+  "update_schedule": "quarterly",
+  "next_review": "2025-04-01",
+  "sources": {
+    "mitre_attack": {
+      "version": "18.1",
+      "updated": "2025-10-28",
+      "source": "https://github.com/mitre/cti",
+      "license": "CC-BY-4.0",
+      "files": [
+        "mitre/attack/enterprise-attack.json",
+        "mitre/attack/techniques-summary.json"
+      ],
+      "changelog": "v18: Detection Strategies (DETxxxx), v17: ESXi platform"
+    },
+    "mitre_atlas": {
+      "version": "5.0.0",
+      "updated": "2025-10-22",
+      "source": "https://github.com/mitre-atlas/atlas-data",
+      "license": "CC-BY-4.0",
+      "files": [
+        "mitre/atlas/atlas-summary.json"
+      ],
+      "changelog": "v5: 14 agentic AI techniques, Technique Maturity field"
+    },
+    "mitre_d3fend": {
+      "version": "1.0",
+      "updated": "2025-01-22",
+      "source": "https://d3fend.mitre.org/",
+      "license": "Apache-2.0",
+      "files": [
+        "mitre/d3fend/d3fend-summary.json"
+      ],
+      "changelog": "v1.0: Official release, 245+ defensive techniques, OT extension"
+    },
+    "mitre_capec": {
+      "version": "3.9",
+      "updated": "2024-04-04",
+      "source": "https://capec.mitre.org/",
+      "license": "CAPEC Terms of Use",
+      "files": [
+        "mitre/capec/capec-summary.json"
+      ],
+      "description": "559 attack patterns for threat modeling"
+    },
+    "cwe": {
+      "version": "4.19",
+      "updated": "2025-09-24",
+      "source": "https://cwe.mitre.org/data/downloads.html",
+      "license": "CWE Terms of Use",
+      "files": [
+        "cwe/cwe-top-25-2025.json",
+        "cwe/cwe-common.json"
+      ],
+      "changelog": "v4.19: AI-related CWEs, D3FEND alignment, hardware weaknesses"
+    },
+    "owasp_top10": {
+      "versions": {
+        "web": "2025",
+        "api": "2023",
+        "llm": "2025",
+        "mobile": "2024"
+      },
+      "source": "https://owasp.org/",
+      "license": "CC-BY-SA-4.0",
+      "files": [
+        "owasp/top10-web-2025.json",
+        "owasp/top10-api-2023.json",
+        "owasp/top10-llm-2025.json",
+        "owasp/top10-mobile-2024.json"
+      ],
+      "changelog": "Web 2025: Supply Chain Failures (A03), Mishandling Exceptions (A10)"
+    },
+    "owasp_asvs": {
+      "version": "5.0.0",
+      "updated": "2025-05-01",
+      "source": "https://owasp.org/ASVS/",
+      "license": "CC-BY-SA-4.0",
+      "files": [
+        "owasp/asvs-5.0.json"
+      ],
+      "description": "350 security requirements across 3 verification levels"
+    },
+    "ja4_signatures": {
+      "version": "2025.01",
+      "updated": "2025-01-01",
+      "source": "https://github.com/FoxIO-LLC/ja4",
+      "license": "BSD-3-Clause",
+      "files": [
+        "fingerprints/ja4/malware-signatures.json"
+      ]
+    },
+    "sigma_rules": {
+      "version": "r2024-12-15",
+      "updated": "2024-12-15",
+      "source": "https://github.com/SigmaHQ/sigma",
+      "license": "LGPL-2.1",
+      "files": [
+        "sigma/rules-summary.json"
+      ],
+      "note": "Full rules in sigma/rules/ directory"
+    },
+    "slsa": {
+      "version": "1.2",
+      "updated": "2025-11-24",
+      "source": "https://slsa.dev/",
+      "license": "Apache-2.0",
+      "files": [
+        "slsa/slsa-levels.json"
+      ],
+      "changelog": "v1.2: Source Track introduced"
+    },
+    "openssf_scorecard": {
+      "version": "5.0",
+      "updated": "2025-01-02",
+      "source": "https://securityscorecards.dev/",
+      "license": "Apache-2.0",
+      "files": [
+        "openssf/scorecard.json"
+      ],
+      "description": "18 security checks for open source project health"
+    },
+    "sbom": {
+      "version": "2025.01",
+      "updated": "2025-01-02",
+      "formats": ["CycloneDX 1.6", "SPDX 3.0", "SWID"],
+      "files": [
+        "sbom/sbom-formats.json"
+      ],
+      "description": "SBOM format specifications, VEX, and PURL reference"
+    },
+    "cis_controls": {
+      "version": "8.1",
+      "updated": "2025-01-02",
+      "source": "https://www.cisecurity.org/controls/v8-1",
+      "license": "CC-BY-NC-ND 4.0",
+      "files": [
+        "cis/controls-v8.json"
+      ],
+      "note": "CIS Critical Security Controls - referenced in control-mappings.json"
+    },
+    "nist": {
+      "frameworks": ["CSF 2.0", "SP 800-53 r5", "SP 800-207"],
+      "source": "https://csrc.nist.gov/",
+      "license": "Public Domain",
+      "files": [
+        "nist/csf-2.0-summary.json",
+        "nist/sp800-53-controls.json"
+      ]
+    },
+    "cisa_kev": {
+      "version": "live",
+      "updated": "2025-01-02",
+      "source": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "license": "Public Domain",
+      "update_frequency": "daily",
+      "files": [
+        "kev/known-exploited-vulnerabilities.json"
+      ]
+    },
+    "epss": {
+      "version": "3.0",
+      "updated": "2025-01-02",
+      "source": "https://www.first.org/epss/",
+      "license": "CC-BY-SA-4.0",
+      "update_frequency": "daily",
+      "files": [
+        "epss/exploit-prediction.json"
+      ]
+    },
+    "exploit_availability": {
+      "version": "2025.01",
+      "updated": "2025-01-02",
+      "sources": ["Exploit-DB", "GitHub PoCs", "Metasploit", "Nuclei"],
+      "files": [
+        "exploits/exploit-availability.json"
+      ]
+    },
+    "cryptographic_standards": {
+      "version": "2025.01",
+      "updated": "2025-01-02",
+      "sources": ["NIST SP 800-131A", "NIST SP 800-57", "NIST PQC"],
+      "files": [
+        "crypto/cryptographic-standards.json"
+      ]
+    },
+    "container_security": {
+      "version": "2025.01",
+      "updated": "2025-01-02",
+      "sources": ["CIS Docker Benchmark", "CIS Kubernetes Benchmark", "NSA K8s Guide"],
+      "files": [
+        "containers/container-security.json"
+      ]
+    },
+    "compliance": {
+      "version": "2.0.0",
+      "updated": "2025-01-02",
+      "frameworks_covered": 20,
+      "frameworks": [
+        "GDPR", "HIPAA", "PCI-DSS 4.0", "SOC 2", "ISO 27001",
+        "FedRAMP", "DORA", "NIS2", "C5", "CSA STAR",
+        "CCPA/CPRA", "IRAP", "TISAX", "SOC 1", "CMMC",
+        "SOX", "GLBA", "LGPD", "DPDPA"
+      ],
+      "files": [
+        "compliance/frameworks.json",
+        "compliance/control-mappings.json",
+        "compliance/technical-requirements.json"
+      ],
+      "note": "Consolidated compliance reference with cross-framework mappings and actionable technical checks"
+    }
+  },
+  "update_automation": {
+    "workflow": ".github/workflows/check-security-refs.yml",
+    "schedule": "0 0 1 * *",
+    "pr_creation": true,
+    "live_apis": {
+      "kev": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+      "epss": "https://api.first.org/data/v1/epss"
+    },
+    "version_check_urls": {
+      "mitre_attack": "https://api.github.com/repos/mitre/cti/releases/latest",
+      "mitre_atlas": "https://api.github.com/repos/mitre-atlas/atlas-data/releases/latest",
+      "slsa": "https://api.github.com/repos/slsa-framework/slsa/releases/latest"
+    }
+  },
+  "staleness_policy": {
+    "quarterly_review": true,
+    "max_age_days": {
+      "mitre_attack": 180,
+      "mitre_atlas": 180,
+      "cwe": 365,
+      "owasp": 730,
+      "slsa": 365
+    }
+  }
+}

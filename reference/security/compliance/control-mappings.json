@@ -1,0 +1,169 @@
+{
+  "name": "Cross-Framework Control Mappings",
+  "version": "1.0.0",
+  "description": "Control mappings across major compliance frameworks for efficient multi-framework compliance",
+  "last_updated": "2025-01-02",
+  "mapping_methodology": {
+    "source": "Derived from NIST SP 800-53 Rev 5, CSA CCM, and framework-specific documentation",
+    "note": "Mappings indicate conceptual alignment, not 1:1 equivalence. Always verify with framework-specific requirements."
+  },
+  "control_domains": {
+    "access_control": {
+      "description": "Authentication, authorization, and access management",
+      "soc_2": ["CC6.1", "CC6.2", "CC6.3"],
+      "iso_27001": ["A.9.1.1", "A.9.1.2", "A.9.2.1", "A.9.2.2", "A.9.2.3", "A.9.2.4", "A.9.2.5", "A.9.2.6", "A.9.4.1", "A.9.4.2", "A.9.4.3"],
+      "nist_800_53": ["AC-1", "AC-2", "AC-3", "AC-5", "AC-6", "AC-7", "AC-11", "AC-12", "AC-14", "IA-1", "IA-2", "IA-4", "IA-5", "IA-8"],
+      "pci_dss_4": ["7.1", "7.2", "7.3", "8.1", "8.2", "8.3", "8.4", "8.5", "8.6"],
+      "hipaa": ["164.312(a)(1)", "164.312(a)(2)(i)", "164.312(a)(2)(ii)", "164.312(a)(2)(iii)", "164.312(d)"],
+      "cis_v8": ["5.1", "5.2", "5.3", "5.4", "5.5", "5.6", "6.1", "6.2", "6.3", "6.4", "6.5", "6.6", "6.7", "6.8"],
+      "gdpr": ["Art. 5(1)(f)", "Art. 32"],
+      "nist_csf": ["PR.AC-1", "PR.AC-2", "PR.AC-3", "PR.AC-4", "PR.AC-5", "PR.AC-6", "PR.AC-7"]
+    },
+    "cryptography": {
+      "description": "Encryption at rest, in transit, and key management",
+      "soc_2": ["CC6.1", "CC6.7"],
+      "iso_27001": ["A.10.1.1", "A.10.1.2"],
+      "nist_800_53": ["SC-8", "SC-12", "SC-13", "SC-28"],
+      "pci_dss_4": ["3.4", "3.5", "3.6", "3.7", "4.1", "4.2"],
+      "hipaa": ["164.312(a)(2)(iv)", "164.312(e)(1)", "164.312(e)(2)(i)", "164.312(e)(2)(ii)"],
+      "cis_v8": ["3.6", "3.10", "3.11"],
+      "gdpr": ["Art. 32(1)(a)"],
+      "nist_csf": ["PR.DS-1", "PR.DS-2", "PR.DS-5"]
+    },
+    "logging_monitoring": {
+      "description": "Audit logging, monitoring, and alerting",
+      "soc_2": ["CC7.1", "CC7.2", "CC7.3", "CC4.1", "CC4.2"],
+      "iso_27001": ["A.12.4.1", "A.12.4.2", "A.12.4.3", "A.12.4.4"],
+      "nist_800_53": ["AU-1", "AU-2", "AU-3", "AU-4", "AU-5", "AU-6", "AU-7", "AU-8", "AU-9", "AU-11", "AU-12", "SI-4"],
+      "pci_dss_4": ["10.1", "10.2", "10.3", "10.4", "10.5", "10.6", "10.7"],
+      "hipaa": ["164.312(b)"],
+      "cis_v8": ["8.1", "8.2", "8.3", "8.4", "8.5", "8.6", "8.7", "8.8", "8.9", "8.10", "8.11", "8.12"],
+      "gdpr": ["Art. 5(2)", "Art. 30"],
+      "nist_csf": ["DE.AE-1", "DE.AE-2", "DE.AE-3", "DE.AE-4", "DE.AE-5", "DE.CM-1", "DE.CM-7"]
+    },
+    "incident_response": {
+      "description": "Incident detection, response, and notification",
+      "soc_2": ["CC7.4", "CC7.5", "CC9.1"],
+      "iso_27001": ["A.16.1.1", "A.16.1.2", "A.16.1.3", "A.16.1.4", "A.16.1.5", "A.16.1.6", "A.16.1.7"],
+      "nist_800_53": ["IR-1", "IR-2", "IR-3", "IR-4", "IR-5", "IR-6", "IR-7", "IR-8"],
+      "pci_dss_4": ["12.10.1", "12.10.2", "12.10.3", "12.10.4", "12.10.5", "12.10.6", "12.10.7"],
+      "hipaa": ["164.308(a)(6)", "164.308(a)(6)(i)", "164.308(a)(6)(ii)"],
+      "cis_v8": ["17.1", "17.2", "17.3", "17.4", "17.5", "17.6", "17.7", "17.8", "17.9"],
+      "gdpr": ["Art. 33", "Art. 34"],
+      "dora": ["Art. 17", "Art. 18", "Art. 19"],
+      "nist_csf": ["RS.RP-1", "RS.CO-1", "RS.CO-2", "RS.CO-3", "RS.CO-4", "RS.CO-5", "RS.AN-1", "RS.AN-2", "RS.AN-3", "RS.AN-4", "RS.AN-5"]
+    },
+    "change_management": {
+      "description": "Change control, testing, and deployment",
+      "soc_2": ["CC8.1"],
+      "iso_27001": ["A.12.1.2", "A.14.2.2", "A.14.2.3", "A.14.2.4"],
+      "nist_800_53": ["CM-1", "CM-2", "CM-3", "CM-4", "CM-5", "CM-6", "CM-7", "CM-8", "CM-9"],
+      "pci_dss_4": ["6.4.1", "6.4.2", "6.4.3", "6.5.1", "6.5.2", "6.5.3", "6.5.4", "6.5.5", "6.5.6"],
+      "hipaa": ["164.308(a)(8)"],
+      "cis_v8": ["2.1", "2.2", "2.3", "2.4", "2.5", "2.6", "2.7"],
+      "nist_csf": ["PR.IP-1", "PR.IP-3"]
+    },
+    "vulnerability_management": {
+      "description": "Vulnerability scanning, patching, and remediation",
+      "soc_2": ["CC7.1", "CC3.2"],
+      "iso_27001": ["A.12.6.1", "A.12.6.2"],
+      "nist_800_53": ["RA-3", "RA-5", "SI-2", "SI-3", "SI-5"],
+      "pci_dss_4": ["5.2", "5.3", "5.4", "6.3.1", "6.3.2", "6.3.3", "11.3.1", "11.3.2"],
+      "hipaa": ["164.308(a)(1)(ii)(A)"],
+      "cis_v8": ["7.1", "7.2", "7.3", "7.4", "7.5", "7.6", "7.7"],
+      "nist_csf": ["ID.RA-1", "ID.RA-2", "DE.CM-8", "RS.MI-3"]
+    },
+    "data_protection": {
+      "description": "Data classification, retention, and deletion",
+      "soc_2": ["CC6.5", "CC6.7", "C1.1", "C1.2"],
+      "iso_27001": ["A.8.1.1", "A.8.1.2", "A.8.1.3", "A.8.2.1", "A.8.2.2", "A.8.2.3", "A.8.3.1", "A.8.3.2", "A.8.3.3"],
+      "nist_800_53": ["MP-1", "MP-2", "MP-3", "MP-4", "MP-5", "MP-6", "MP-7", "SC-28"],
+      "pci_dss_4": ["3.1", "3.2", "3.3", "9.4.1", "9.4.2", "9.4.3", "9.4.4", "9.4.5", "9.4.6", "9.4.7"],
+      "hipaa": ["164.310(d)(1)", "164.310(d)(2)", "164.312(c)(1)", "164.312(c)(2)"],
+      "cis_v8": ["3.1", "3.2", "3.3", "3.4", "3.5", "3.7", "3.8", "3.9", "3.12", "3.13", "3.14"],
+      "gdpr": ["Art. 5(1)(c)", "Art. 5(1)(d)", "Art. 5(1)(e)", "Art. 17"],
+      "nist_csf": ["PR.DS-1", "PR.DS-2", "PR.DS-3", "PR.DS-4", "PR.DS-5", "PR.DS-6", "PR.DS-7", "PR.DS-8"]
+    },
+    "network_security": {
+      "description": "Network segmentation, firewalls, and TLS",
+      "soc_2": ["CC6.1", "CC6.6"],
+      "iso_27001": ["A.13.1.1", "A.13.1.2", "A.13.1.3", "A.13.2.1", "A.13.2.2", "A.13.2.3", "A.13.2.4"],
+      "nist_800_53": ["SC-1", "SC-7", "SC-8", "SC-10", "SC-11", "SC-20", "SC-21", "SC-22", "SC-23"],
+      "pci_dss_4": ["1.1", "1.2", "1.3", "1.4", "1.5", "2.2.1", "2.2.2", "2.2.3", "4.2.1", "4.2.2"],
+      "hipaa": ["164.312(e)(1)"],
+      "cis_v8": ["12.1", "12.2", "12.3", "12.4", "12.5", "12.6", "12.7", "12.8", "13.1", "13.2", "13.3", "13.4", "13.5", "13.6", "13.7", "13.8", "13.9", "13.10", "13.11"],
+      "nist_csf": ["PR.AC-5", "PR.DS-2", "PR.PT-4"]
+    },
+    "backup_recovery": {
+      "description": "Backup, disaster recovery, and business continuity",
+      "soc_2": ["A1.2", "CC9.1"],
+      "iso_27001": ["A.12.3.1", "A.17.1.1", "A.17.1.2", "A.17.1.3", "A.17.2.1"],
+      "nist_800_53": ["CP-1", "CP-2", "CP-3", "CP-4", "CP-6", "CP-7", "CP-8", "CP-9", "CP-10"],
+      "pci_dss_4": ["9.4.1", "12.10.1"],
+      "hipaa": ["164.308(a)(7)(i)", "164.308(a)(7)(ii)", "164.310(a)(2)(i)"],
+      "cis_v8": ["11.1", "11.2", "11.3", "11.4", "11.5"],
+      "dora": ["Art. 11", "Art. 12"],
+      "nist_csf": ["PR.IP-4", "PR.IP-9", "PR.IP-10", "RC.RP-1", "RC.CO-1", "RC.CO-2", "RC.CO-3"]
+    },
+    "vendor_management": {
+      "description": "Third-party risk management and supply chain security",
+      "soc_2": ["CC9.2"],
+      "iso_27001": ["A.15.1.1", "A.15.1.2", "A.15.1.3", "A.15.2.1", "A.15.2.2"],
+      "nist_800_53": ["SA-4", "SA-9", "SA-12", "SR-1", "SR-2", "SR-3", "SR-5", "SR-6"],
+      "pci_dss_4": ["12.8.1", "12.8.2", "12.8.3", "12.8.4", "12.8.5"],
+      "hipaa": ["164.308(b)(1)", "164.308(b)(2)", "164.308(b)(3)", "164.308(b)(4)"],
+      "cis_v8": ["15.1", "15.2", "15.3", "15.4", "15.5", "15.6", "15.7"],
+      "gdpr": ["Art. 28"],
+      "dora": ["Art. 28", "Art. 29", "Art. 30"],
+      "nis2": ["Art. 21(2)(d)"],
+      "nist_csf": ["ID.SC-1", "ID.SC-2", "ID.SC-3", "ID.SC-4", "ID.SC-5"]
+    },
+    "security_awareness": {
+      "description": "Security training and awareness programs",
+      "soc_2": ["CC1.4", "CC2.2"],
+      "iso_27001": ["A.7.2.1", "A.7.2.2"],
+      "nist_800_53": ["AT-1", "AT-2", "AT-3", "AT-4"],
+      "pci_dss_4": ["12.6.1", "12.6.2", "12.6.3"],
+      "hipaa": ["164.308(a)(5)(i)", "164.308(a)(5)(ii)"],
+      "cis_v8": ["14.1", "14.2", "14.3", "14.4", "14.5", "14.6", "14.7", "14.8", "14.9"],
+      "gdpr": ["Art. 39(1)(b)"],
+      "nist_csf": ["PR.AT-1", "PR.AT-2", "PR.AT-3", "PR.AT-4", "PR.AT-5"]
+    },
+    "risk_assessment": {
+      "description": "Risk identification, analysis, and treatment",
+      "soc_2": ["CC3.1", "CC3.2", "CC3.3", "CC3.4"],
+      "iso_27001": ["6.1.1", "6.1.2", "6.1.3", "8.2", "8.3"],
+      "nist_800_53": ["RA-1", "RA-2", "RA-3", "PM-9"],
+      "pci_dss_4": ["12.3.1", "12.3.2", "12.3.3", "12.3.4"],
+      "hipaa": ["164.308(a)(1)(ii)(A)", "164.308(a)(1)(ii)(B)"],
+      "cis_v8": ["Controls are risk-based implementation"],
+      "gdpr": ["Art. 35"],
+      "dora": ["Art. 5", "Art. 6"],
+      "nist_csf": ["ID.RA-1", "ID.RA-2", "ID.RA-3", "ID.RA-4", "ID.RA-5", "ID.RA-6", "ID.RM-1", "ID.RM-2", "ID.RM-3"]
+    }
+  },
+  "efficiency_matrix": {
+    "description": "Use these mappings to minimize duplicate work",
+    "soc_2_to_iso_27001": {
+      "overlap_percentage": "~80%",
+      "recommendation": "Implement ISO 27001 first - SOC 2 becomes incremental",
+      "unique_soc_2": ["Subservice organization oversight", "Specific trust criteria customization"],
+      "unique_iso_27001": ["Formal ISMS structure", "Continuous improvement (PDCA)"]
+    },
+    "fedramp_to_soc_2": {
+      "overlap_percentage": "~70%",
+      "recommendation": "FedRAMP control baseline covers most SOC 2 requirements",
+      "unique_fedramp": ["US government-specific controls", "POA&M requirements", "ConMon"]
+    },
+    "pci_dss_to_iso_27001": {
+      "overlap_percentage": "~60%",
+      "recommendation": "ISO 27001 provides foundation, PCI-DSS adds payment-specific controls",
+      "unique_pci_dss": ["Cardholder data environment scoping", "Quarterly ASV scans", "Annual penetration testing"]
+    },
+    "hipaa_to_nist_800_53": {
+      "overlap_percentage": "~75%",
+      "recommendation": "NIST 800-53 controls satisfy most HIPAA Security Rule requirements",
+      "unique_hipaa": ["PHI-specific handling", "Business associate requirements", "Breach notification timelines"]
+    }
+  }
+}

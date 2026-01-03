@@ -1,0 +1,318 @@
+{
+  "name": "CIS Critical Security Controls v8.1",
+  "version": "8.1",
+  "released": "2024-06-25",
+  "source": "https://www.cisecurity.org/controls/v8-1",
+  "license": "CC-BY-NC-ND 4.0",
+  "changes_in_8_1": [
+    "Added Governance function aligned with NIST CSF 2.0",
+    "Updated NIST CSF security function mappings",
+    "Revised asset classes with new mappings to Safeguards",
+    "New Technique Maturity field",
+    "Expanded glossary definitions"
+  ],
+  "description": "Prioritized set of actions to protect organizations and data from known cyber attack vectors",
+  "implementation_groups": {
+    "ig1": {
+      "name": "Implementation Group 1 (IG1)",
+      "description": "Essential Cyber Hygiene - minimum standard for all organizations",
+      "control_count": 56,
+      "organization_profile": "Small to medium with limited IT expertise"
+    },
+    "ig2": {
+      "name": "Implementation Group 2 (IG2)",
+      "description": "For organizations with moderate resources and risk",
+      "control_count": 74,
+      "organization_profile": "Medium organizations with IT staff, sensitive data"
+    },
+    "ig3": {
+      "name": "Implementation Group 3 (IG3)",
+      "description": "For organizations with significant security resources",
+      "control_count": 23,
+      "organization_profile": "Large organizations, regulated industries, high-value targets"
+    }
+  },
+  "controls": {
+    "1": {
+      "name": "Inventory and Control of Enterprise Assets",
+      "description": "Actively manage all enterprise assets connected to the infrastructure",
+      "safeguards": {
+        "1.1": {"name": "Establish and Maintain Detailed Enterprise Asset Inventory", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Devices"},
+        "1.2": {"name": "Address Unauthorized Assets", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Devices"},
+        "1.3": {"name": "Utilize an Active Discovery Tool", "ig": ["IG2", "IG3"], "asset_type": "Devices"},
+        "1.4": {"name": "Use Dynamic Host Configuration Protocol (DHCP) Logging", "ig": ["IG2", "IG3"], "asset_type": "Network"},
+        "1.5": {"name": "Use a Passive Asset Discovery Tool", "ig": ["IG3"], "asset_type": "Devices"}
+      }
+    },
+    "2": {
+      "name": "Inventory and Control of Software Assets",
+      "description": "Actively manage all software on the network",
+      "safeguards": {
+        "2.1": {"name": "Establish and Maintain a Software Inventory", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Applications"},
+        "2.2": {"name": "Ensure Authorized Software is Currently Supported", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Applications"},
+        "2.3": {"name": "Address Unauthorized Software", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Applications"},
+        "2.4": {"name": "Utilize Automated Software Inventory Tools", "ig": ["IG2", "IG3"], "asset_type": "Applications"},
+        "2.5": {"name": "Allowlist Authorized Software", "ig": ["IG2", "IG3"], "asset_type": "Applications"},
+        "2.6": {"name": "Allowlist Authorized Libraries", "ig": ["IG2", "IG3"], "asset_type": "Applications"},
+        "2.7": {"name": "Allowlist Authorized Scripts", "ig": ["IG3"], "asset_type": "Applications"}
+      }
+    },
+    "3": {
+      "name": "Data Protection",
+      "description": "Develop processes and technical controls to identify, classify, securely handle, retain, and dispose of data",
+      "safeguards": {
+        "3.1": {"name": "Establish and Maintain a Data Management Process", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Data"},
+        "3.2": {"name": "Establish and Maintain a Data Inventory", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Data"},
+        "3.3": {"name": "Configure Data Access Control Lists", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Data"},
+        "3.4": {"name": "Enforce Data Retention", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Data"},
+        "3.5": {"name": "Securely Dispose of Data", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Data"},
+        "3.6": {"name": "Encrypt Data on End-User Devices", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Devices"},
+        "3.7": {"name": "Establish and Maintain a Data Classification Scheme", "ig": ["IG2", "IG3"], "asset_type": "Data"},
+        "3.8": {"name": "Document Data Flows", "ig": ["IG2", "IG3"], "asset_type": "Data"},
+        "3.9": {"name": "Encrypt Data on Removable Media", "ig": ["IG2", "IG3"], "asset_type": "Data"},
+        "3.10": {"name": "Encrypt Sensitive Data in Transit", "ig": ["IG2", "IG3"], "asset_type": "Data"},
+        "3.11": {"name": "Encrypt Sensitive Data at Rest", "ig": ["IG2", "IG3"], "asset_type": "Data"},
+        "3.12": {"name": "Segment Data Processing and Storage Based on Sensitivity", "ig": ["IG2", "IG3"], "asset_type": "Data"},
+        "3.13": {"name": "Deploy a Data Loss Prevention Solution", "ig": ["IG3"], "asset_type": "Data"},
+        "3.14": {"name": "Log Sensitive Data Access", "ig": ["IG3"], "asset_type": "Data"}
+      }
+    },
+    "4": {
+      "name": "Secure Configuration of Enterprise Assets and Software",
+      "description": "Establish and maintain secure configuration of enterprise assets and software",
+      "safeguards": {
+        "4.1": {"name": "Establish and Maintain a Secure Configuration Process", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Applications"},
+        "4.2": {"name": "Establish and Maintain a Secure Configuration Process for Network Infrastructure", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Network"},
+        "4.3": {"name": "Configure Automatic Session Locking on Enterprise Assets", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Devices"},
+        "4.4": {"name": "Implement and Manage a Firewall on Servers", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Devices"},
+        "4.5": {"name": "Implement and Manage a Firewall on End-User Devices", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Devices"},
+        "4.6": {"name": "Securely Manage Enterprise Assets and Software", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Devices"},
+        "4.7": {"name": "Manage Default Accounts on Enterprise Assets and Software", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Users"},
+        "4.8": {"name": "Uninstall or Disable Unnecessary Services", "ig": ["IG2", "IG3"], "asset_type": "Devices"},
+        "4.9": {"name": "Configure Trusted DNS Servers", "ig": ["IG2", "IG3"], "asset_type": "Network"},
+        "4.10": {"name": "Enforce Automatic Device Lockout", "ig": ["IG2", "IG3"], "asset_type": "Devices"},
+        "4.11": {"name": "Enforce Remote Wipe Capability", "ig": ["IG2", "IG3"], "asset_type": "Devices"},
+        "4.12": {"name": "Separate Enterprise Workspaces on Mobile End-User Devices", "ig": ["IG3"], "asset_type": "Devices"}
+      }
+    },
+    "5": {
+      "name": "Account Management",
+      "description": "Use processes and tools to assign and manage authorization to credentials for user accounts",
+      "safeguards": {
+        "5.1": {"name": "Establish and Maintain an Inventory of Accounts", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Users"},
+        "5.2": {"name": "Use Unique Passwords", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Users"},
+        "5.3": {"name": "Disable Dormant Accounts", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Users"},
+        "5.4": {"name": "Restrict Administrator Privileges to Dedicated Administrator Accounts", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Users"},
+        "5.5": {"name": "Establish and Maintain an Inventory of Service Accounts", "ig": ["IG2", "IG3"], "asset_type": "Users"},
+        "5.6": {"name": "Centralize Account Management", "ig": ["IG2", "IG3"], "asset_type": "Users"}
+      }
+    },
+    "6": {
+      "name": "Access Control Management",
+      "description": "Use processes and tools to create, assign, manage, and revoke access credentials and privileges",
+      "safeguards": {
+        "6.1": {"name": "Establish an Access Granting Process", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Users"},
+        "6.2": {"name": "Establish an Access Revoking Process", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Users"},
+        "6.3": {"name": "Require MFA for Externally-Exposed Applications", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Users"},
+        "6.4": {"name": "Require MFA for Remote Network Access", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Users"},
+        "6.5": {"name": "Require MFA for Administrative Access", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Users"},
+        "6.6": {"name": "Establish and Maintain an Inventory of Authentication and Authorization Systems", "ig": ["IG2", "IG3"], "asset_type": "Users"},
+        "6.7": {"name": "Centralize Access Control", "ig": ["IG2", "IG3"], "asset_type": "Users"},
+        "6.8": {"name": "Define and Maintain Role-Based Access Control", "ig": ["IG3"], "asset_type": "Users"}
+      }
+    },
+    "7": {
+      "name": "Continuous Vulnerability Management",
+      "description": "Develop a plan to continuously assess and track vulnerabilities on all enterprise assets",
+      "safeguards": {
+        "7.1": {"name": "Establish and Maintain a Vulnerability Management Process", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Applications"},
+        "7.2": {"name": "Establish and Maintain a Remediation Process", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Applications"},
+        "7.3": {"name": "Perform Automated Operating System Patch Management", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Devices"},
+        "7.4": {"name": "Perform Automated Application Patch Management", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Applications"},
+        "7.5": {"name": "Perform Automated Vulnerability Scans of Internal Enterprise Assets", "ig": ["IG2", "IG3"], "asset_type": "Devices"},
+        "7.6": {"name": "Perform Automated Vulnerability Scans of Externally-Exposed Enterprise Assets", "ig": ["IG2", "IG3"], "asset_type": "Devices"},
+        "7.7": {"name": "Remediate Detected Vulnerabilities", "ig": ["IG2", "IG3"], "asset_type": "Applications"}
+      }
+    },
+    "8": {
+      "name": "Audit Log Management",
+      "description": "Collect, alert, review, and retain audit logs of events that could help detect, understand, or recover from an attack",
+      "safeguards": {
+        "8.1": {"name": "Establish and Maintain an Audit Log Management Process", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Network"},
+        "8.2": {"name": "Collect Audit Logs", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Network"},
+        "8.3": {"name": "Ensure Adequate Audit Log Storage", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Network"},
+        "8.4": {"name": "Standardize Time Synchronization", "ig": ["IG2", "IG3"], "asset_type": "Network"},
+        "8.5": {"name": "Collect Detailed Audit Logs", "ig": ["IG2", "IG3"], "asset_type": "Network"},
+        "8.6": {"name": "Collect DNS Query Audit Logs", "ig": ["IG2", "IG3"], "asset_type": "Network"},
+        "8.7": {"name": "Collect URL Request Audit Logs", "ig": ["IG2", "IG3"], "asset_type": "Network"},
+        "8.8": {"name": "Collect Command-Line Audit Logs", "ig": ["IG2", "IG3"], "asset_type": "Devices"},
+        "8.9": {"name": "Centralize Audit Logs", "ig": ["IG2", "IG3"], "asset_type": "Network"},
+        "8.10": {"name": "Retain Audit Logs", "ig": ["IG2", "IG3"], "asset_type": "Network"},
+        "8.11": {"name": "Conduct Audit Log Reviews", "ig": ["IG2", "IG3"], "asset_type": "Network"},
+        "8.12": {"name": "Collect Service Provider Logs", "ig": ["IG3"], "asset_type": "Network"}
+      }
+    },
+    "9": {
+      "name": "Email and Web Browser Protections",
+      "description": "Improve protections and detections of threats from email and web vectors",
+      "safeguards": {
+        "9.1": {"name": "Ensure Use of Only Fully Supported Browsers and Email Clients", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Applications"},
+        "9.2": {"name": "Use DNS Filtering Services", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Network"},
+        "9.3": {"name": "Maintain and Enforce Network-Based URL Filters", "ig": ["IG2", "IG3"], "asset_type": "Network"},
+        "9.4": {"name": "Restrict Unnecessary or Unauthorized Browser and Email Client Extensions", "ig": ["IG2", "IG3"], "asset_type": "Applications"},
+        "9.5": {"name": "Implement DMARC", "ig": ["IG2", "IG3"], "asset_type": "Network"},
+        "9.6": {"name": "Block Unnecessary File Types", "ig": ["IG2", "IG3"], "asset_type": "Network"},
+        "9.7": {"name": "Deploy and Maintain Email Server Anti-Malware Protections", "ig": ["IG3"], "asset_type": "Network"}
+      }
+    },
+    "10": {
+      "name": "Malware Defenses",
+      "description": "Prevent or control installation, spread, and execution of malicious applications, code, or scripts",
+      "safeguards": {
+        "10.1": {"name": "Deploy and Maintain Anti-Malware Software", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Devices"},
+        "10.2": {"name": "Configure Automatic Anti-Malware Signature Updates", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Devices"},
+        "10.3": {"name": "Disable Autorun and Autoplay for Removable Media", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Devices"},
+        "10.4": {"name": "Configure Automatic Anti-Malware Scanning of Removable Media", "ig": ["IG2", "IG3"], "asset_type": "Devices"},
+        "10.5": {"name": "Enable Anti-Exploitation Features", "ig": ["IG2", "IG3"], "asset_type": "Devices"},
+        "10.6": {"name": "Centrally Manage Anti-Malware Software", "ig": ["IG2", "IG3"], "asset_type": "Devices"},
+        "10.7": {"name": "Use Behavior-Based Anti-Malware Software", "ig": ["IG3"], "asset_type": "Devices"}
+      }
+    },
+    "11": {
+      "name": "Data Recovery",
+      "description": "Establish and maintain data recovery practices sufficient to restore in-scope enterprise assets to a pre-incident state",
+      "safeguards": {
+        "11.1": {"name": "Establish and Maintain a Data Recovery Process", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Data"},
+        "11.2": {"name": "Perform Automated Backups", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Data"},
+        "11.3": {"name": "Protect Recovery Data", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Data"},
+        "11.4": {"name": "Establish and Maintain an Isolated Instance of Recovery Data", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Data"},
+        "11.5": {"name": "Test Data Recovery", "ig": ["IG2", "IG3"], "asset_type": "Data"}
+      }
+    },
+    "12": {
+      "name": "Network Infrastructure Management",
+      "description": "Establish, implement, and actively manage network devices to prevent attackers from exploiting network services",
+      "safeguards": {
+        "12.1": {"name": "Ensure Network Infrastructure is Up-to-Date", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Network"},
+        "12.2": {"name": "Establish and Maintain a Secure Network Architecture", "ig": ["IG2", "IG3"], "asset_type": "Network"},
+        "12.3": {"name": "Securely Manage Network Infrastructure", "ig": ["IG2", "IG3"], "asset_type": "Network"},
+        "12.4": {"name": "Establish and Maintain Architecture Diagram(s)", "ig": ["IG2", "IG3"], "asset_type": "Network"},
+        "12.5": {"name": "Centralize Network Authentication, Authorization, and Auditing (AAA)", "ig": ["IG2", "IG3"], "asset_type": "Network"},
+        "12.6": {"name": "Use Secure Network Management and Communication Protocols", "ig": ["IG2", "IG3"], "asset_type": "Network"},
+        "12.7": {"name": "Ensure Remote Devices Utilize a VPN and are Connecting to an Enterprise's AAA Infrastructure", "ig": ["IG2", "IG3"], "asset_type": "Network"},
+        "12.8": {"name": "Establish and Maintain Dedicated Computing Resources for Administrative Work", "ig": ["IG3"], "asset_type": "Network"}
+      }
+    },
+    "13": {
+      "name": "Network Monitoring and Defense",
+      "description": "Operate processes and tooling to establish and maintain comprehensive network monitoring and defense",
+      "safeguards": {
+        "13.1": {"name": "Centralize Security Event Alerting", "ig": ["IG2", "IG3"], "asset_type": "Network"},
+        "13.2": {"name": "Deploy a Host-Based Intrusion Detection Solution", "ig": ["IG2", "IG3"], "asset_type": "Devices"},
+        "13.3": {"name": "Deploy a Network Intrusion Detection Solution", "ig": ["IG2", "IG3"], "asset_type": "Network"},
+        "13.4": {"name": "Perform Traffic Filtering Between Network Segments", "ig": ["IG2", "IG3"], "asset_type": "Network"},
+        "13.5": {"name": "Manage Access Control for Remote Assets", "ig": ["IG2", "IG3"], "asset_type": "Network"},
+        "13.6": {"name": "Collect Network Traffic Flow Logs", "ig": ["IG2", "IG3"], "asset_type": "Network"},
+        "13.7": {"name": "Deploy a Host-Based Intrusion Prevention Solution", "ig": ["IG3"], "asset_type": "Devices"},
+        "13.8": {"name": "Deploy a Network Intrusion Prevention Solution", "ig": ["IG3"], "asset_type": "Network"},
+        "13.9": {"name": "Deploy Port-Level Access Control", "ig": ["IG3"], "asset_type": "Network"},
+        "13.10": {"name": "Perform Application Layer Filtering", "ig": ["IG3"], "asset_type": "Network"},
+        "13.11": {"name": "Tune Security Event Alerting Thresholds", "ig": ["IG3"], "asset_type": "Network"}
+      }
+    },
+    "14": {
+      "name": "Security Awareness and Skills Training",
+      "description": "Establish and maintain a security awareness program to influence behavior among the workforce",
+      "safeguards": {
+        "14.1": {"name": "Establish and Maintain a Security Awareness Program", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Users"},
+        "14.2": {"name": "Train Workforce Members to Recognize Social Engineering Attacks", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Users"},
+        "14.3": {"name": "Train Workforce Members on Authentication Best Practices", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Users"},
+        "14.4": {"name": "Train Workforce on Data Handling Best Practices", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Users"},
+        "14.5": {"name": "Train Workforce Members on Causes of Unintentional Data Exposure", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Users"},
+        "14.6": {"name": "Train Workforce Members on Recognizing and Reporting Security Incidents", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Users"},
+        "14.7": {"name": "Train Workforce on How to Identify and Report if Their Enterprise Assets are Missing Security Updates", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Users"},
+        "14.8": {"name": "Train Workforce on the Dangers of Connecting to and Transmitting Enterprise Data Over Insecure Networks", "ig": ["IG1", "IG2", "IG3"], "asset_type": "Users"},
+        "14.9": {"name": "Conduct Role-Specific Security Awareness and Skills Training", "ig": ["IG2", "IG3"], "asset_type": "Users"}
+      }
+    },
+    "15": {
+      "name": "Service Provider Management",
+      "description": "Develop a process to evaluate service providers who hold sensitive data, or are responsible for enterprise's critical IT platforms",
+      "safeguards": {
+        "15.1": {"name": "Establish and Maintain an Inventory of Service Providers", "ig": ["IG1", "IG2", "IG3"], "asset_type": "N/A"},
+        "15.2": {"name": "Establish and Maintain a Service Provider Management Policy", "ig": ["IG2", "IG3"], "asset_type": "N/A"},
+        "15.3": {"name": "Classify Service Providers", "ig": ["IG2", "IG3"], "asset_type": "N/A"},
+        "15.4": {"name": "Ensure Service Provider Contracts Include Security Requirements", "ig": ["IG2", "IG3"], "asset_type": "N/A"},
+        "15.5": {"name": "Assess Service Providers", "ig": ["IG3"], "asset_type": "N/A"},
+        "15.6": {"name": "Monitor Service Providers", "ig": ["IG3"], "asset_type": "N/A"},
+        "15.7": {"name": "Securely Decommission Service Providers", "ig": ["IG3"], "asset_type": "N/A"}
+      }
+    },
+    "16": {
+      "name": "Application Software Security",
+      "description": "Manage the security life cycle of in-house developed, hosted, or acquired software",
+      "safeguards": {
+        "16.1": {"name": "Establish and Maintain a Secure Application Development Process", "ig": ["IG2", "IG3"], "asset_type": "Applications"},
+        "16.2": {"name": "Establish and Maintain a Process to Accept and Address Software Vulnerabilities", "ig": ["IG2", "IG3"], "asset_type": "Applications"},
+        "16.3": {"name": "Perform Root Cause Analysis on Security Vulnerabilities", "ig": ["IG2", "IG3"], "asset_type": "Applications"},
+        "16.4": {"name": "Establish and Manage an Inventory of Third-Party Software Components", "ig": ["IG2", "IG3"], "asset_type": "Applications"},
+        "16.5": {"name": "Use Up-to-Date and Trusted Third-Party Software Components", "ig": ["IG2", "IG3"], "asset_type": "Applications"},
+        "16.6": {"name": "Establish and Maintain a Severity Rating System and Process for Application Vulnerabilities", "ig": ["IG2", "IG3"], "asset_type": "Applications"},
+        "16.7": {"name": "Use Standard Hardening Configuration Templates for Application Infrastructure", "ig": ["IG2", "IG3"], "asset_type": "Applications"},
+        "16.8": {"name": "Separate Production and Non-Production Systems", "ig": ["IG2", "IG3"], "asset_type": "Applications"},
+        "16.9": {"name": "Train Developers in Application Security Concepts and Secure Coding", "ig": ["IG2", "IG3"], "asset_type": "Applications"},
+        "16.10": {"name": "Apply Secure Design Principles in Application Architectures", "ig": ["IG2", "IG3"], "asset_type": "Applications"},
+        "16.11": {"name": "Leverage Vetted Modules or Services for Application Security Components", "ig": ["IG2", "IG3"], "asset_type": "Applications"},
+        "16.12": {"name": "Implement Code-Level Security Checks", "ig": ["IG3"], "asset_type": "Applications"},
+        "16.13": {"name": "Conduct Application Penetration Testing", "ig": ["IG3"], "asset_type": "Applications"},
+        "16.14": {"name": "Conduct Threat Modeling", "ig": ["IG3"], "asset_type": "Applications"}
+      }
+    },
+    "17": {
+      "name": "Incident Response Management",
+      "description": "Establish a program to develop and maintain an incident response capability",
+      "safeguards": {
+        "17.1": {"name": "Designate Personnel to Manage Incident Handling", "ig": ["IG1", "IG2", "IG3"], "asset_type": "N/A"},
+        "17.2": {"name": "Establish and Maintain Contact Information for Reporting Security Incidents", "ig": ["IG1", "IG2", "IG3"], "asset_type": "N/A"},
+        "17.3": {"name": "Establish and Maintain an Enterprise Process for Reporting Incidents", "ig": ["IG1", "IG2", "IG3"], "asset_type": "N/A"},
+        "17.4": {"name": "Establish and Maintain an Incident Response Process", "ig": ["IG2", "IG3"], "asset_type": "N/A"},
+        "17.5": {"name": "Assign Key Roles and Responsibilities", "ig": ["IG2", "IG3"], "asset_type": "N/A"},
+        "17.6": {"name": "Define Mechanisms for Communicating During Incident Response", "ig": ["IG2", "IG3"], "asset_type": "N/A"},
+        "17.7": {"name": "Conduct Routine Incident Response Exercises", "ig": ["IG2", "IG3"], "asset_type": "N/A"},
+        "17.8": {"name": "Conduct Post-Incident Reviews", "ig": ["IG2", "IG3"], "asset_type": "N/A"},
+        "17.9": {"name": "Establish and Maintain Security Incident Thresholds", "ig": ["IG3"], "asset_type": "N/A"}
+      }
+    },
+    "18": {
+      "name": "Penetration Testing",
+      "description": "Test the effectiveness and resiliency of enterprise assets through identifying and exploiting weaknesses",
+      "safeguards": {
+        "18.1": {"name": "Establish and Maintain a Penetration Testing Program", "ig": ["IG2", "IG3"], "asset_type": "N/A"},
+        "18.2": {"name": "Perform Periodic External Penetration Tests", "ig": ["IG2", "IG3"], "asset_type": "N/A"},
+        "18.3": {"name": "Remediate Penetration Test Findings", "ig": ["IG2", "IG3"], "asset_type": "N/A"},
+        "18.4": {"name": "Validate Security Measures", "ig": ["IG3"], "asset_type": "N/A"},
+        "18.5": {"name": "Perform Periodic Internal Penetration Tests", "ig": ["IG3"], "asset_type": "N/A"}
+      }
+    }
+  },
+  "mapping_to_nist_csf": {
+    "1": ["ID.AM-1", "ID.AM-2"],
+    "2": ["ID.AM-1", "ID.AM-2"],
+    "3": ["PR.DS-1", "PR.DS-2", "PR.DS-3", "PR.DS-5"],
+    "4": ["PR.IP-1"],
+    "5": ["PR.AC-1", "PR.AC-4"],
+    "6": ["PR.AC-1", "PR.AC-3", "PR.AC-4", "PR.AC-6"],
+    "7": ["ID.RA-1", "ID.RA-2", "RS.MI-3"],
+    "8": ["DE.AE-3", "PR.PT-1"],
+    "9": ["DE.CM-7", "PR.AT-1"],
+    "10": ["DE.CM-4", "PR.DS-5"],
+    "11": ["PR.IP-4", "RC.RP-1"],
+    "12": ["PR.AC-5", "PR.PT-4"],
+    "13": ["DE.AE-1", "DE.CM-1", "DE.CM-7"],
+    "14": ["PR.AT-1", "PR.AT-2"],
+    "15": ["ID.SC-1", "ID.SC-2"],
+    "16": ["PR.IP-2", "DE.CM-8"],
+    "17": ["RS.RP-1", "RS.CO-1"],
+    "18": ["ID.RA-1", "PR.IP-7"]
+  }
+}

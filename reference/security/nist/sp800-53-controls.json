@@ -1,0 +1,256 @@
+{
+  "name": "NIST SP 800-53 Rev. 5 Security Controls Summary",
+  "version": "Rev. 5",
+  "released": "2020-09-23",
+  "source": "https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final",
+  "license": "Public Domain",
+  "description": "Security and Privacy Controls for Information Systems and Organizations",
+  "control_families": {
+    "AC": {
+      "name": "Access Control",
+      "count": 25,
+      "key_controls": [
+        {"id": "AC-1", "name": "Policy and Procedures", "priority": "P1"},
+        {"id": "AC-2", "name": "Account Management", "priority": "P1"},
+        {"id": "AC-3", "name": "Access Enforcement", "priority": "P1"},
+        {"id": "AC-4", "name": "Information Flow Enforcement", "priority": "P1"},
+        {"id": "AC-5", "name": "Separation of Duties", "priority": "P1"},
+        {"id": "AC-6", "name": "Least Privilege", "priority": "P1"},
+        {"id": "AC-7", "name": "Unsuccessful Logon Attempts", "priority": "P2"},
+        {"id": "AC-11", "name": "Device Lock", "priority": "P3"},
+        {"id": "AC-17", "name": "Remote Access", "priority": "P1"},
+        {"id": "AC-18", "name": "Wireless Access", "priority": "P1"},
+        {"id": "AC-20", "name": "Use of External Systems", "priority": "P1"}
+      ]
+    },
+    "AT": {
+      "name": "Awareness and Training",
+      "count": 6,
+      "key_controls": [
+        {"id": "AT-2", "name": "Literacy Training and Awareness", "priority": "P1"},
+        {"id": "AT-3", "name": "Role-based Training", "priority": "P1"},
+        {"id": "AT-4", "name": "Training Records", "priority": "P3"}
+      ]
+    },
+    "AU": {
+      "name": "Audit and Accountability",
+      "count": 16,
+      "key_controls": [
+        {"id": "AU-2", "name": "Event Logging", "priority": "P1"},
+        {"id": "AU-3", "name": "Content of Audit Records", "priority": "P1"},
+        {"id": "AU-4", "name": "Audit Log Storage Capacity", "priority": "P1"},
+        {"id": "AU-5", "name": "Response to Audit Logging Process Failures", "priority": "P1"},
+        {"id": "AU-6", "name": "Audit Record Review, Analysis, and Reporting", "priority": "P1"},
+        {"id": "AU-9", "name": "Protection of Audit Information", "priority": "P1"},
+        {"id": "AU-11", "name": "Audit Record Retention", "priority": "P3"},
+        {"id": "AU-12", "name": "Audit Record Generation", "priority": "P1"}
+      ]
+    },
+    "CA": {
+      "name": "Assessment, Authorization, and Monitoring",
+      "count": 9,
+      "key_controls": [
+        {"id": "CA-2", "name": "Control Assessments", "priority": "P2"},
+        {"id": "CA-3", "name": "Information Exchange", "priority": "P1"},
+        {"id": "CA-5", "name": "Plan of Action and Milestones", "priority": "P3"},
+        {"id": "CA-7", "name": "Continuous Monitoring", "priority": "P1"}
+      ]
+    },
+    "CM": {
+      "name": "Configuration Management",
+      "count": 14,
+      "key_controls": [
+        {"id": "CM-2", "name": "Baseline Configuration", "priority": "P1"},
+        {"id": "CM-3", "name": "Configuration Change Control", "priority": "P1"},
+        {"id": "CM-4", "name": "Impact Analyses", "priority": "P2"},
+        {"id": "CM-6", "name": "Configuration Settings", "priority": "P1"},
+        {"id": "CM-7", "name": "Least Functionality", "priority": "P1"},
+        {"id": "CM-8", "name": "System Component Inventory", "priority": "P1"},
+        {"id": "CM-10", "name": "Software Usage Restrictions", "priority": "P2"},
+        {"id": "CM-11", "name": "User-installed Software", "priority": "P1"}
+      ]
+    },
+    "CP": {
+      "name": "Contingency Planning",
+      "count": 13,
+      "key_controls": [
+        {"id": "CP-2", "name": "Contingency Plan", "priority": "P1"},
+        {"id": "CP-4", "name": "Contingency Plan Testing", "priority": "P2"},
+        {"id": "CP-9", "name": "System Backup", "priority": "P1"},
+        {"id": "CP-10", "name": "System Recovery and Reconstitution", "priority": "P1"}
+      ]
+    },
+    "IA": {
+      "name": "Identification and Authentication",
+      "count": 12,
+      "key_controls": [
+        {"id": "IA-2", "name": "Identification and Authentication (Organizational Users)", "priority": "P1"},
+        {"id": "IA-3", "name": "Device Identification and Authentication", "priority": "P1"},
+        {"id": "IA-4", "name": "Identifier Management", "priority": "P1"},
+        {"id": "IA-5", "name": "Authenticator Management", "priority": "P1"},
+        {"id": "IA-6", "name": "Authentication Feedback", "priority": "P2"},
+        {"id": "IA-8", "name": "Identification and Authentication (Non-Organizational Users)", "priority": "P1"}
+      ]
+    },
+    "IR": {
+      "name": "Incident Response",
+      "count": 10,
+      "key_controls": [
+        {"id": "IR-2", "name": "Incident Response Training", "priority": "P2"},
+        {"id": "IR-3", "name": "Incident Response Testing", "priority": "P2"},
+        {"id": "IR-4", "name": "Incident Handling", "priority": "P1"},
+        {"id": "IR-5", "name": "Incident Monitoring", "priority": "P1"},
+        {"id": "IR-6", "name": "Incident Reporting", "priority": "P1"},
+        {"id": "IR-8", "name": "Incident Response Plan", "priority": "P1"}
+      ]
+    },
+    "MA": {
+      "name": "Maintenance",
+      "count": 7,
+      "key_controls": [
+        {"id": "MA-2", "name": "Controlled Maintenance", "priority": "P2"},
+        {"id": "MA-4", "name": "Nonlocal Maintenance", "priority": "P2"},
+        {"id": "MA-5", "name": "Maintenance Personnel", "priority": "P2"}
+      ]
+    },
+    "MP": {
+      "name": "Media Protection",
+      "count": 8,
+      "key_controls": [
+        {"id": "MP-2", "name": "Media Access", "priority": "P1"},
+        {"id": "MP-4", "name": "Media Storage", "priority": "P1"},
+        {"id": "MP-6", "name": "Media Sanitization", "priority": "P1"}
+      ]
+    },
+    "PE": {
+      "name": "Physical and Environmental Protection",
+      "count": 23,
+      "key_controls": [
+        {"id": "PE-2", "name": "Physical Access Authorizations", "priority": "P1"},
+        {"id": "PE-3", "name": "Physical Access Control", "priority": "P1"},
+        {"id": "PE-6", "name": "Monitoring Physical Access", "priority": "P1"}
+      ]
+    },
+    "PL": {
+      "name": "Planning",
+      "count": 11,
+      "key_controls": [
+        {"id": "PL-2", "name": "System Security and Privacy Plans", "priority": "P1"},
+        {"id": "PL-4", "name": "Rules of Behavior", "priority": "P2"},
+        {"id": "PL-8", "name": "Security and Privacy Architectures", "priority": "P1"}
+      ]
+    },
+    "PM": {
+      "name": "Program Management",
+      "count": 32,
+      "key_controls": [
+        {"id": "PM-1", "name": "Information Security Program Plan", "priority": "P1"},
+        {"id": "PM-2", "name": "Information Security Program Leadership Role", "priority": "P1"},
+        {"id": "PM-9", "name": "Risk Management Strategy", "priority": "P1"}
+      ]
+    },
+    "PS": {
+      "name": "Personnel Security",
+      "count": 9,
+      "key_controls": [
+        {"id": "PS-2", "name": "Position Risk Designation", "priority": "P1"},
+        {"id": "PS-3", "name": "Personnel Screening", "priority": "P1"},
+        {"id": "PS-4", "name": "Personnel Termination", "priority": "P1"},
+        {"id": "PS-5", "name": "Personnel Transfer", "priority": "P2"}
+      ]
+    },
+    "PT": {
+      "name": "Personally Identifiable Information Processing and Transparency",
+      "count": 8,
+      "new_in_rev5": true,
+      "key_controls": [
+        {"id": "PT-2", "name": "Authority to Process PII", "priority": "P1"},
+        {"id": "PT-3", "name": "PII Processing Purposes", "priority": "P1"},
+        {"id": "PT-4", "name": "Consent", "priority": "P1"}
+      ]
+    },
+    "RA": {
+      "name": "Risk Assessment",
+      "count": 10,
+      "key_controls": [
+        {"id": "RA-2", "name": "Security Categorization", "priority": "P1"},
+        {"id": "RA-3", "name": "Risk Assessment", "priority": "P1"},
+        {"id": "RA-5", "name": "Vulnerability Monitoring and Scanning", "priority": "P1"},
+        {"id": "RA-7", "name": "Risk Response", "priority": "P1"}
+      ]
+    },
+    "SA": {
+      "name": "System and Services Acquisition",
+      "count": 23,
+      "key_controls": [
+        {"id": "SA-2", "name": "Allocation of Resources", "priority": "P1"},
+        {"id": "SA-3", "name": "System Development Life Cycle", "priority": "P1"},
+        {"id": "SA-4", "name": "Acquisition Process", "priority": "P1"},
+        {"id": "SA-8", "name": "Security and Privacy Engineering Principles", "priority": "P1"},
+        {"id": "SA-9", "name": "External System Services", "priority": "P1"},
+        {"id": "SA-11", "name": "Developer Testing and Evaluation", "priority": "P1"},
+        {"id": "SA-22", "name": "Unsupported System Components", "priority": "P1"}
+      ]
+    },
+    "SC": {
+      "name": "System and Communications Protection",
+      "count": 51,
+      "key_controls": [
+        {"id": "SC-5", "name": "Denial-of-service Protection", "priority": "P1"},
+        {"id": "SC-7", "name": "Boundary Protection", "priority": "P1"},
+        {"id": "SC-8", "name": "Transmission Confidentiality and Integrity", "priority": "P1"},
+        {"id": "SC-12", "name": "Cryptographic Key Establishment and Management", "priority": "P1"},
+        {"id": "SC-13", "name": "Cryptographic Protection", "priority": "P1"},
+        {"id": "SC-17", "name": "Public Key Infrastructure Certificates", "priority": "P1"},
+        {"id": "SC-23", "name": "Session Authenticity", "priority": "P1"},
+        {"id": "SC-28", "name": "Protection of Information at Rest", "priority": "P1"}
+      ]
+    },
+    "SI": {
+      "name": "System and Information Integrity",
+      "count": 23,
+      "key_controls": [
+        {"id": "SI-2", "name": "Flaw Remediation", "priority": "P1"},
+        {"id": "SI-3", "name": "Malicious Code Protection", "priority": "P1"},
+        {"id": "SI-4", "name": "System Monitoring", "priority": "P1"},
+        {"id": "SI-5", "name": "Security Alerts, Advisories, and Directives", "priority": "P1"},
+        {"id": "SI-7", "name": "Software, Firmware, and Information Integrity", "priority": "P1"},
+        {"id": "SI-10", "name": "Information Input Validation", "priority": "P1"},
+        {"id": "SI-12", "name": "Information Management and Retention", "priority": "P2"}
+      ]
+    },
+    "SR": {
+      "name": "Supply Chain Risk Management",
+      "count": 12,
+      "new_in_rev5": true,
+      "key_controls": [
+        {"id": "SR-1", "name": "Policy and Procedures", "priority": "P1"},
+        {"id": "SR-2", "name": "Supply Chain Risk Management Plan", "priority": "P1"},
+        {"id": "SR-3", "name": "Supply Chain Controls and Processes", "priority": "P1"},
+        {"id": "SR-5", "name": "Acquisition Strategies, Tools, and Methods", "priority": "P1"},
+        {"id": "SR-6", "name": "Supplier Assessments and Reviews", "priority": "P2"},
+        {"id": "SR-11", "name": "Component Authenticity", "priority": "P1"}
+      ]
+    }
+  },
+  "baselines": {
+    "low": {
+      "description": "Basic controls for low-impact systems",
+      "control_count": 125
+    },
+    "moderate": {
+      "description": "Standard controls for moderate-impact systems",
+      "control_count": 272
+    },
+    "high": {
+      "description": "Enhanced controls for high-impact systems",
+      "control_count": 320
+    }
+  },
+  "new_in_rev5": [
+    "PT family (PII Processing and Transparency)",
+    "SR family (Supply Chain Risk Management)",
+    "Enhanced privacy controls throughout",
+    "Updated for cloud and modern architectures"
+  ]
+}

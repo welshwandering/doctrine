@@ -1,0 +1,306 @@
+{
+  "name": "MITRE CAPEC (Common Attack Pattern Enumeration and Classification)",
+  "version": "3.9",
+  "released": "2024-04-04",
+  "source": "https://capec.mitre.org/",
+  "license": "CAPEC Terms of Use",
+  "description": "Comprehensive dictionary of known attack patterns used by adversaries",
+  "total_patterns": 559,
+  "changelog": {
+    "v3_9": {
+      "released": "2024-04-04",
+      "changes": [
+        "5 new attack patterns added",
+        "39 patterns modified for clarity",
+        "Enhanced relationships to CWE and ATT&CK"
+      ]
+    }
+  },
+  "domains": {
+    "software": {
+      "description": "Attacks targeting software applications",
+      "pattern_count": 507
+    },
+    "hardware": {
+      "description": "Attacks targeting hardware components",
+      "pattern_count": 38
+    },
+    "social_engineering": {
+      "description": "Attacks exploiting human factors",
+      "pattern_count": 52
+    },
+    "supply_chain": {
+      "description": "Attacks targeting the supply chain",
+      "pattern_count": 14
+    }
+  },
+  "mechanisms_of_attack": [
+    {
+      "id": "1000",
+      "name": "Gather Information",
+      "description": "Techniques to collect information about target",
+      "top_patterns": [
+        {"id": "CAPEC-169", "name": "Footprinting"},
+        {"id": "CAPEC-224", "name": "Fingerprinting"},
+        {"id": "CAPEC-300", "name": "Port Scanning"}
+      ]
+    },
+    {
+      "id": "1001",
+      "name": "Employ Probabilistic Techniques",
+      "description": "Attacks using probabilistic methods",
+      "top_patterns": [
+        {"id": "CAPEC-49", "name": "Password Brute Forcing"},
+        {"id": "CAPEC-55", "name": "Rainbow Table Password Cracking"},
+        {"id": "CAPEC-112", "name": "Brute Force"}
+      ]
+    },
+    {
+      "id": "1002",
+      "name": "Subvert Access Control",
+      "description": "Attacks that bypass access controls",
+      "top_patterns": [
+        {"id": "CAPEC-122", "name": "Privilege Abuse"},
+        {"id": "CAPEC-233", "name": "Privilege Escalation"},
+        {"id": "CAPEC-180", "name": "Exploiting Incorrectly Configured Access Control Security Levels"}
+      ]
+    },
+    {
+      "id": "1003",
+      "name": "Inject Unexpected Items",
+      "description": "Injection-based attacks",
+      "top_patterns": [
+        {"id": "CAPEC-66", "name": "SQL Injection"},
+        {"id": "CAPEC-86", "name": "XSS Through HTTP Headers"},
+        {"id": "CAPEC-88", "name": "OS Command Injection"}
+      ]
+    },
+    {
+      "id": "1004",
+      "name": "Manipulate Data Structures",
+      "description": "Attacks manipulating data structures",
+      "top_patterns": [
+        {"id": "CAPEC-100", "name": "Overflow Buffers"},
+        {"id": "CAPEC-123", "name": "Buffer Manipulation"}
+      ]
+    },
+    {
+      "id": "1005",
+      "name": "Engage in Deceptive Interactions",
+      "description": "Social engineering and deception attacks",
+      "top_patterns": [
+        {"id": "CAPEC-98", "name": "Phishing"},
+        {"id": "CAPEC-163", "name": "Spear Phishing"},
+        {"id": "CAPEC-103", "name": "Clickjacking"}
+      ]
+    },
+    {
+      "id": "1006",
+      "name": "Abuse Existing Functionality",
+      "description": "Misusing legitimate functionality",
+      "top_patterns": [
+        {"id": "CAPEC-113", "name": "Interface Manipulation"},
+        {"id": "CAPEC-115", "name": "Authentication Bypass"}
+      ]
+    },
+    {
+      "id": "1007",
+      "name": "Manipulate System Resources",
+      "description": "Attacks on system resources",
+      "top_patterns": [
+        {"id": "CAPEC-17", "name": "Using Malicious Files"},
+        {"id": "CAPEC-219", "name": "XML Routing Detour Attacks"}
+      ]
+    },
+    {
+      "id": "1008",
+      "name": "Manipulate Timing and State",
+      "description": "Race condition and timing attacks",
+      "top_patterns": [
+        {"id": "CAPEC-26", "name": "Leveraging Race Conditions"},
+        {"id": "CAPEC-29", "name": "Leveraging Time-of-Check and Time-of-Use (TOCTOU) Race Conditions"}
+      ]
+    },
+    {
+      "id": "1009",
+      "name": "Collect and Analyze Information",
+      "description": "Reconnaissance techniques",
+      "top_patterns": [
+        {"id": "CAPEC-118", "name": "Gather Victim Identity Information"},
+        {"id": "CAPEC-309", "name": "Network Topology Mapping"}
+      ]
+    }
+  ],
+  "high_priority_patterns": {
+    "web_application": [
+      {
+        "id": "CAPEC-66",
+        "name": "SQL Injection",
+        "severity": "High",
+        "cwes": ["CWE-89"],
+        "attack_techniques": ["T1190"]
+      },
+      {
+        "id": "CAPEC-86",
+        "name": "XSS Through HTTP Headers",
+        "severity": "High",
+        "cwes": ["CWE-79"],
+        "attack_techniques": ["T1059.007"]
+      },
+      {
+        "id": "CAPEC-88",
+        "name": "OS Command Injection",
+        "severity": "Critical",
+        "cwes": ["CWE-78"],
+        "attack_techniques": ["T1059"]
+      },
+      {
+        "id": "CAPEC-126",
+        "name": "Path Traversal",
+        "severity": "High",
+        "cwes": ["CWE-22"],
+        "attack_techniques": ["T1083"]
+      },
+      {
+        "id": "CAPEC-115",
+        "name": "Authentication Bypass",
+        "severity": "Critical",
+        "cwes": ["CWE-287", "CWE-306"],
+        "attack_techniques": ["T1078"]
+      }
+    ],
+    "supply_chain": [
+      {
+        "id": "CAPEC-437",
+        "name": "Supply Chain Attack",
+        "severity": "Critical",
+        "description": "Attacker compromises supply chain to inject malicious components",
+        "cwes": ["CWE-829", "CWE-494"]
+      },
+      {
+        "id": "CAPEC-438",
+        "name": "Modification During Manufacture",
+        "severity": "Critical",
+        "description": "Malicious modifications during production"
+      },
+      {
+        "id": "CAPEC-439",
+        "name": "Manipulation During Distribution",
+        "severity": "High",
+        "description": "Tampering during shipping or storage"
+      },
+      {
+        "id": "CAPEC-443",
+        "name": "Malicious Logic Inserted Into Product Software",
+        "severity": "Critical",
+        "description": "Backdoors in software dependencies"
+      },
+      {
+        "id": "CAPEC-693",
+        "name": "StarJacking",
+        "severity": "High",
+        "description": "Claiming unaffiliated popular repository to gain trust"
+      }
+    ],
+    "social_engineering": [
+      {
+        "id": "CAPEC-98",
+        "name": "Phishing",
+        "severity": "High",
+        "attack_techniques": ["T1566"]
+      },
+      {
+        "id": "CAPEC-163",
+        "name": "Spear Phishing",
+        "severity": "High",
+        "attack_techniques": ["T1566.001", "T1566.002"]
+      },
+      {
+        "id": "CAPEC-173",
+        "name": "Action Spoofing",
+        "severity": "Medium",
+        "description": "Tricking user into unintended actions"
+      }
+    ],
+    "api_security": [
+      {
+        "id": "CAPEC-113",
+        "name": "Interface Manipulation",
+        "severity": "High",
+        "cwes": ["CWE-20"]
+      },
+      {
+        "id": "CAPEC-180",
+        "name": "Exploiting Incorrectly Configured Access Control",
+        "severity": "Critical",
+        "cwes": ["CWE-284"]
+      },
+      {
+        "id": "CAPEC-194",
+        "name": "Fake the Source of Data",
+        "severity": "High",
+        "cwes": ["CWE-346"]
+      }
+    ]
+  },
+  "ai_ml_patterns": {
+    "note": "Attack patterns relevant to AI/ML systems",
+    "patterns": [
+      {
+        "id": "CAPEC-542",
+        "name": "Targeted Malware",
+        "relevance": "Malware targeting ML model files"
+      },
+      {
+        "id": "CAPEC-141",
+        "name": "Cache Poisoning",
+        "relevance": "Model cache poisoning"
+      },
+      {
+        "id": "CAPEC-148",
+        "name": "Content Spoofing",
+        "relevance": "Training data manipulation"
+      }
+    ],
+    "cross_reference": "reference/security/mitre/atlas/atlas-summary.json"
+  },
+  "cwe_mapping": {
+    "description": "CAPEC attack patterns map to CWE weaknesses they exploit",
+    "relationship": "Many-to-many (pattern can exploit multiple weaknesses)",
+    "examples": [
+      {"capec": "CAPEC-66", "cwes": ["CWE-89", "CWE-20", "CWE-943"]},
+      {"capec": "CAPEC-100", "cwes": ["CWE-787", "CWE-120", "CWE-119"]},
+      {"capec": "CAPEC-88", "cwes": ["CWE-78", "CWE-77", "CWE-20"]}
+    ]
+  },
+  "attack_mapping": {
+    "description": "CAPEC patterns map to ATT&CK techniques",
+    "coverage": "Most CAPEC patterns have corresponding ATT&CK techniques",
+    "examples": [
+      {"capec": "CAPEC-98", "attack": "T1566"},
+      {"capec": "CAPEC-66", "attack": "T1190"},
+      {"capec": "CAPEC-49", "attack": "T1110"}
+    ]
+  },
+  "views": {
+    "description": "CAPEC provides different views of attack patterns",
+    "available_views": [
+      {
+        "id": "1000",
+        "name": "Mechanisms of Attack",
+        "description": "Patterns organized by attack mechanism"
+      },
+      {
+        "id": "3000",
+        "name": "Domains of Attack",
+        "description": "Patterns organized by target domain"
+      }
+    ]
+  },
+  "agent_usage": {
+    "threat_modeling": "Use CAPEC patterns to enumerate attack vectors",
+    "code_review": "Map CWE findings to CAPEC attack patterns for context",
+    "pentesting": "Reference CAPEC for attack methodology",
+    "incident_analysis": "Classify observed attacks using CAPEC taxonomy"
+  }
+}

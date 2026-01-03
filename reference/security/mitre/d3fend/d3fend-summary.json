@@ -1,0 +1,319 @@
+{
+  "name": "MITRE D3FEND",
+  "version": "1.0",
+  "released": "2025-01-22",
+  "source": "https://d3fend.mitre.org/",
+  "license": "Apache-2.0",
+  "description": "Knowledge graph of cybersecurity countermeasures and defensive techniques",
+  "changelog": {
+    "v1_0": {
+      "released": "2025-01-22",
+      "major_changes": [
+        "Official 1.0 release after 4 years of development",
+        "245+ defensive techniques",
+        "Complete ATT&CK technique coverage mapping",
+        "OT (Operational Technology) Extension added December 2025"
+      ]
+    }
+  },
+  "taxonomy": {
+    "description": "Hierarchical organization of defensive techniques",
+    "top_level_tactics": [
+      {
+        "id": "D3-HAR",
+        "name": "Harden",
+        "description": "Techniques to make systems more resistant to attack",
+        "techniques": [
+          "Application Configuration Hardening",
+          "Credential Hardening",
+          "Message Hardening",
+          "Platform Hardening",
+          "User Behavior Hardening"
+        ]
+      },
+      {
+        "id": "D3-DET",
+        "name": "Detect",
+        "description": "Techniques to identify malicious activity",
+        "techniques": [
+          "File Analysis",
+          "Identifier Analysis",
+          "Message Analysis",
+          "Network Traffic Analysis",
+          "Platform Monitoring",
+          "Process Analysis",
+          "User Behavior Analysis"
+        ]
+      },
+      {
+        "id": "D3-ISO",
+        "name": "Isolate",
+        "description": "Techniques to separate and contain threats",
+        "techniques": [
+          "Execution Isolation",
+          "Network Isolation"
+        ]
+      },
+      {
+        "id": "D3-DEC",
+        "name": "Deceive",
+        "description": "Techniques using deception to detect or misdirect attackers",
+        "techniques": [
+          "Decoy Environment",
+          "Decoy Object"
+        ]
+      },
+      {
+        "id": "D3-EVT",
+        "name": "Evict",
+        "description": "Techniques to remove threats from the environment",
+        "techniques": [
+          "Credential Eviction",
+          "File Eviction",
+          "Process Eviction"
+        ]
+      }
+    ]
+  },
+  "key_techniques": {
+    "harden": [
+      {
+        "id": "D3-ACH",
+        "name": "Application Configuration Hardening",
+        "description": "Modifying application configuration to reduce attack surface",
+        "examples": ["Disable macros", "Restrict script execution", "Remove unnecessary features"],
+        "counters_attack": ["T1059", "T1204", "T1566"]
+      },
+      {
+        "id": "D3-CH",
+        "name": "Credential Hardening",
+        "description": "Strengthening credential-related defenses",
+        "examples": ["MFA enforcement", "Password policies", "Credential rotation"],
+        "counters_attack": ["T1110", "T1078", "T1556"]
+      },
+      {
+        "id": "D3-PSEP",
+        "name": "Process Segment Execution Prevention",
+        "description": "Preventing execution in memory regions",
+        "examples": ["DEP/NX bit", "ASLR", "CFI"],
+        "counters_attack": ["T1055", "T1203", "T1574"]
+      },
+      {
+        "id": "D3-NI",
+        "name": "Network Isolation",
+        "description": "Segmenting network to limit lateral movement",
+        "examples": ["Micro-segmentation", "VLANs", "Zero trust architecture"],
+        "counters_attack": ["T1021", "T1570", "T1071"]
+      }
+    ],
+    "detect": [
+      {
+        "id": "D3-FA",
+        "name": "File Analysis",
+        "description": "Analyzing files for malicious content",
+        "subtechniques": [
+          "Dynamic Analysis",
+          "Emulated File Analysis",
+          "File Content Rules",
+          "File Hashing"
+        ],
+        "counters_attack": ["T1204", "T1566", "T1105"]
+      },
+      {
+        "id": "D3-NTA",
+        "name": "Network Traffic Analysis",
+        "description": "Monitoring and analyzing network communications",
+        "subtechniques": [
+          "Active Certificate Analysis",
+          "Certificate Analysis",
+          "Client-server Payload Profiling",
+          "Connection Attempt Analysis",
+          "DNS Traffic Analysis",
+          "File Carving",
+          "Inbound Traffic Filtering",
+          "Network Traffic Community Deviation",
+          "Outbound Traffic Filtering",
+          "Per Host Download-Upload Ratio Analysis",
+          "Protocol Metadata Anomaly Detection",
+          "Relay Pattern Analysis",
+          "Remote Terminal Session Detection"
+        ],
+        "counters_attack": ["T1071", "T1095", "T1573"]
+      },
+      {
+        "id": "D3-PM",
+        "name": "Platform Monitoring",
+        "description": "Monitoring system and platform activity",
+        "subtechniques": [
+          "Endpoint Health Beacon",
+          "Firmware Behavior Analysis",
+          "Firmware Embedded Monitoring Code",
+          "Firmware Verification",
+          "Operating System Monitoring",
+          "Peripheral Firmware Verification",
+          "Service Binary Verification",
+          "System Daemon Monitoring",
+          "User Session Init Config Analysis"
+        ],
+        "counters_attack": ["T1547", "T1543", "T1542"]
+      },
+      {
+        "id": "D3-PA",
+        "name": "Process Analysis",
+        "description": "Analyzing process behavior and characteristics",
+        "subtechniques": [
+          "Database Query String Analysis",
+          "File Access Pattern Analysis",
+          "Indirect Branch Call Analysis",
+          "Process Code Segment Verification",
+          "Process Self-Modification Detection",
+          "Process Spawn Analysis",
+          "Script Execution Analysis",
+          "Shadow Stack Comparisons",
+          "System Call Analysis"
+        ],
+        "counters_attack": ["T1055", "T1059", "T1106"]
+      }
+    ],
+    "isolate": [
+      {
+        "id": "D3-EI",
+        "name": "Execution Isolation",
+        "description": "Isolating execution environments",
+        "subtechniques": [
+          "Executable Allowlisting",
+          "Executable Denylisting",
+          "Hardware-based Process Isolation",
+          "IO Port Restriction",
+          "Kernel-based Process Isolation",
+          "Mandatory Access Control"
+        ],
+        "counters_attack": ["T1059", "T1204", "T1106"]
+      },
+      {
+        "id": "D3-NIS",
+        "name": "Network Isolation",
+        "description": "Isolating network segments and resources",
+        "subtechniques": [
+          "Broadcast Domain Isolation",
+          "DNS Allowlisting",
+          "DNS Denylisting",
+          "Encrypted Tunnels",
+          "Forward Resolution Domain Denylisting",
+          "Forward Resolution IP Denylisting",
+          "Homoglyph Denylisting",
+          "Reverse Resolution IP Denylisting"
+        ],
+        "counters_attack": ["T1071", "T1021", "T1570"]
+      }
+    ],
+    "deceive": [
+      {
+        "id": "D3-DE",
+        "name": "Decoy Environment",
+        "description": "Creating fake environments to detect or misdirect attackers",
+        "subtechniques": [
+          "Connected Honeynet",
+          "Integrated Honeynet",
+          "Standalone Honeynet"
+        ],
+        "counters_attack": ["T1595", "T1046", "T1018"]
+      },
+      {
+        "id": "D3-DO",
+        "name": "Decoy Object",
+        "description": "Creating fake objects to detect access",
+        "subtechniques": [
+          "Decoy File",
+          "Decoy Network Resource",
+          "Decoy Persona",
+          "Decoy Public Release",
+          "Decoy Session Token",
+          "Decoy User Credential"
+        ],
+        "counters_attack": ["T1083", "T1005", "T1078"]
+      }
+    ],
+    "evict": [
+      {
+        "id": "D3-CE",
+        "name": "Credential Eviction",
+        "description": "Removing compromised credentials",
+        "subtechniques": [
+          "Account Locking",
+          "Authentication Cache Invalidation"
+        ],
+        "counters_attack": ["T1078", "T1550"]
+      },
+      {
+        "id": "D3-FE",
+        "name": "File Eviction",
+        "description": "Removing malicious files",
+        "subtechniques": [
+          "File Removal"
+        ],
+        "counters_attack": ["T1105", "T1204"]
+      },
+      {
+        "id": "D3-PE",
+        "name": "Process Eviction",
+        "description": "Terminating malicious processes",
+        "subtechniques": [
+          "Process Termination"
+        ],
+        "counters_attack": ["T1055", "T1059"]
+      }
+    ]
+  },
+  "attack_mapping": {
+    "description": "D3FEND techniques map to ATT&CK techniques they counter",
+    "coverage": "Full coverage of ATT&CK Enterprise techniques",
+    "example_mappings": [
+      {
+        "attack_technique": "T1059 - Command and Scripting Interpreter",
+        "d3fend_counters": ["D3-ACH", "D3-EI", "D3-PA"]
+      },
+      {
+        "attack_technique": "T1055 - Process Injection",
+        "d3fend_counters": ["D3-PSEP", "D3-PA", "D3-PE"]
+      },
+      {
+        "attack_technique": "T1566 - Phishing",
+        "d3fend_counters": ["D3-FA", "D3-ACH", "D3-UBA"]
+      },
+      {
+        "attack_technique": "T1078 - Valid Accounts",
+        "d3fend_counters": ["D3-CH", "D3-CE", "D3-DO"]
+      }
+    ]
+  },
+  "ot_extension": {
+    "name": "D3FEND OT Extension",
+    "released": "2025-12-03",
+    "description": "Extends D3FEND to Operational Technology environments",
+    "new_techniques": [
+      "Industrial Control System Monitoring",
+      "SCADA Protocol Analysis",
+      "PLC Firmware Verification",
+      "HMI Access Control",
+      "Safety Instrumented System Isolation"
+    ],
+    "note": "Aligns with ICS-specific ATT&CK techniques"
+  },
+  "integration": {
+    "cwe_mapping": "D3FEND techniques reference CWE weaknesses they address",
+    "capec_mapping": "D3FEND techniques counter CAPEC attack patterns",
+    "nist_mapping": "Techniques map to NIST 800-53 controls"
+  },
+  "tools": {
+    "knowledge_graph": "https://d3fend.mitre.org/",
+    "api": "https://d3fend.mitre.org/api/",
+    "github": "https://github.com/mitre-attack/d3fend-ontology"
+  },
+  "agent_usage": {
+    "defensive_recommendation": "Given ATT&CK technique, lookup D3FEND counters",
+    "gap_analysis": "Compare implemented defenses against D3FEND taxonomy",
+    "incident_response": "Use eviction techniques during remediation",
+    "detection_engineering": "Reference detect techniques for SIEM rule creation"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "name": "CWE Common Weaknesses Quick Reference",
+  "version": "4.14",
+  "source": "https://cwe.mitre.org/",
+  "description": "Frequently referenced CWEs beyond Top 25, categorized by domain",
+  "categories": {
+    "authentication": [
+      {"id": "CWE-257", "name": "Storing Passwords in a Recoverable Format", "severity": "critical"},
+      {"id": "CWE-259", "name": "Use of Hard-coded Password", "severity": "critical"},
+      {"id": "CWE-262", "name": "Not Using Password Aging", "severity": "low"},
+      {"id": "CWE-263", "name": "Password Aging with Long Expiration", "severity": "low"},
+      {"id": "CWE-307", "name": "Improper Restriction of Excessive Authentication Attempts", "severity": "high"},
+      {"id": "CWE-308", "name": "Use of Single-factor Authentication", "severity": "medium"},
+      {"id": "CWE-521", "name": "Weak Password Requirements", "severity": "medium"},
+      {"id": "CWE-640", "name": "Weak Password Recovery Mechanism", "severity": "high"}
+    ],
+    "session_management": [
+      {"id": "CWE-384", "name": "Session Fixation", "severity": "high"},
+      {"id": "CWE-539", "name": "Use of Persistent Cookies", "severity": "medium"},
+      {"id": "CWE-613", "name": "Insufficient Session Expiration", "severity": "medium"},
+      {"id": "CWE-614", "name": "Sensitive Cookie in HTTPS Session Without 'Secure' Attribute", "severity": "medium"},
+      {"id": "CWE-1004", "name": "Sensitive Cookie Without 'HttpOnly' Flag", "severity": "medium"}
+    ],
+    "cryptography": [
+      {"id": "CWE-310", "name": "Cryptographic Issues (general)", "severity": "varies"},
+      {"id": "CWE-311", "name": "Missing Encryption of Sensitive Data", "severity": "high"},
+      {"id": "CWE-312", "name": "Cleartext Storage of Sensitive Information", "severity": "high"},
+      {"id": "CWE-319", "name": "Cleartext Transmission of Sensitive Information", "severity": "high"},
+      {"id": "CWE-326", "name": "Inadequate Encryption Strength", "severity": "high"},
+      {"id": "CWE-327", "name": "Use of Broken or Risky Cryptographic Algorithm", "severity": "high"},
+      {"id": "CWE-328", "name": "Reversible One-Way Hash", "severity": "medium"},
+      {"id": "CWE-329", "name": "Not Using a Random IV with CBC Mode", "severity": "medium"},
+      {"id": "CWE-330", "name": "Use of Insufficiently Random Values", "severity": "high"},
+      {"id": "CWE-338", "name": "Use of Cryptographically Weak PRNG", "severity": "high"},
+      {"id": "CWE-347", "name": "Improper Verification of Cryptographic Signature", "severity": "high"}
+    ],
+    "file_operations": [
+      {"id": "CWE-23", "name": "Relative Path Traversal", "severity": "high"},
+      {"id": "CWE-36", "name": "Absolute Path Traversal", "severity": "high"},
+      {"id": "CWE-73", "name": "External Control of File Name or Path", "severity": "high"},
+      {"id": "CWE-377", "name": "Insecure Temporary File", "severity": "medium"},
+      {"id": "CWE-379", "name": "Creation of Temporary File in Directory with Insecure Permissions", "severity": "medium"},
+      {"id": "CWE-426", "name": "Untrusted Search Path", "severity": "high"},
+      {"id": "CWE-427", "name": "Uncontrolled Search Path Element", "severity": "high"}
+    ],
+    "logging_errors": [
+      {"id": "CWE-117", "name": "Improper Output Neutralization for Logs", "severity": "medium"},
+      {"id": "CWE-209", "name": "Generation of Error Message Containing Sensitive Information", "severity": "medium"},
+      {"id": "CWE-532", "name": "Insertion of Sensitive Information into Log File", "severity": "medium"},
+      {"id": "CWE-778", "name": "Insufficient Logging", "severity": "medium"}
+    ],
+    "configuration": [
+      {"id": "CWE-15", "name": "External Control of System or Configuration Setting", "severity": "medium"},
+      {"id": "CWE-16", "name": "Configuration", "severity": "varies"},
+      {"id": "CWE-250", "name": "Execution with Unnecessary Privileges", "severity": "high"},
+      {"id": "CWE-266", "name": "Incorrect Privilege Assignment", "severity": "high"},
+      {"id": "CWE-732", "name": "Incorrect Permission Assignment for Critical Resource", "severity": "high"}
+    ],
+    "time_state": [
+      {"id": "CWE-362", "name": "Race Condition", "severity": "high"},
+      {"id": "CWE-366", "name": "Race Condition within a Thread", "severity": "medium"},
+      {"id": "CWE-367", "name": "Time-of-check Time-of-use (TOCTOU)", "severity": "high"},
+      {"id": "CWE-400", "name": "Uncontrolled Resource Consumption", "severity": "high"},
+      {"id": "CWE-770", "name": "Allocation of Resources Without Limits or Throttling", "severity": "high"}
+    ],
+    "xml_xxe": [
+      {"id": "CWE-611", "name": "Improper Restriction of XML External Entity Reference", "severity": "high"},
+      {"id": "CWE-776", "name": "Improper Restriction of Recursive Entity References", "severity": "high"},
+      {"id": "CWE-91", "name": "XML Injection", "severity": "high"}
+    ],
+    "api_web": [
+      {"id": "CWE-183", "name": "Permissive List of Allowed Inputs", "severity": "medium"},
+      {"id": "CWE-184", "name": "Incomplete List of Disallowed Inputs", "severity": "medium"},
+      {"id": "CWE-346", "name": "Origin Validation Error", "severity": "high"},
+      {"id": "CWE-601", "name": "URL Redirection to Untrusted Site (Open Redirect)", "severity": "medium"},
+      {"id": "CWE-942", "name": "Permissive Cross-domain Policy", "severity": "high"}
+    ]
+  },
+  "language_specific": {
+    "javascript": ["CWE-79", "CWE-94", "CWE-400", "CWE-1321"],
+    "python": ["CWE-78", "CWE-94", "CWE-502", "CWE-918"],
+    "java": ["CWE-502", "CWE-611", "CWE-89", "CWE-295"],
+    "go": ["CWE-78", "CWE-190", "CWE-295", "CWE-693"],
+    "rust": ["CWE-787", "CWE-416", "CWE-119"],
+    "c_cpp": ["CWE-787", "CWE-125", "CWE-416", "CWE-476", "CWE-119", "CWE-190"]
+  }
+}

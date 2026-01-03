@@ -1,0 +1,452 @@
+{
+  "name": "Compliance Frameworks Reference",
+  "version": "2.0.0",
+  "description": "Comprehensive compliance framework reference for security agents",
+  "last_updated": "2025-01-02",
+  "framework_tiers": {
+    "tier_1_universal": {
+      "description": "Frameworks nearly every major provider holds - must-have for enterprise SaaS",
+      "frameworks": ["SOC 2 Type II", "ISO 27001", "GDPR"]
+    },
+    "tier_2_industry": {
+      "description": "Industry-specific frameworks based on customer base",
+      "frameworks": ["PCI-DSS", "HIPAA", "FedRAMP", "DORA", "NIS2"]
+    },
+    "tier_3_regional": {
+      "description": "Regional/country-specific frameworks",
+      "frameworks": ["C5", "IRAP", "TISAX", "CCPA/CPRA", "LGPD", "DPDPA"]
+    },
+    "tier_4_specialized": {
+      "description": "Specialized or emerging frameworks",
+      "frameworks": ["CSA STAR", "StateRAMP", "CMMC", "SOX", "GLBA"]
+    }
+  },
+  "provider_matrix": {
+    "hyperscalers": {
+      "aws": {
+        "certifications": ["SOC 1/2/3", "ISO 27001", "ISO 27017", "ISO 27018", "ISO 27701", "ISO 9001", "ISO 22301", "PCI-DSS Level 1", "HIPAA", "FedRAMP High", "DoD SRG", "GDPR", "C5", "IRAP", "MTCS", "CSA STAR", "NIST 800-171", "FIPS 140-3"],
+        "count": "143+ standards",
+        "compliance_page": "https://aws.amazon.com/compliance/programs/"
+      },
+      "azure": {
+        "certifications": ["SOC 1/2/3", "ISO 27001", "ISO 27017", "ISO 27018", "ISO 27701", "PCI-DSS Level 1", "HIPAA", "FedRAMP High", "DoD IL6", "GDPR", "C5", "IRAP", "CSA STAR", "TISAX", "ENS High"],
+        "count": "100+ standards",
+        "compliance_page": "https://learn.microsoft.com/en-us/azure/compliance/"
+      },
+      "gcp": {
+        "certifications": ["SOC 1/2/3", "ISO 27001", "ISO 27017", "ISO 27018", "PCI-DSS Level 1", "HIPAA", "FedRAMP High", "GDPR", "CSA STAR"],
+        "count": "40+ standards",
+        "compliance_page": "https://cloud.google.com/security/compliance"
+      }
+    },
+    "payments": {
+      "stripe": {
+        "certifications": ["PCI-DSS Level 1", "SOC 2 Type II", "GDPR"],
+        "notes": "Highest PCI level; NIST CSF aligned"
+      },
+      "braintree_paypal": {
+        "certifications": ["PCI-DSS Level 1", "PCI PIN", "PCI P2PE", "SOC 1/2", "ISO 27001"],
+        "notes": "Full payment ecosystem compliance"
+      }
+    }
+  },
+  "frameworks": {
+    "gdpr": {
+      "name": "General Data Protection Regulation",
+      "authority": "European Union",
+      "scope": "Personal data of EU residents",
+      "geography": "EU + any company processing EU data",
+      "priority": "CRITICAL",
+      "effective": "2018-05-25",
+      "applies_to": "Organizations processing EU resident data",
+      "key_articles": [
+        {
+          "article": "Art. 5",
+          "name": "Principles of Processing",
+          "requirements": ["Lawfulness, fairness, transparency", "Purpose limitation", "Data minimization", "Accuracy", "Storage limitation", "Integrity and confidentiality"]
+        },
+        {
+          "article": "Art. 6",
+          "name": "Lawful Basis for Processing",
+          "bases": ["Consent", "Contract", "Legal obligation", "Vital interests", "Public task", "Legitimate interests"]
+        },
+        {
+          "article": "Art. 17",
+          "name": "Right to Erasure",
+          "requirements": ["Right to be forgotten", "Erasure without undue delay"]
+        },
+        {
+          "article": "Art. 20",
+          "name": "Data Portability",
+          "requirements": ["Machine-readable format", "Right to transmit to another controller"]
+        },
+        {
+          "article": "Art. 25",
+          "name": "Data Protection by Design and Default",
+          "requirements": ["Privacy by design", "Privacy by default", "Pseudonymization", "Minimization"]
+        },
+        {
+          "article": "Art. 32",
+          "name": "Security of Processing",
+          "requirements": ["Encryption", "Confidentiality", "Integrity", "Availability", "Resilience", "Regular testing"]
+        },
+        {
+          "article": "Art. 33",
+          "name": "Breach Notification",
+          "requirements": ["Notify authority within 72 hours", "Document all breaches"]
+        },
+        {
+          "article": "Art. 35",
+          "name": "Data Protection Impact Assessment",
+          "requirements": ["Required for high-risk processing", "Systematic description", "Necessity assessment", "Risk assessment"]
+        }
+      ],
+      "data_subject_rights": ["Right to access", "Right to rectification", "Right to erasure", "Right to data portability", "Right to object"],
+      "penalties": {
+        "tier_1": "Up to €10M or 2% global turnover",
+        "tier_2": "Up to €20M or 4% global turnover"
+      },
+      "technical_controls": ["Encryption of personal data", "Access controls and logging", "Data retention policies", "Consent management", "Privacy impact assessments", "Breach detection and response"]
+    },
+    "hipaa": {
+      "name": "Health Insurance Portability and Accountability Act",
+      "authority": "HHS (US Dept of Health & Human Services)",
+      "scope": "Protected Health Information (PHI)",
+      "geography": "United States",
+      "priority": "CRITICAL (if handling health data)",
+      "applies_to": "Healthcare providers, health plans, healthcare clearinghouses, business associates",
+      "rules": {
+        "privacy_rule": {
+          "description": "Standards for PHI protection",
+          "key_requirements": ["Minimum necessary standard", "Patient rights (access, amendment, accounting)", "Notice of Privacy Practices", "Authorization requirements"]
+        },
+        "security_rule": {
+          "description": "Standards for ePHI protection",
+          "safeguards": {
+            "administrative": ["Security management process", "Workforce security", "Information access management", "Security awareness training", "Contingency planning"],
+            "physical": ["Facility access controls", "Workstation security", "Device and media controls"],
+            "technical": ["Access controls", "Audit controls", "Integrity controls", "Transmission security"]
+          }
+        },
+        "breach_notification": {
+          "description": "Requirements for breach reporting",
+          "requirements": ["Individual notification within 60 days", "HHS notification", "Media notification for breaches >500"]
+        }
+      },
+      "penalties": {
+        "tier_1": "$137-$68,928 per violation (unknowing)",
+        "tier_2": "$1,379-$68,928 per violation (reasonable cause)",
+        "tier_3": "$13,785-$68,928 per violation (willful neglect, corrected)",
+        "tier_4": "$68,928-$2,067,813 per violation (willful neglect, not corrected)"
+      },
+      "technical_controls": ["Unique user identification", "Automatic logoff", "Encryption and decryption", "Audit controls and logging", "Integrity controls", "Person or entity authentication", "Transmission security"],
+      "no_certification": "No official HIPAA certification exists - only attestations"
+    },
+    "pci_dss": {
+      "name": "Payment Card Industry Data Security Standard 4.0",
+      "authority": "PCI Security Standards Council",
+      "version": "4.0",
+      "scope": "Payment card data",
+      "geography": "Global",
+      "priority": "CRITICAL (if handling payments)",
+      "effective": "2024-03-31",
+      "applies_to": "Organizations that store, process, or transmit cardholder data",
+      "requirements": [
+        {"id": 1, "name": "Install and Maintain Network Security Controls", "key_items": ["Firewalls", "Network segmentation", "Change management"]},
+        {"id": 2, "name": "Apply Secure Configurations", "key_items": ["No vendor defaults", "Hardening standards", "System inventory"]},
+        {"id": 3, "name": "Protect Stored Account Data", "key_items": ["Data retention policies", "PAN masking", "Encryption", "Key management"]},
+        {"id": 4, "name": "Protect Cardholder Data with Strong Cryptography During Transmission", "key_items": ["TLS 1.2+", "Strong cipher suites", "Certificate validation"]},
+        {"id": 5, "name": "Protect All Systems and Networks from Malicious Software", "key_items": ["Anti-malware", "Periodic scans", "Phishing protection"]},
+        {"id": 6, "name": "Develop and Maintain Secure Systems and Software", "key_items": ["Secure SDLC", "Vulnerability management", "Change control", "WAF"]},
+        {"id": 7, "name": "Restrict Access by Business Need to Know", "key_items": ["Access control policy", "RBAC", "Privileged access management"]},
+        {"id": 8, "name": "Identify Users and Authenticate Access", "key_items": ["Unique IDs", "MFA", "Password policies", "Session management"]},
+        {"id": 9, "name": "Restrict Physical Access to Cardholder Data", "key_items": ["Physical access controls", "Visitor management", "Media controls"]},
+        {"id": 10, "name": "Log and Monitor All Access", "key_items": ["Audit logging", "Log review", "Time synchronization", "Alerting"]},
+        {"id": 11, "name": "Test Security of Systems and Networks Regularly", "key_items": ["Vulnerability scanning", "Penetration testing", "File integrity monitoring"]},
+        {"id": 12, "name": "Support Information Security with Organizational Policies", "key_items": ["Security policy", "Risk assessment", "Incident response", "Security awareness"]}
+      ],
+      "new_in_4_0": ["Customized approach option", "Enhanced authentication requirements", "E-commerce and phishing protections", "Targeted risk analysis", "Service provider clarifications"],
+      "compliance_levels": {
+        "level_1": "6M+ transactions annually - Annual ROC by QSA",
+        "level_2": "1-6M transactions - Annual SAQ",
+        "level_3": "20K-1M e-commerce transactions - Annual SAQ",
+        "level_4": "<20K e-commerce or <1M other - Annual SAQ"
+      }
+    },
+    "soc_2": {
+      "name": "SOC 2 (Service Organization Control 2)",
+      "authority": "AICPA",
+      "scope": "Service organizations",
+      "geography": "Global (US-origin)",
+      "priority": "CRITICAL",
+      "provider_coverage": "95%+",
+      "applies_to": "Service organizations handling customer data",
+      "trust_service_criteria": {
+        "security": {
+          "name": "Security (Common Criteria)",
+          "required": true,
+          "description": "Protection against unauthorized access",
+          "criteria": ["CC1: Control Environment", "CC2: Communication and Information", "CC3: Risk Assessment", "CC4: Monitoring Activities", "CC5: Control Activities", "CC6: Logical and Physical Access Controls", "CC7: System Operations", "CC8: Change Management", "CC9: Risk Mitigation"]
+        },
+        "availability": {
+          "name": "Availability",
+          "required": false,
+          "description": "System is available for operation and use",
+          "criteria": ["A1.1", "A1.2", "A1.3"]
+        },
+        "processing_integrity": {
+          "name": "Processing Integrity",
+          "required": false,
+          "description": "System processing is complete, valid, accurate, timely, authorized",
+          "criteria": ["PI1.1", "PI1.2", "PI1.3", "PI1.4", "PI1.5"]
+        },
+        "confidentiality": {
+          "name": "Confidentiality",
+          "required": false,
+          "description": "Information designated as confidential is protected",
+          "criteria": ["C1.1", "C1.2"]
+        },
+        "privacy": {
+          "name": "Privacy",
+          "required": false,
+          "description": "Personal information is collected, used, retained, disclosed appropriately",
+          "criteria": ["P1-P8"]
+        }
+      },
+      "report_types": {
+        "type_1": {"description": "Design of controls at a point in time", "duration": "Point in time assessment"},
+        "type_2": {"description": "Design and operating effectiveness over time", "duration": "Typically 6-12 month observation period"}
+      },
+      "typical_timeline": "3-6 months for Type 2",
+      "cost_estimate": "$30,000-$100,000",
+      "technical_controls": ["Access control and authentication", "Encryption in transit and at rest", "Logging and monitoring", "Incident response procedures", "Change management", "Backup and recovery", "Vulnerability management"]
+    },
+    "iso_27001": {
+      "name": "ISO/IEC 27001:2022",
+      "authority": "ISO/IEC",
+      "scope": "Information Security Management System (ISMS)",
+      "geography": "Global",
+      "priority": "CRITICAL",
+      "provider_coverage": "90%+",
+      "structure": {
+        "clauses": ["4: Context of the organization", "5: Leadership", "6: Planning", "7: Support", "8: Operation", "9: Performance evaluation", "10: Improvement"],
+        "annex_a_controls": {"organizational": 37, "people": 8, "physical": 14, "technological": 34, "total": 93}
+      },
+      "key_controls": ["A.5: Information security policies", "A.6: Organization of information security", "A.7: Human resource security", "A.8: Asset management", "A.9: Access control", "A.10: Cryptography", "A.11: Physical security", "A.12: Operations security", "A.13: Communications security", "A.14: System acquisition and development", "A.15: Supplier relationships", "A.16: Incident management", "A.17: Business continuity", "A.18: Compliance"],
+      "certification": {
+        "process": ["Gap analysis", "Implementation", "Internal audit", "Stage 1 audit", "Stage 2 audit"],
+        "validity": "3 years with annual surveillance audits"
+      },
+      "typical_timeline": "6-12 months",
+      "cost_estimate": "$25,000-$75,000",
+      "related_standards": {
+        "iso_27017": "Cloud security controls",
+        "iso_27018": "PII in cloud",
+        "iso_27701": "Privacy management (GDPR alignment)"
+      }
+    },
+    "fedramp": {
+      "name": "FedRAMP (Federal Risk and Authorization Management Program)",
+      "authority": "US GSA",
+      "scope": "Cloud services for US federal agencies",
+      "geography": "United States",
+      "priority": "CRITICAL (US government market)",
+      "impact_levels": {
+        "low": "Low impact - self-attestation possible",
+        "moderate": "Moderate impact - most common",
+        "high": "High impact - strictest controls"
+      },
+      "control_baseline": "NIST SP 800-53 Rev 5",
+      "authorization_path": "Agency Authorization (JAB discontinued 2024)",
+      "typical_timeline": "12-18 months",
+      "cost_estimate": "$500,000-$2,000,000+",
+      "fedramp_20x": "New accelerated path with automated validation (2025+)",
+      "related": {"stateramp": "State/local government (now GovRAMP)", "tx_ramp": "Texas-specific"}
+    },
+    "dora": {
+      "name": "DORA (Digital Operational Resilience Act)",
+      "authority": "European Union",
+      "scope": "Financial sector ICT resilience",
+      "geography": "European Union",
+      "priority": "CRITICAL (financial services)",
+      "effective": "2025-01-17",
+      "applies_to": ["Banks and credit institutions", "Insurance/reinsurance companies", "Investment firms", "Payment institutions", "Crypto-asset service providers", "ICT third-party providers (critical)"],
+      "key_requirements": ["ICT risk management framework", "ICT incident reporting (within hours)", "Digital operational resilience testing", "ICT third-party risk management", "Information sharing"],
+      "register_deadline": "April 30, 2025",
+      "penalties": "Up to 2% of total annual worldwide turnover"
+    },
+    "nis2": {
+      "name": "NIS2 Directive (Network and Information Security)",
+      "authority": "European Union",
+      "scope": "Critical infrastructure cybersecurity",
+      "geography": "European Union",
+      "priority": "HIGH",
+      "transposition_deadline": "2024-10-17",
+      "sectors": {
+        "essential": ["Energy", "Transport", "Banking", "Health", "Water", "Digital infrastructure"],
+        "important": ["Postal", "Waste", "Chemicals", "Food", "Manufacturing", "Digital providers"]
+      },
+      "key_requirements": ["Risk management measures", "Incident reporting (24 hours)", "Supply chain security", "Business continuity", "Cybersecurity hygiene"],
+      "penalties": "Up to €10M or 2% of global turnover"
+    },
+    "c5": {
+      "name": "C5 (Cloud Computing Compliance Criteria Catalogue)",
+      "authority": "BSI (German Federal Office for Information Security)",
+      "scope": "Cloud services in Germany",
+      "geography": "Germany",
+      "priority": "HIGH (German market)",
+      "categories": ["Basic criteria", "Additional criteria for high protection"],
+      "typical_users": "German government, enterprises",
+      "often_combined_with": "ISO 27001"
+    },
+    "csa_star": {
+      "name": "CSA STAR (Security Trust Assurance and Risk)",
+      "authority": "Cloud Security Alliance",
+      "scope": "Cloud-specific security",
+      "geography": "Global",
+      "priority": "MEDIUM-HIGH",
+      "levels": {
+        "level_1": "Self-assessment (CAIQ)",
+        "level_2": "Third-party certification (SOC 2 or ISO 27001 based)",
+        "level_3": "Continuous monitoring"
+      },
+      "ccm": "Cloud Controls Matrix - 197 control objectives"
+    },
+    "ccpa_cpra": {
+      "name": "CCPA/CPRA (California Consumer Privacy Act/Rights Act)",
+      "authority": "California",
+      "scope": "Consumer data privacy",
+      "geography": "California (applies to qualifying businesses)",
+      "priority": "HIGH (US market)",
+      "thresholds": [">$25M annual revenue", "Buy/sell data of 100K+ consumers", "50%+ revenue from selling data"],
+      "consumer_rights": ["Right to know", "Right to delete", "Right to opt-out of sale", "Right to non-discrimination"],
+      "cpra_additions": ["Right to correct", "Right to limit sensitive data use", "Enforcement agency (CPPA)"]
+    },
+    "irap": {
+      "name": "IRAP (Information Security Registered Assessors Program)",
+      "authority": "Australian Cyber Security Centre (ACSC)",
+      "scope": "Australian government data",
+      "geography": "Australia",
+      "priority": "HIGH (Australian government market)",
+      "assessment_levels": ["PROTECTED", "SECRET", "TOP SECRET"],
+      "framework": "Australian ISM (Information Security Manual)"
+    },
+    "tisax": {
+      "name": "TISAX (Trusted Information Security Assessment Exchange)",
+      "authority": "ENX Association / VDA",
+      "scope": "Automotive industry",
+      "geography": "Global (automotive supply chain)",
+      "priority": "CRITICAL (automotive sector)",
+      "assessment_levels": ["AL1", "AL2", "AL3"],
+      "required_for": "OEM suppliers (VW, BMW, Mercedes, etc.)",
+      "based_on": "ISO 27001 with automotive-specific controls"
+    },
+    "soc_1": {
+      "name": "SOC 1 (SSAE 18)",
+      "authority": "AICPA",
+      "scope": "Controls relevant to financial reporting",
+      "geography": "Global (US-origin)",
+      "priority": "HIGH (financial services, payroll, SaaS affecting finance)",
+      "use_case": "When your service affects customer's financial statements"
+    },
+    "cmmc": {
+      "name": "CMMC 2.0 (Cybersecurity Maturity Model Certification)",
+      "authority": "US DoD",
+      "scope": "Defense Industrial Base",
+      "geography": "United States",
+      "priority": "CRITICAL (DoD contractors)",
+      "levels": {
+        "level_1": "Basic cyber hygiene (17 practices)",
+        "level_2": "Aligned with NIST 800-171 (110 practices)",
+        "level_3": "Expert (additional DoD practices)"
+      },
+      "effective": "Phased rollout 2025+"
+    },
+    "sox": {
+      "name": "SOX (Sarbanes-Oxley Act)",
+      "authority": "US SEC",
+      "scope": "Public company financial controls",
+      "geography": "US public companies",
+      "priority": "CRITICAL (public companies)",
+      "relevant_sections": {
+        "section_302": "CEO/CFO certification of financial statements",
+        "section_404": "Internal controls over financial reporting"
+      },
+      "it_controls": "Access controls, change management, audit logging"
+    },
+    "glba": {
+      "name": "GLBA (Gramm-Leach-Bliley Act)",
+      "authority": "US FTC/OCC",
+      "scope": "Financial institutions",
+      "geography": "United States",
+      "priority": "HIGH (financial services)",
+      "key_requirements": ["Financial Privacy Rule", "Safeguards Rule", "Pretexting provisions"]
+    },
+    "lgpd": {
+      "name": "LGPD (Lei Geral de Proteção de Dados)",
+      "authority": "Brazil",
+      "scope": "Personal data of Brazilian residents",
+      "geography": "Brazil",
+      "priority": "HIGH (Brazil market)",
+      "similarity": "Closely aligned with GDPR",
+      "penalties": "Up to 2% of Brazil revenue (max R$50M)"
+    },
+    "dpdpa": {
+      "name": "DPDPA (Digital Personal Data Protection Act)",
+      "authority": "India",
+      "scope": "Personal data of Indian residents",
+      "geography": "India",
+      "priority": "HIGH (India market)",
+      "effective": "2024 (phased)",
+      "penalties": "Up to ₹250 crore (~$30M)"
+    }
+  },
+  "framework_mapping": {
+    "description": "Cross-framework mappings to NIST CSF",
+    "gdpr_to_nist_csf": {
+      "Art.32_Security": ["PR.DS", "PR.IP", "DE.CM"],
+      "Art.33_Breach": ["RS.CO", "RS.AN"],
+      "Art.35_DPIA": ["ID.RA", "ID.GV"]
+    },
+    "hipaa_to_nist_csf": {
+      "Security_Rule": ["PR.AC", "PR.DS", "PR.IP", "PR.MA", "DE.AE", "DE.CM"],
+      "Privacy_Rule": ["ID.GV", "PR.DS"]
+    },
+    "pci_dss_to_nist_csf": {
+      "Req_1_2": ["PR.AC", "PR.PT"],
+      "Req_3_4": ["PR.DS"],
+      "Req_5_6": ["PR.IP", "PR.MA"],
+      "Req_7_8_9": ["PR.AC"],
+      "Req_10_11": ["DE.AE", "DE.CM"],
+      "Req_12": ["ID.GV", "ID.RA"]
+    }
+  },
+  "framework_overlap_matrix": {
+    "description": "Common control overlap enables efficiency",
+    "high_overlap": [
+      {"frameworks": ["SOC 2", "ISO 27001"], "overlap": "~80%", "strategy": "Do ISO 27001 first, add SOC 2 with minimal effort"},
+      {"frameworks": ["GDPR", "ISO 27701"], "overlap": "~85%", "strategy": "ISO 27701 demonstrates GDPR compliance"},
+      {"frameworks": ["FedRAMP", "SOC 2", "ISO 27001"], "overlap": "~70%", "strategy": "FedRAMP maps to NIST 800-53; significant overlap with others"},
+      {"frameworks": ["DORA", "NIS2", "ISO 27001"], "overlap": "~60%", "strategy": "ISO 27001 provides foundation for DORA/NIS2"}
+    ]
+  },
+  "recommended_starting_path": {
+    "saas_startup": {
+      "year_1": ["SOC 2 Type II"],
+      "year_2": ["ISO 27001", "CSA STAR Level 1"],
+      "conditional": {"payments": "+PCI-DSS", "health_data": "+HIPAA", "eu_customers": "+GDPR documentation"}
+    },
+    "enterprise_saas": {
+      "baseline": ["SOC 2 Type II", "ISO 27001", "GDPR"],
+      "expansion": ["ISO 27017/27018", "CSA STAR Level 2"],
+      "government": ["+FedRAMP", "+StateRAMP"],
+      "financial": ["+SOC 1", "+DORA (EU)", "+GLBA (US)"],
+      "healthcare": ["+HIPAA", "+HITRUST"]
+    },
+    "global_enterprise": {
+      "baseline": ["SOC 1/2/3", "ISO 27001/27017/27018/27701"],
+      "regional": ["+C5 (Germany)", "+IRAP (Australia)", "+LGPD (Brazil)"],
+      "sector": ["+Industry-specific (TISAX, DORA, etc.)"]
+    }
+  }
+}

@@ -1,0 +1,225 @@
+{
+  "name": "OpenSSF Scorecard",
+  "version": "5.0",
+  "source": "https://securityscorecards.dev/",
+  "github": "https://github.com/ossf/scorecard",
+  "license": "Apache-2.0",
+  "description": "Automated security health metrics for open source projects",
+  "scoring": {
+    "range": "0-10",
+    "interpretation": {
+      "9-10": "Excellent security posture",
+      "7-8": "Good security posture",
+      "5-6": "Moderate security posture",
+      "0-4": "Poor security posture, needs improvement"
+    }
+  },
+  "checks": [
+    {
+      "name": "Binary-Artifacts",
+      "weight": "high",
+      "description": "Project does not contain checked-in binary artifacts",
+      "risk": "Binary artifacts can contain malicious code difficult to detect",
+      "remediation": "Remove binary files, use package managers",
+      "detection": "Scans for binary file types in repository"
+    },
+    {
+      "name": "Branch-Protection",
+      "weight": "high",
+      "description": "Branch protection enabled on default and release branches",
+      "risk": "Unprotected branches allow direct pushes bypassing review",
+      "remediation": [
+        "Require pull request reviews",
+        "Require status checks to pass",
+        "Require signed commits",
+        "Disable force push"
+      ]
+    },
+    {
+      "name": "CI-Tests",
+      "weight": "medium",
+      "description": "Project runs tests in CI before merging PRs",
+      "risk": "Without CI tests, bugs and vulnerabilities may go undetected",
+      "remediation": "Add CI workflow that runs tests on pull requests"
+    },
+    {
+      "name": "CII-Best-Practices",
+      "weight": "medium",
+      "description": "Project has earned OpenSSF Best Practices Badge",
+      "risk": "May not follow security best practices",
+      "remediation": "Complete OpenSSF Best Practices Badge questionnaire",
+      "link": "https://www.bestpractices.dev/"
+    },
+    {
+      "name": "Code-Review",
+      "weight": "high",
+      "description": "All changes are reviewed before merging",
+      "risk": "Unreviewed code may contain vulnerabilities or backdoors",
+      "remediation": "Require code review for all PRs",
+      "slsa_alignment": "SLSA Source Level 2"
+    },
+    {
+      "name": "Contributors",
+      "weight": "low",
+      "description": "Project has multiple contributors from different organizations",
+      "risk": "Single contributor projects have higher bus factor risk",
+      "remediation": "Encourage diverse contributions"
+    },
+    {
+      "name": "Dangerous-Workflow",
+      "weight": "critical",
+      "description": "Project avoids dangerous CI workflow patterns",
+      "risk": "Vulnerable CI can lead to supply chain compromise",
+      "dangerous_patterns": [
+        "pull_request_target with explicit checkout of PR",
+        "Workflow with dangerous permissions",
+        "Untrusted input in run commands"
+      ],
+      "remediation": "Audit and fix dangerous workflow patterns"
+    },
+    {
+      "name": "Dependency-Update-Tool",
+      "weight": "medium",
+      "description": "Project uses automated dependency update tools",
+      "risk": "Outdated dependencies may have known vulnerabilities",
+      "tools": ["Dependabot", "Renovate", "Snyk"],
+      "remediation": "Enable Dependabot or Renovate"
+    },
+    {
+      "name": "Fuzzing",
+      "weight": "medium",
+      "description": "Project uses fuzzing for testing",
+      "risk": "May miss edge case vulnerabilities",
+      "tools": ["OSS-Fuzz", "ClusterFuzz", "libFuzzer"],
+      "remediation": "Integrate with OSS-Fuzz or add fuzzing tests"
+    },
+    {
+      "name": "License",
+      "weight": "low",
+      "description": "Project has a declared license",
+      "risk": "Unclear licensing creates legal uncertainty",
+      "remediation": "Add LICENSE file to repository"
+    },
+    {
+      "name": "Maintained",
+      "weight": "high",
+      "description": "Project is actively maintained",
+      "risk": "Unmaintained projects may have unpatched vulnerabilities",
+      "indicators": [
+        "Recent commits",
+        "Responsive to issues",
+        "Active release cycle"
+      ]
+    },
+    {
+      "name": "Packaging",
+      "weight": "medium",
+      "description": "Project publishes packages using secure practices",
+      "risk": "Insecure packaging can lead to supply chain attacks",
+      "remediation": "Use GitHub Actions with SLSA provenance"
+    },
+    {
+      "name": "Pinned-Dependencies",
+      "weight": "high",
+      "description": "Dependencies are pinned to specific versions/hashes",
+      "risk": "Unpinned deps can be hijacked via version updates",
+      "remediation": [
+        "Use lockfiles (package-lock.json, poetry.lock)",
+        "Pin GitHub Actions to SHA",
+        "Use hash verification for downloads"
+      ]
+    },
+    {
+      "name": "SAST",
+      "weight": "medium",
+      "description": "Project uses Static Application Security Testing",
+      "risk": "Code vulnerabilities may go undetected",
+      "tools": ["CodeQL", "Semgrep", "SonarQube"],
+      "remediation": "Enable CodeQL or other SAST in CI"
+    },
+    {
+      "name": "Security-Policy",
+      "weight": "medium",
+      "description": "Project has SECURITY.md with vulnerability disclosure process",
+      "risk": "No clear way to report vulnerabilities",
+      "remediation": "Add SECURITY.md with disclosure instructions"
+    },
+    {
+      "name": "Signed-Releases",
+      "weight": "high",
+      "description": "Project signs releases cryptographically",
+      "risk": "Unsigned releases can be tampered with",
+      "remediation": [
+        "Sign releases with GPG or Sigstore",
+        "Publish SLSA provenance"
+      ],
+      "slsa_alignment": "SLSA Build Level 2+"
+    },
+    {
+      "name": "Token-Permissions",
+      "weight": "high",
+      "description": "Workflows use minimal token permissions",
+      "risk": "Overprivileged tokens increase blast radius of compromise",
+      "remediation": [
+        "Set permissions: read-all at workflow level",
+        "Grant specific permissions per job"
+      ]
+    },
+    {
+      "name": "Vulnerabilities",
+      "weight": "high",
+      "description": "Project has no unfixed vulnerabilities in OSV database",
+      "risk": "Known vulnerabilities can be exploited",
+      "remediation": "Fix or patch known vulnerabilities",
+      "data_source": "https://osv.dev/"
+    },
+    {
+      "name": "Webhooks",
+      "weight": "low",
+      "description": "Webhooks use secure configurations",
+      "risk": "Insecure webhooks can leak secrets or be hijacked",
+      "remediation": "Use HTTPS webhooks with secret validation"
+    }
+  ],
+  "usage": {
+    "cli": {
+      "install": "go install github.com/ossf/scorecard/v5/cmd/scorecard@latest",
+      "run_github": "scorecard --repo=github.com/owner/repo",
+      "run_local": "scorecard --local .",
+      "output_formats": ["default", "json", "sarif"]
+    },
+    "github_action": {
+      "workflow": "ossf/scorecard-action@v2",
+      "example": "uses: ossf/scorecard-action@v2\nwith:\n  results_format: sarif\n  publish_results: true"
+    },
+    "api": {
+      "endpoint": "https://api.securityscorecards.dev/projects/github.com/{owner}/{repo}",
+      "note": "Free API for GitHub projects"
+    }
+  },
+  "integration": {
+    "slsa": {
+      "relationship": "Scorecard checks align with SLSA requirements",
+      "mappings": {
+        "Signed-Releases": "Build Level 2",
+        "Code-Review": "Source Level 2",
+        "Branch-Protection": "Source Level 2",
+        "Pinned-Dependencies": "Build integrity"
+      }
+    },
+    "supply_chain_security": {
+      "reference": "reference/security/slsa/slsa-levels.json",
+      "note": "Use with SLSA for comprehensive supply chain security"
+    }
+  },
+  "badges": {
+    "format": "[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/OWNER/REPO/badge)](https://securityscorecards.dev/viewer/?uri=github.com/OWNER/REPO)",
+    "note": "Add badge to README to display score"
+  },
+  "agent_usage": {
+    "supply_chain_assessment": "Run Scorecard on dependencies",
+    "ci_cd_security": "Audit CI workflows against Scorecard checks",
+    "security_posture": "Quick assessment of project security health",
+    "remediation_guidance": "Use check details for improvement recommendations"
+  }
+}

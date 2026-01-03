@@ -1,0 +1,257 @@
+{
+  "name": "OWASP Application Security Verification Standard (ASVS)",
+  "version": "5.0.0",
+  "released": "2025-05-01",
+  "source": "https://owasp.org/ASVS/",
+  "license": "CC-BY-SA-4.0",
+  "description": "Framework of security requirements for designing, developing and testing secure web applications",
+  "total_requirements": 350,
+  "changelog": {
+    "v5_0": {
+      "released": "2025-05-01",
+      "major_changes": [
+        "New chapter structure with 14 chapters",
+        "350 requirements (reduced from 400+ for clarity)",
+        "Renamed from 'Verification Standard' to focus on requirements",
+        "Enhanced OAuth2/OIDC guidance",
+        "Improved cryptography requirements",
+        "Better integration with NIST 800-63b"
+      ]
+    }
+  },
+  "levels": {
+    "L1": {
+      "name": "Opportunistic",
+      "description": "Low assurance - Appropriate for all applications as minimum baseline",
+      "effort": "Lowest",
+      "use_case": "Public-facing sites with no sensitive data",
+      "requirement_count": 150
+    },
+    "L2": {
+      "name": "Standard",
+      "description": "Standard assurance - Recommended for most applications",
+      "effort": "Moderate",
+      "use_case": "Applications handling sensitive data, business applications",
+      "requirement_count": 280
+    },
+    "L3": {
+      "name": "Advanced",
+      "description": "High assurance - For critical applications",
+      "effort": "Highest",
+      "use_case": "Financial, healthcare, critical infrastructure",
+      "requirement_count": 350
+    }
+  },
+  "chapters": {
+    "V1": {
+      "name": "Architecture, Design and Threat Modeling",
+      "description": "Security architecture requirements",
+      "key_requirements": [
+        "Threat model maintained and updated",
+        "Security architecture documented",
+        "Components use least privilege",
+        "Sensitive data flows identified"
+      ]
+    },
+    "V2": {
+      "name": "Authentication",
+      "description": "Identity verification requirements",
+      "key_requirements": [
+        "Multi-factor authentication for sensitive operations",
+        "Password requirements per NIST 800-63b",
+        "Credential recovery secure",
+        "Session fixation prevention",
+        "Passkeys/WebAuthn support"
+      ],
+      "nist_alignment": "SP 800-63b Digital Identity Guidelines"
+    },
+    "V3": {
+      "name": "Session Management",
+      "description": "Session security requirements",
+      "key_requirements": [
+        "Session tokens cryptographically secure",
+        "Session timeout configurable",
+        "Session invalidation on logout",
+        "Concurrent session controls",
+        "Session binding to device/IP"
+      ]
+    },
+    "V4": {
+      "name": "Access Control",
+      "description": "Authorization requirements",
+      "key_requirements": [
+        "Principle of least privilege enforced",
+        "RBAC or ABAC implemented",
+        "Sensitive resources protected server-side",
+        "Access control failures logged",
+        "Rate limiting on sensitive endpoints"
+      ]
+    },
+    "V5": {
+      "name": "Input Validation",
+      "description": "Data validation requirements",
+      "key_requirements": [
+        "Positive validation (allowlist)",
+        "Structured data validation (JSON schema)",
+        "File upload validation (type, size, name)",
+        "Injection prevention for all interpreters",
+        "Context-aware output encoding"
+      ]
+    },
+    "V6": {
+      "name": "Stored Cryptography",
+      "description": "Cryptographic storage requirements",
+      "key_requirements": [
+        "Sensitive data encrypted at rest",
+        "Approved algorithms only (AES-256-GCM, ChaCha20-Poly1305)",
+        "Key management documented",
+        "Password storage using approved functions (Argon2id, bcrypt, scrypt)",
+        "Secrets never in source code"
+      ]
+    },
+    "V7": {
+      "name": "Error Handling and Logging",
+      "description": "Error and logging requirements",
+      "key_requirements": [
+        "Generic error messages to users",
+        "Detailed errors in logs only",
+        "Security events logged",
+        "Log injection prevention",
+        "Tamper-evident logging"
+      ]
+    },
+    "V8": {
+      "name": "Data Protection",
+      "description": "Data security requirements",
+      "key_requirements": [
+        "Sensitive data classified",
+        "HTTP Strict Transport Security enabled",
+        "Cache-Control headers for sensitive data",
+        "Privacy policy enforcement",
+        "Data minimization implemented"
+      ]
+    },
+    "V9": {
+      "name": "Communications",
+      "description": "Transport security requirements",
+      "key_requirements": [
+        "TLS 1.2+ required for all connections",
+        "TLS 1.3 preferred",
+        "Certificate validation enforced",
+        "Certificate pinning for mobile apps",
+        "HSTS preload recommended"
+      ]
+    },
+    "V10": {
+      "name": "Malicious Code",
+      "description": "Code integrity requirements",
+      "key_requirements": [
+        "Integrity verification of dependencies",
+        "SRI for third-party resources",
+        "No untrusted code execution",
+        "Safe deserialization only",
+        "SBOM maintained"
+      ]
+    },
+    "V11": {
+      "name": "Business Logic",
+      "description": "Business logic security requirements",
+      "key_requirements": [
+        "Sensitive workflows protected from automation",
+        "Rate limiting on business operations",
+        "Transaction integrity verified",
+        "Abuse cases considered in design",
+        "State machine validation"
+      ]
+    },
+    "V12": {
+      "name": "Files and Resources",
+      "description": "File handling requirements",
+      "key_requirements": [
+        "User-uploaded files stored outside webroot",
+        "File type validation by content",
+        "File names sanitized",
+        "Antivirus scanning for uploads",
+        "Resource limits enforced"
+      ]
+    },
+    "V13": {
+      "name": "API and Web Service",
+      "description": "API security requirements",
+      "key_requirements": [
+        "RESTful APIs use proper HTTP methods",
+        "GraphQL depth/complexity limits",
+        "OAuth2/OIDC properly implemented",
+        "API versioning strategy",
+        "OpenAPI spec validation"
+      ]
+    },
+    "V14": {
+      "name": "Configuration",
+      "description": "Security configuration requirements",
+      "key_requirements": [
+        "Security headers configured",
+        "Default credentials removed",
+        "Components hardened",
+        "Unnecessary features disabled",
+        "Content Security Policy enforced"
+      ]
+    }
+  },
+  "testing_guidance": {
+    "L1_testing": [
+      "Automated DAST scanning",
+      "Basic SAST analysis",
+      "Dependency vulnerability scanning",
+      "Configuration review"
+    ],
+    "L2_testing": [
+      "Manual penetration testing",
+      "Thorough SAST with manual review",
+      "Threat model review",
+      "Authentication/session testing",
+      "API security testing"
+    ],
+    "L3_testing": [
+      "Comprehensive code review",
+      "Red team exercises",
+      "Architecture review",
+      "Cryptography review",
+      "Third-party security assessment"
+    ]
+  },
+  "compliance_mapping": {
+    "pci_dss_4": {
+      "covered_requirements": "Requirement 6 (Secure Development)",
+      "notes": "ASVS L2 covers most PCI DSS 6.x requirements"
+    },
+    "nist_800_53": {
+      "covered_controls": ["SC", "AC", "IA", "AU", "SI"],
+      "notes": "ASVS maps to many 800-53 controls"
+    },
+    "iso_27001": {
+      "covered_controls": "A.14 System Acquisition, Development",
+      "notes": "ASVS supports ISO 27001 SDLC controls"
+    }
+  },
+  "quick_reference": {
+    "authentication": "V2",
+    "session": "V3",
+    "access_control": "V4",
+    "injection": "V5",
+    "cryptography": "V6",
+    "api_security": "V13",
+    "configuration": "V14"
+  },
+  "cross_references": {
+    "owasp_top10": "reference/security/owasp/top10-web-2025.json",
+    "cwe_top25": "reference/security/cwe/cwe-top-25-2025.json",
+    "nist_800_53": "reference/security/nist/sp800-53-controls.json"
+  },
+  "agent_usage": {
+    "security_requirements": "Generate security requirements from ASVS chapters",
+    "code_review": "Use as checklist for secure code review",
+    "testing_scope": "Define penetration testing scope by ASVS level",
+    "gap_analysis": "Assess application against ASVS requirements"
+  }
+}

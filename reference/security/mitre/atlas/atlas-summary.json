@@ -1,0 +1,265 @@
+{
+  "name": "MITRE ATLAS (Adversarial Threat Landscape for AI Systems)",
+  "version": "5.0.0",
+  "released": "2025-10-22",
+  "source": "https://atlas.mitre.org/",
+  "license": "CC-BY-4.0",
+  "description": "Adversarial machine learning tactics and techniques for AI/ML systems",
+  "changelog_v5": {
+    "major_changes": [
+      "Added Technique Maturity field (Feasible, Demonstrated, Realized)",
+      "14 new agentic AI techniques via Zenity Labs collaboration",
+      "Focus on autonomous AI agent security risks",
+      "STIX 2.1 format for machine-readable integration"
+    ],
+    "statistics": {
+      "tactics": 15,
+      "techniques": 66,
+      "subtechniques": 46,
+      "mitigations": 26,
+      "case_studies": 33
+    }
+  },
+  "technique_maturity": {
+    "feasible": "Shown to work in research settings",
+    "demonstrated": "Effective in red team exercises",
+    "realized": "Used by threat actors in real-world incidents"
+  },
+  "tactics": [
+    {
+      "id": "AML.TA0001",
+      "name": "Reconnaissance",
+      "description": "Gather information about AI systems",
+      "techniques": [
+        {"id": "AML.T0000", "name": "ML Model Fingerprinting", "maturity": "demonstrated"},
+        {"id": "AML.T0001", "name": "ML Infrastructure Discovery", "maturity": "demonstrated"},
+        {"id": "AML.T0002", "name": "ML Supply Chain Reconnaissance", "maturity": "realized"}
+      ]
+    },
+    {
+      "id": "AML.TA0002",
+      "name": "Resource Development",
+      "description": "Establish resources for attack",
+      "techniques": [
+        {"id": "AML.T0003", "name": "Adversarial ML Attack Development", "maturity": "demonstrated"},
+        {"id": "AML.T0004", "name": "Acquire ML Artifacts", "maturity": "realized"},
+        {"id": "AML.T0005", "name": "Compromise ML Infrastructure", "maturity": "realized"}
+      ]
+    },
+    {
+      "id": "AML.TA0003",
+      "name": "Initial Access",
+      "description": "Gain initial access to ML systems",
+      "techniques": [
+        {"id": "AML.T0010", "name": "ML Supply Chain Compromise", "maturity": "realized"},
+        {"id": "AML.T0011", "name": "Valid Credentials", "maturity": "realized"},
+        {"id": "AML.T0012", "name": "Exploit Public-Facing ML Application", "maturity": "realized"}
+      ]
+    },
+    {
+      "id": "AML.TA0004",
+      "name": "ML Attack Staging",
+      "description": "Prepare attack against ML system",
+      "techniques": [
+        {"id": "AML.T0020", "name": "Craft Adversarial Data", "maturity": "demonstrated"},
+        {"id": "AML.T0021", "name": "Backdoor ML Model", "maturity": "demonstrated"},
+        {"id": "AML.T0022", "name": "Poison Training Data", "maturity": "realized"}
+      ]
+    },
+    {
+      "id": "AML.TA0005",
+      "name": "ML Model Access",
+      "description": "Access ML model through various interfaces",
+      "techniques": [
+        {"id": "AML.T0040", "name": "ML Model Inference API Access", "maturity": "realized"},
+        {"id": "AML.T0041", "name": "Full ML Model Access", "maturity": "demonstrated"},
+        {"id": "AML.T0042", "name": "Physical Environment Access", "maturity": "demonstrated"}
+      ]
+    },
+    {
+      "id": "AML.TA0006",
+      "name": "Execution",
+      "description": "Execute adversarial techniques",
+      "techniques": [
+        {"id": "AML.T0043", "name": "Prompt Injection", "priority": "critical", "maturity": "realized"},
+        {"id": "AML.T0044", "name": "Adversarial Example", "maturity": "demonstrated"},
+        {"id": "AML.T0045", "name": "Model Extraction", "maturity": "demonstrated"}
+      ]
+    },
+    {
+      "id": "AML.TA0007",
+      "name": "Persistence",
+      "description": "Maintain access to ML systems",
+      "techniques": [
+        {"id": "AML.T0050", "name": "Poison Training Data", "maturity": "demonstrated"},
+        {"id": "AML.T0051", "name": "Insert Backdoor", "maturity": "demonstrated"}
+      ]
+    },
+    {
+      "id": "AML.TA0008",
+      "name": "Defense Evasion",
+      "description": "Evade ML-based defenses",
+      "techniques": [
+        {"id": "AML.T0054", "name": "Evade ML Model", "priority": "high", "maturity": "realized"},
+        {"id": "AML.T0055", "name": "Adversarial Example in Physical World", "maturity": "demonstrated"}
+      ]
+    },
+    {
+      "id": "AML.TA0009",
+      "name": "Exfiltration",
+      "description": "Extract data from ML systems",
+      "techniques": [
+        {"id": "AML.T0056", "name": "Infer Training Data Membership", "maturity": "demonstrated"},
+        {"id": "AML.T0057", "name": "Model Inversion", "priority": "high", "maturity": "demonstrated"},
+        {"id": "AML.T0058", "name": "Attribute Inference", "maturity": "demonstrated"}
+      ]
+    },
+    {
+      "id": "AML.TA0010",
+      "name": "Impact",
+      "description": "Disrupt or degrade ML systems",
+      "techniques": [
+        {"id": "AML.T0060", "name": "ML-Enabled Product/Service Disruption", "maturity": "realized"},
+        {"id": "AML.T0061", "name": "Output Manipulation", "maturity": "realized"},
+        {"id": "AML.T0062", "name": "Model Degradation", "maturity": "demonstrated"}
+      ]
+    }
+  ],
+  "agentic_ai_techniques": {
+    "note": "New in v5.0 - 14 agent-focused techniques via Zenity Labs collaboration",
+    "techniques": [
+      {
+        "id": "AML.T0070",
+        "name": "Agent Goal Hijacking",
+        "description": "Manipulate autonomous agent to pursue attacker goals",
+        "maturity": "demonstrated",
+        "mitigations": ["Clear goal constraints", "Human oversight for critical actions", "Goal validation"]
+      },
+      {
+        "id": "AML.T0071",
+        "name": "Tool Abuse",
+        "description": "Exploit agent's tool access for unauthorized actions",
+        "maturity": "realized",
+        "mitigations": ["Least privilege for tools", "Tool output validation", "Rate limiting"]
+      },
+      {
+        "id": "AML.T0072",
+        "name": "Memory Poisoning",
+        "description": "Corrupt agent memory/context to influence future behavior",
+        "maturity": "demonstrated",
+        "mitigations": ["Memory integrity checks", "Context isolation", "Periodic memory reset"]
+      },
+      {
+        "id": "AML.T0073",
+        "name": "Multi-Agent Collusion",
+        "description": "Coordinate multiple agents for malicious purposes",
+        "maturity": "feasible",
+        "mitigations": ["Agent isolation", "Communication monitoring", "Behavioral anomaly detection"]
+      },
+      {
+        "id": "AML.T0074",
+        "name": "Excessive Autonomy Exploitation",
+        "description": "Abuse overly permissive agent configurations",
+        "maturity": "realized",
+        "mitigations": ["Minimal autonomy", "Approval gates", "Action logging"]
+      }
+    ]
+  },
+  "llm_specific_techniques": [
+    {
+      "id": "AML.T0043",
+      "name": "Prompt Injection",
+      "maturity": "realized",
+      "subtechniques": [
+        {"id": "AML.T0043.001", "name": "Direct Prompt Injection"},
+        {"id": "AML.T0043.002", "name": "Indirect Prompt Injection"},
+        {"id": "AML.T0043.003", "name": "Jailbreak"},
+        {"id": "AML.T0043.004", "name": "Context Manipulation"}
+      ],
+      "mitigations": [
+        "Input filtering and sanitization",
+        "Output validation",
+        "Least privilege for LLM actions",
+        "Human-in-the-loop for sensitive operations",
+        "Instruction hierarchy enforcement"
+      ]
+    },
+    {
+      "id": "AML.T0057",
+      "name": "Model Inversion",
+      "maturity": "demonstrated",
+      "description": "Reconstruct training data from model",
+      "risk_for": ["PII exposure", "Trade secret disclosure"],
+      "mitigations": [
+        "Differential privacy",
+        "Output perturbation",
+        "Rate limiting",
+        "Membership inference detection"
+      ]
+    }
+  ],
+  "rag_vulnerabilities": {
+    "note": "RAG attacks emphasized in v5.0 - 53% of companies use RAG",
+    "techniques": [
+      {
+        "id": "AML.T0080",
+        "name": "RAG Poisoning",
+        "description": "Inject malicious content into retrieval corpus",
+        "mitigations": ["Content validation", "Source authentication", "Anomaly detection"]
+      },
+      {
+        "id": "AML.T0081",
+        "name": "Retrieval Manipulation",
+        "description": "Craft queries to surface malicious content",
+        "mitigations": ["Query sanitization", "Relevance verification", "Content filtering"]
+      },
+      {
+        "id": "AML.T0082",
+        "name": "Embedding Space Attacks",
+        "description": "Exploit vector similarity for adversarial retrieval",
+        "mitigations": ["Embedding integrity checks", "Semantic validation"]
+      }
+    ]
+  },
+  "case_studies": [
+    {
+      "id": "AML.CS0001",
+      "name": "Evasion Attack on Tesla Autopilot",
+      "techniques": ["AML.T0044", "AML.T0055"],
+      "description": "Adversarial patches caused misclassification of stop signs"
+    },
+    {
+      "id": "AML.CS0014",
+      "name": "ChatGPT Prompt Injection",
+      "techniques": ["AML.T0043"],
+      "description": "Indirect prompt injection via web content"
+    },
+    {
+      "id": "AML.CS0016",
+      "name": "Training Data Extraction from GPT-2",
+      "techniques": ["AML.T0056"],
+      "description": "Extracted PII from language model outputs"
+    },
+    {
+      "id": "AML.CS0020",
+      "name": "Agent Tool Exploitation",
+      "techniques": ["AML.T0071", "AML.T0074"],
+      "description": "Autonomous agent exploited to access unauthorized systems",
+      "year": 2025
+    }
+  ],
+  "cross_references": {
+    "owasp_llm_2025": {
+      "LLM01_Prompt_Injection": ["AML.T0043"],
+      "LLM02_Sensitive_Info_Disclosure": ["AML.T0056", "AML.T0057", "AML.T0058"],
+      "LLM03_Supply_Chain": ["AML.T0010", "AML.T0051"],
+      "LLM04_Data_Model_Poisoning": ["AML.T0022", "AML.T0050"],
+      "LLM05_Improper_Output_Handling": ["AML.T0061"],
+      "LLM06_Excessive_Agency": ["AML.T0074", "AML.T0071"],
+      "LLM07_System_Prompt_Leakage": ["AML.T0043.001"],
+      "LLM08_Vector_Embedding_Weaknesses": ["AML.T0080", "AML.T0081", "AML.T0082"],
+      "LLM09_Misinformation": ["AML.T0061", "AML.T0062"],
+      "LLM10_Unbounded_Consumption": ["AML.T0060"]
+    }
+  }
+}

@@ -1,0 +1,213 @@
+{
+  "name": "SLSA (Supply-chain Levels for Software Artifacts)",
+  "version": "1.2",
+  "released": "2025-11-24",
+  "source": "https://slsa.dev/",
+  "license": "Apache-2.0",
+  "description": "Framework for supply chain integrity, assessing build and source security",
+  "changelog": {
+    "v1_2": {
+      "released": "2025-11-24",
+      "major_changes": [
+        "Introduction of Source Track - major milestone",
+        "Distinct Build Track and Source Track",
+        "Enhanced source integrity requirements"
+      ]
+    },
+    "v1_1": {
+      "released": "2025-04-21",
+      "changes": [
+        "Clarifications to threat model and attestation model",
+        "Verification procedure updates",
+        "Verifier metadata added to VSA format"
+      ]
+    }
+  },
+  "tracks": {
+    "build": {
+      "description": "Assurance about the build process and provenance",
+      "levels": {
+        "0": {
+          "name": "No Guarantees",
+          "description": "No SLSA level. Default state with no security guarantees.",
+          "requirements": [],
+          "risk": "Full exposure to supply chain attacks"
+        },
+        "1": {
+          "name": "Build Provenance",
+          "description": "Documentation of build process exists",
+          "requirements": [
+            "Build provenance exists and is generated",
+            "Provenance identifies the artifact and builder"
+          ],
+          "protects_against": [
+            "Mistakes in build process",
+            "Basic tampering"
+          ],
+          "verification": "Provenance exists and is parseable"
+        },
+        "2": {
+          "name": "Hosted Build, Signed Provenance",
+          "description": "Build on hosted service with signed provenance",
+          "requirements": [
+            "Build on hosted platform (not developer machine)",
+            "Provenance is signed by the build service",
+            "Provenance is non-falsifiable by users"
+          ],
+          "protects_against": [
+            "Tampering after build",
+            "Developer machine compromise",
+            "Falsified provenance"
+          ],
+          "verification": "Verify signature from known build service"
+        },
+        "3": {
+          "name": "Hardened Builds",
+          "description": "Hermetic, reproducible builds with full provenance",
+          "requirements": [
+            "Hermetic builds (no network during build)",
+            "Isolated build environment",
+            "Provenance includes all dependencies",
+            "Unforgeable provenance",
+            "Authenticated source"
+          ],
+          "protects_against": [
+            "Build tampering",
+            "Source tampering",
+            "Dependency confusion",
+            "Compromised build systems"
+          ],
+          "verification": "Full provenance chain verification"
+        }
+      }
+    },
+    "source": {
+      "description": "NEW in v1.2 - Assurance about source code integrity",
+      "note": "Major addition in SLSA 1.2",
+      "levels": {
+        "1": {
+          "name": "Source Provenance",
+          "description": "Source revision is tracked with provenance",
+          "requirements": [
+            "Source repository tracks revisions",
+            "Source provenance exists"
+          ]
+        },
+        "2": {
+          "name": "Verified Source",
+          "description": "Source changes are reviewed and verified",
+          "requirements": [
+            "Two-person review for changes",
+            "Source hosted on verified platform",
+            "Change history is immutable"
+          ]
+        },
+        "3": {
+          "name": "Hardened Source",
+          "description": "Full source integrity with strong controls",
+          "requirements": [
+            "Cryptographically signed commits",
+            "Protected branches",
+            "Audit log of all changes",
+            "Unforgeable source provenance"
+          ]
+        }
+      }
+    }
+  },
+  "provenance_schema": {
+    "buildType": "URI identifying build process",
+    "builder": {
+      "id": "URI identifying the builder"
+    },
+    "invocation": {
+      "configSource": {
+        "uri": "Source repository",
+        "digest": "Commit hash",
+        "entryPoint": "Build configuration file"
+      }
+    },
+    "materials": [
+      {
+        "uri": "Dependency source",
+        "digest": "SHA256 of dependency"
+      }
+    ],
+    "metadata": {
+      "buildInvocationId": "Unique build ID",
+      "buildStartedOn": "ISO 8601 timestamp",
+      "buildFinishedOn": "ISO 8601 timestamp"
+    }
+  },
+  "build_platforms": {
+    "github_actions": {
+      "slsa_level": 3,
+      "generator": "slsa-framework/slsa-github-generator",
+      "provenance_type": "DSSE envelope with in-toto attestation",
+      "latest_version": "v2.1.0"
+    },
+    "google_cloud_build": {
+      "slsa_level": 3,
+      "provenance_type": "Binary Authorization attestation"
+    },
+    "gitlab_ci": {
+      "slsa_level": 2,
+      "notes": "Signed attestations available"
+    },
+    "tekton": {
+      "slsa_level": 3,
+      "generator": "Tekton Chains"
+    }
+  },
+  "verification_tools": {
+    "slsa-verifier": {
+      "source": "https://github.com/slsa-framework/slsa-verifier",
+      "usage": "slsa-verifier verify-artifact artifact.tar.gz --provenance-path provenance.intoto.jsonl --source-uri github.com/org/repo",
+      "version": "v2.6.0"
+    },
+    "cosign": {
+      "source": "https://github.com/sigstore/cosign",
+      "usage": "cosign verify-attestation --type slsaprovenance image:tag"
+    }
+  },
+  "package_ecosystem_support": {
+    "npm": {
+      "status": "Supported via npm provenance",
+      "slsa_level": 2,
+      "command": "npm publish --provenance"
+    },
+    "pypi": {
+      "status": "Supported via Trusted Publishers",
+      "slsa_level": 2,
+      "docs": "https://docs.pypi.org/trusted-publishers/"
+    },
+    "go": {
+      "status": "Native via Go sumdb + source verification",
+      "slsa_level": 2
+    },
+    "container_images": {
+      "status": "Supported via Sigstore/cosign",
+      "slsa_level": 3,
+      "registries": ["ghcr.io", "gcr.io", "Docker Hub"]
+    }
+  },
+  "threat_model": {
+    "in_scope": [
+      "Source integrity (unauthorized changes)",
+      "Build integrity (tampering during build)",
+      "Provenance integrity (falsified attestations)",
+      "Dependency integrity (malicious dependencies)"
+    ],
+    "out_of_scope": [
+      "Vulnerabilities in source code",
+      "Malicious maintainers",
+      "Compiler/toolchain vulnerabilities"
+    ]
+  },
+  "ci_cd_integration": {
+    "github_example": {
+      "workflow": ".github/workflows/slsa-build.yml",
+      "uses": "slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v2.1.0"
+    }
+  }
+}

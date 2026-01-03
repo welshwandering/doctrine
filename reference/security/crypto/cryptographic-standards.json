@@ -1,0 +1,415 @@
+{
+  "name": "Cryptographic Standards Reference",
+  "version": "2025.01",
+  "sources": [
+    "NIST SP 800-131A Rev 2",
+    "NIST SP 800-57",
+    "NIST FIPS 140-3",
+    "NIST Post-Quantum Cryptography",
+    "IETF RFCs"
+  ],
+  "description": "Approved cryptographic algorithms, key sizes, and deprecation schedules",
+  "symmetric_encryption": {
+    "approved": {
+      "AES-256-GCM": {
+        "status": "RECOMMENDED",
+        "use_cases": ["Data at rest", "Data in transit", "General purpose"],
+        "key_size": 256,
+        "nonce_size": 96,
+        "notes": "Preferred for authenticated encryption"
+      },
+      "AES-128-GCM": {
+        "status": "APPROVED",
+        "use_cases": ["Performance-sensitive applications"],
+        "key_size": 128,
+        "nonce_size": 96,
+        "notes": "Acceptable when 256-bit is performance prohibitive"
+      },
+      "ChaCha20-Poly1305": {
+        "status": "RECOMMENDED",
+        "use_cases": ["Mobile", "IoT", "Software implementations"],
+        "key_size": 256,
+        "nonce_size": 96,
+        "notes": "Preferred for software-only implementations, resistant to timing attacks"
+      },
+      "AES-256-CBC": {
+        "status": "APPROVED_WITH_CAVEATS",
+        "use_cases": ["Legacy compatibility"],
+        "key_size": 256,
+        "notes": "MUST use with HMAC for authentication (Encrypt-then-MAC)"
+      }
+    },
+    "deprecated": {
+      "3DES": {
+        "status": "DEPRECATED",
+        "deadline": "2023-12-31",
+        "reason": "64-bit block size vulnerable to Sweet32 attack",
+        "migration": "AES-256-GCM"
+      },
+      "DES": {
+        "status": "PROHIBITED",
+        "reason": "56-bit key trivially brute-forced",
+        "migration": "AES-256-GCM"
+      },
+      "RC4": {
+        "status": "PROHIBITED",
+        "reason": "Multiple cryptographic weaknesses",
+        "migration": "ChaCha20-Poly1305 or AES-GCM"
+      },
+      "Blowfish": {
+        "status": "DEPRECATED",
+        "reason": "64-bit block size",
+        "migration": "AES-256-GCM"
+      }
+    }
+  },
+  "asymmetric_encryption": {
+    "approved": {
+      "RSA-3072": {
+        "status": "APPROVED",
+        "use_cases": ["Key exchange", "Digital signatures"],
+        "key_size": 3072,
+        "security_level": "128-bit",
+        "notes": "Minimum for new deployments"
+      },
+      "RSA-4096": {
+        "status": "RECOMMENDED",
+        "use_cases": ["Long-term secrets", "High-security applications"],
+        "key_size": 4096,
+        "security_level": "140-bit",
+        "notes": "Preferred for new deployments"
+      },
+      "ECDSA-P256": {
+        "status": "APPROVED",
+        "use_cases": ["Digital signatures", "TLS"],
+        "curve": "P-256 (secp256r1)",
+        "security_level": "128-bit"
+      },
+      "ECDSA-P384": {
+        "status": "RECOMMENDED",
+        "use_cases": ["High-security digital signatures"],
+        "curve": "P-384 (secp384r1)",
+        "security_level": "192-bit"
+      },
+      "Ed25519": {
+        "status": "RECOMMENDED",
+        "use_cases": ["Digital signatures", "SSH keys"],
+        "security_level": "128-bit",
+        "notes": "Preferred for new SSH keys, resistant to implementation errors"
+      },
+      "X25519": {
+        "status": "RECOMMENDED",
+        "use_cases": ["Key exchange", "TLS 1.3"],
+        "security_level": "128-bit",
+        "notes": "Preferred for ECDH key exchange"
+      }
+    },
+    "deprecated": {
+      "RSA-1024": {
+        "status": "PROHIBITED",
+        "reason": "Factorable with moderate resources",
+        "migration": "RSA-3072 or ECDSA-P256"
+      },
+      "RSA-2048": {
+        "status": "LEGACY",
+        "deadline": "2030-12-31",
+        "reason": "Below 128-bit security margin",
+        "migration": "RSA-3072 or RSA-4096",
+        "notes": "Acceptable for existing systems, not for new deployments"
+      },
+      "DSA": {
+        "status": "DEPRECATED",
+        "reason": "Superseded by ECDSA and EdDSA",
+        "migration": "ECDSA-P256 or Ed25519"
+      }
+    }
+  },
+  "hash_functions": {
+    "approved": {
+      "SHA-256": {
+        "status": "APPROVED",
+        "use_cases": ["General hashing", "HMAC", "Digital signatures"],
+        "output_size": 256,
+        "security_level": "128-bit collision resistance"
+      },
+      "SHA-384": {
+        "status": "APPROVED",
+        "use_cases": ["High-security applications"],
+        "output_size": 384,
+        "security_level": "192-bit collision resistance"
+      },
+      "SHA-512": {
+        "status": "APPROVED",
+        "use_cases": ["High-security, 64-bit optimized platforms"],
+        "output_size": 512,
+        "security_level": "256-bit collision resistance"
+      },
+      "SHA3-256": {
+        "status": "APPROVED",
+        "use_cases": ["Diversity from SHA-2 family"],
+        "output_size": 256,
+        "notes": "Use when SHA-2 diversity is required"
+      },
+      "BLAKE3": {
+        "status": "RECOMMENDED",
+        "use_cases": ["High-performance hashing", "File integrity"],
+        "output_size": "Variable (256 default)",
+        "notes": "Faster than SHA-256, suitable for file hashing"
+      }
+    },
+    "deprecated": {
+      "MD5": {
+        "status": "PROHIBITED",
+        "reason": "Collision attacks trivial",
+        "migration": "SHA-256",
+        "exception": "ONLY for non-security checksums with explicit documentation"
+      },
+      "SHA-1": {
+        "status": "PROHIBITED",
+        "reason": "Practical collision attacks demonstrated (SHAttered)",
+        "migration": "SHA-256",
+        "deadline": "2017 (already passed)"
+      }
+    }
+  },
+  "password_hashing": {
+    "approved": {
+      "Argon2id": {
+        "status": "RECOMMENDED",
+        "use_cases": ["Password storage", "Key derivation"],
+        "parameters": {
+          "memory": "64 MB minimum (65536 KB)",
+          "iterations": "3 minimum",
+          "parallelism": "4"
+        },
+        "notes": "Winner of Password Hashing Competition, preferred choice"
+      },
+      "scrypt": {
+        "status": "APPROVED",
+        "use_cases": ["Password storage", "Key derivation"],
+        "parameters": {
+          "N": "2^17 (131072) minimum",
+          "r": "8",
+          "p": "1"
+        },
+        "notes": "Good alternative to Argon2id"
+      },
+      "bcrypt": {
+        "status": "APPROVED",
+        "use_cases": ["Password storage"],
+        "parameters": {
+          "cost": "12 minimum (2^12 iterations)"
+        },
+        "notes": "Widely supported, 72-byte password limit"
+      },
+      "PBKDF2-HMAC-SHA256": {
+        "status": "LEGACY",
+        "use_cases": ["Compliance requirements (FIPS)"],
+        "parameters": {
+          "iterations": "600000 minimum"
+        },
+        "notes": "Use only if FIPS compliance required; prefer Argon2id otherwise"
+      }
+    },
+    "prohibited": {
+      "plain_text": "NEVER store passwords in plain text",
+      "md5_password": "PROHIBITED - trivially crackable",
+      "sha1_password": "PROHIBITED - fast hashing enables brute force",
+      "sha256_password": "PROHIBITED without key stretching - too fast"
+    }
+  },
+  "tls_configuration": {
+    "protocol_versions": {
+      "TLS_1.3": {
+        "status": "RECOMMENDED",
+        "notes": "Preferred for all new deployments"
+      },
+      "TLS_1.2": {
+        "status": "APPROVED",
+        "notes": "Acceptable with proper cipher suite configuration"
+      },
+      "TLS_1.1": {
+        "status": "PROHIBITED",
+        "deadline": "2020 (already passed)"
+      },
+      "TLS_1.0": {
+        "status": "PROHIBITED",
+        "deadline": "2020 (already passed)"
+      },
+      "SSL_3.0": {
+        "status": "PROHIBITED",
+        "reason": "POODLE attack"
+      }
+    },
+    "cipher_suites_tls13": {
+      "recommended": [
+        "TLS_AES_256_GCM_SHA384",
+        "TLS_CHACHA20_POLY1305_SHA256",
+        "TLS_AES_128_GCM_SHA256"
+      ]
+    },
+    "cipher_suites_tls12": {
+      "recommended": [
+        "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384",
+        "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+        "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256",
+        "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256",
+        "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256",
+        "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+      ],
+      "prohibited": [
+        "Anything with RC4",
+        "Anything with 3DES",
+        "Anything with CBC (prefer GCM)",
+        "Anything with MD5",
+        "Anything with NULL",
+        "Anything with EXPORT",
+        "Anything with anon (anonymous)"
+      ]
+    }
+  },
+  "post_quantum_cryptography": {
+    "status": "TRANSITION_PLANNING",
+    "timeline": {
+      "2024": "NIST PQC standards finalized (ML-KEM, ML-DSA, SLH-DSA)",
+      "2025-2030": "Hybrid deployment (classical + PQC)",
+      "2030+": "PQC-only for new deployments",
+      "2035": "Target for full PQC migration"
+    },
+    "approved_algorithms": {
+      "ML-KEM": {
+        "formerly": "CRYSTALS-Kyber",
+        "use_case": "Key encapsulation (replacing ECDH/RSA key exchange)",
+        "security_levels": ["ML-KEM-512", "ML-KEM-768", "ML-KEM-1024"],
+        "status": "FIPS 203 (draft)",
+        "recommendation": "ML-KEM-768 for general use"
+      },
+      "ML-DSA": {
+        "formerly": "CRYSTALS-Dilithium",
+        "use_case": "Digital signatures (replacing ECDSA/RSA signatures)",
+        "security_levels": ["ML-DSA-44", "ML-DSA-65", "ML-DSA-87"],
+        "status": "FIPS 204 (draft)",
+        "recommendation": "ML-DSA-65 for general use"
+      },
+      "SLH-DSA": {
+        "formerly": "SPHINCS+",
+        "use_case": "Stateless hash-based signatures",
+        "status": "FIPS 205 (draft)",
+        "notes": "Larger signatures but conservative security assumptions"
+      }
+    },
+    "hybrid_mode": {
+      "description": "Combine classical and PQC algorithms during transition",
+      "example": "X25519 + ML-KEM-768 for key exchange",
+      "rationale": "Security even if one algorithm is broken",
+      "tls_support": "TLS 1.3 hybrid key exchange drafts"
+    },
+    "harvest_now_decrypt_later": {
+      "threat": "Adversaries storing encrypted data to decrypt with future quantum computers",
+      "risk_assessment": {
+        "high_risk": "Data with 10+ year secrecy requirement",
+        "medium_risk": "Data with 5-10 year secrecy requirement",
+        "low_risk": "Ephemeral data (session keys, short-term secrets)"
+      },
+      "mitigation": "Begin PQC migration for high-risk data now"
+    }
+  },
+  "key_management": {
+    "key_sizes": {
+      "symmetric": {
+        "minimum": 128,
+        "recommended": 256,
+        "notes": "256-bit preferred for future-proofing"
+      },
+      "rsa": {
+        "minimum": 3072,
+        "recommended": 4096,
+        "notes": "2048-bit legacy only"
+      },
+      "ecc": {
+        "minimum": "P-256",
+        "recommended": "P-384 or Ed25519"
+      }
+    },
+    "key_rotation": {
+      "symmetric_data_keys": "Rotate annually or per 2^32 encryptions",
+      "asymmetric_keys": "Rotate every 1-2 years",
+      "tls_certificates": "Rotate annually (90-day for Let's Encrypt)",
+      "jwt_signing_keys": "Rotate weekly to monthly",
+      "api_keys": "Rotate every 90 days"
+    },
+    "key_storage": {
+      "recommended": [
+        "Hardware Security Module (HSM)",
+        "Cloud KMS (AWS KMS, GCP KMS, Azure Key Vault)",
+        "HashiCorp Vault",
+        "OS keychain/keyring"
+      ],
+      "prohibited": [
+        "Source code",
+        "Configuration files (unencrypted)",
+        "Environment variables (for long-term secrets)",
+        "Shared drives or wikis"
+      ]
+    }
+  },
+  "common_mistakes": {
+    "ecb_mode": {
+      "mistake": "Using AES-ECB mode",
+      "problem": "Identical plaintext blocks produce identical ciphertext (penguin problem)",
+      "fix": "Use GCM or CBC with random IV"
+    },
+    "static_iv": {
+      "mistake": "Reusing IV/nonce",
+      "problem": "Catastrophic security failure for stream ciphers and GCM",
+      "fix": "Generate random IV for each encryption"
+    },
+    "mac_then_encrypt": {
+      "mistake": "MAC-then-Encrypt order",
+      "problem": "Vulnerable to padding oracle attacks",
+      "fix": "Use authenticated encryption (GCM) or Encrypt-then-MAC"
+    },
+    "predictable_randomness": {
+      "mistake": "Using Math.random() or rand() for cryptography",
+      "problem": "Predictable output",
+      "fix": "Use crypto.randomBytes() or equivalent CSPRNG"
+    },
+    "homebrew_crypto": {
+      "mistake": "Implementing custom cryptographic algorithms",
+      "problem": "Almost certainly contains vulnerabilities",
+      "fix": "Use well-vetted libraries (libsodium, OpenSSL, BoringSSL)"
+    },
+    "string_comparison": {
+      "mistake": "Using == for comparing secrets/hashes",
+      "problem": "Timing attack vulnerability",
+      "fix": "Use constant-time comparison (crypto.timingSafeEqual)"
+    }
+  },
+  "language_libraries": {
+    "recommended": {
+      "javascript_node": ["crypto (builtin)", "libsodium-wrappers", "@noble/ciphers"],
+      "python": ["cryptography", "pynacl", "hashlib (builtin)"],
+      "go": ["crypto (stdlib)", "golang.org/x/crypto"],
+      "rust": ["ring", "rustcrypto/*", "sodiumoxide"],
+      "java": ["Tink", "BouncyCastle", "JCA (builtin)"],
+      "csharp": ["System.Security.Cryptography", "libsodium-net"]
+    },
+    "avoid": {
+      "node_crypto_js": "Pure JS implementation, use native crypto",
+      "python_pycrypto": "Unmaintained, use cryptography instead",
+      "java_jasypt": "Outdated defaults"
+    }
+  },
+  "agent_integration": {
+    "code_security_reviewer": {
+      "detect": "Flag usage of deprecated algorithms",
+      "suggest": "Recommend approved alternatives"
+    },
+    "security_posture_score": {
+      "metric": "Crypto hygiene score based on algorithm usage"
+    },
+    "compliance_assessor": {
+      "map": "Crypto requirements to compliance frameworks (PCI-DSS, HIPAA)"
+    }
+  }
+}

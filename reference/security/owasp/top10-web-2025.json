@@ -1,0 +1,270 @@
+{
+  "name": "OWASP Top 10 Web Application Security Risks 2025",
+  "version": "2025",
+  "released": "2025-11-06",
+  "source": "https://owasp.org/Top10/2025/",
+  "license": "CC-BY-SA-4.0",
+  "changelog": {
+    "new_categories": [
+      "A03:2025 - Software Supply Chain Failures (NEW)",
+      "A10:2025 - Mishandling of Exceptional Conditions (NEW)"
+    ],
+    "removed": ["A10:2021 - SSRF merged into other categories"],
+    "methodology": "Community survey input + expanded data analysis"
+  },
+  "risks": [
+    {
+      "id": "A01:2025",
+      "name": "Broken Access Control",
+      "rank": 1,
+      "cwes": ["CWE-200", "CWE-201", "CWE-352", "CWE-566", "CWE-639", "CWE-862", "CWE-863", "CWE-918"],
+      "description": "Access control enforces policy such that users cannot act outside of their intended permissions. Now includes SSRF.",
+      "detection_patterns": [
+        "IDOR vulnerabilities",
+        "Bypassing access control checks by modifying URL",
+        "Elevation of privilege",
+        "Metadata manipulation (JWT, cookies)",
+        "CORS misconfiguration",
+        "SSRF attacks (169.254.169.254 access)"
+      ],
+      "prevention": [
+        "Deny by default except for public resources",
+        "Implement access control mechanisms once, reuse throughout",
+        "Enforce record ownership",
+        "Disable directory listing",
+        "Log and alert access control failures",
+        "Rate limit API access",
+        "Validate and sanitize URLs for SSRF prevention"
+      ]
+    },
+    {
+      "id": "A02:2025",
+      "name": "Cryptographic Failures",
+      "rank": 2,
+      "cwes": ["CWE-259", "CWE-327", "CWE-331", "CWE-328", "CWE-798"],
+      "description": "Failures related to cryptography which often lead to sensitive data exposure",
+      "detection_patterns": [
+        "Data transmitted in clear text (HTTP, SMTP, FTP)",
+        "Old or weak cryptographic algorithms (MD5, SHA1, DES)",
+        "Default or weak crypto keys",
+        "Missing TLS enforcement",
+        "Certificates not validated",
+        "Hardcoded secrets and API keys"
+      ],
+      "prevention": [
+        "Classify data by sensitivity",
+        "Encrypt all sensitive data at rest",
+        "Use strong algorithms (AES-256-GCM, RSA-2048+)",
+        "Enforce TLS 1.3 with HSTS",
+        "Disable caching for sensitive data",
+        "Use authenticated encryption",
+        "Secrets management (not hardcoded)"
+      ]
+    },
+    {
+      "id": "A03:2025",
+      "name": "Software Supply Chain Failures",
+      "rank": 3,
+      "status": "NEW in 2025",
+      "cwes": ["CWE-502", "CWE-829", "CWE-1395"],
+      "description": "Risks from third-party components, dependencies, and build pipelines",
+      "detection_patterns": [
+        "Unsigned dependencies",
+        "Compromised packages (typosquatting, dependency confusion)",
+        "Insecure CI/CD pipelines",
+        "Missing SBOM",
+        "Outdated components with known vulnerabilities",
+        "Auto-update without integrity verification"
+      ],
+      "prevention": [
+        "Use SLSA framework for build integrity",
+        "Verify package signatures and provenance",
+        "Maintain Software Bill of Materials (SBOM)",
+        "Use lockfiles and hash pinning",
+        "Regular dependency auditing (Dependabot, Snyk)",
+        "Secure CI/CD with proper segregation",
+        "Monitor for compromised packages"
+      ],
+      "references": {
+        "slsa": "reference/security/slsa/slsa-levels.json",
+        "note": "Previously part of A08:2021 - now elevated to separate category"
+      }
+    },
+    {
+      "id": "A04:2025",
+      "name": "Injection",
+      "rank": 4,
+      "cwes": ["CWE-77", "CWE-78", "CWE-79", "CWE-89", "CWE-94"],
+      "description": "Hostile data sent to an interpreter as part of a command or query",
+      "detection_patterns": [
+        "User-supplied data not validated/sanitized",
+        "Dynamic queries without parameterization",
+        "Hostile data used in ORM search parameters",
+        "Direct concatenation into SQL, OS commands, LDAP",
+        "Template injection",
+        "XSS (DOM, reflected, stored)"
+      ],
+      "prevention": [
+        "Use parameterized queries/prepared statements",
+        "Use positive server-side input validation",
+        "Escape special characters for residual dynamic queries",
+        "Use LIMIT to prevent mass disclosure in SQL injection",
+        "Implement CSP for XSS mitigation",
+        "Context-aware output encoding"
+      ]
+    },
+    {
+      "id": "A05:2025",
+      "name": "Insecure Design",
+      "rank": 5,
+      "cwes": ["CWE-209", "CWE-256", "CWE-501", "CWE-522"],
+      "description": "Missing or ineffective control design; different from implementation bugs",
+      "detection_patterns": [
+        "Missing threat modeling",
+        "No security requirements defined",
+        "Missing rate limiting on sensitive operations",
+        "Insufficient protection against bots/automation",
+        "Business logic flaws"
+      ],
+      "prevention": [
+        "Establish secure development lifecycle",
+        "Use threat modeling for critical flows",
+        "Integrate security language in user stories",
+        "Design for defense in depth",
+        "Limit resource consumption by user/service",
+        "Use abuse cases alongside use cases"
+      ]
+    },
+    {
+      "id": "A06:2025",
+      "name": "Security Misconfiguration",
+      "rank": 6,
+      "cwes": ["CWE-16", "CWE-611"],
+      "description": "Missing or misconfigured security hardening",
+      "detection_patterns": [
+        "Unnecessary features enabled (ports, services)",
+        "Default accounts/passwords",
+        "Overly informative error messages",
+        "Missing security headers",
+        "Outdated software/features",
+        "Cloud misconfigurations (open S3, IAM)"
+      ],
+      "prevention": [
+        "Repeatable hardening process",
+        "Minimal platform (no unused features)",
+        "Review and update configurations",
+        "Segmented architecture",
+        "Automated verification of configurations",
+        "Infrastructure as Code scanning"
+      ]
+    },
+    {
+      "id": "A07:2025",
+      "name": "Vulnerable and Outdated Components",
+      "rank": 7,
+      "cwes": [],
+      "description": "Using components with known vulnerabilities",
+      "detection_patterns": [
+        "Unknown component versions",
+        "Outdated OS, web server, DBMS, APIs",
+        "No regular vulnerability scanning",
+        "Components not monitored for CVEs",
+        "Transitive dependency vulnerabilities"
+      ],
+      "prevention": [
+        "Remove unused dependencies",
+        "Inventory component versions continuously",
+        "Monitor CVE databases",
+        "Obtain components from official sources",
+        "Monitor for unmaintained libraries",
+        "Automated SCA in CI/CD"
+      ]
+    },
+    {
+      "id": "A08:2025",
+      "name": "Identification and Authentication Failures",
+      "rank": 8,
+      "cwes": ["CWE-287", "CWE-297", "CWE-384"],
+      "description": "Confirmation of user identity, authentication, and session management",
+      "detection_patterns": [
+        "Permits credential stuffing/brute force",
+        "Weak or default passwords allowed",
+        "Missing or ineffective MFA",
+        "Session identifiers in URL",
+        "Sessions not properly invalidated",
+        "Passkeys/WebAuthn not offered"
+      ],
+      "prevention": [
+        "Implement MFA (preferably passkeys)",
+        "No default credentials",
+        "Weak password checks against breached password lists",
+        "Align password policies with NIST 800-63b",
+        "Limit failed login attempts",
+        "Server-side session management with secure session IDs"
+      ]
+    },
+    {
+      "id": "A09:2025",
+      "name": "Security Logging and Monitoring Failures",
+      "rank": 9,
+      "cwes": ["CWE-117", "CWE-223", "CWE-532", "CWE-778"],
+      "description": "Insufficient logging, detection, monitoring, and active response",
+      "detection_patterns": [
+        "Auditable events not logged",
+        "Warnings/errors generate no logs",
+        "Logs only stored locally",
+        "No alerting thresholds",
+        "No incident response plan",
+        "Sensitive data in logs"
+      ],
+      "prevention": [
+        "Log all login, access control, input validation failures",
+        "Log with sufficient context for forensics",
+        "Use log management solutions (SIEM)",
+        "Establish incident response plan",
+        "Use tamper-evident logs",
+        "Redact sensitive data from logs"
+      ]
+    },
+    {
+      "id": "A10:2025",
+      "name": "Mishandling of Exceptional Conditions",
+      "rank": 10,
+      "status": "NEW in 2025",
+      "cwes": ["CWE-755", "CWE-754", "CWE-391", "CWE-209"],
+      "description": "Improper handling of errors, exceptions, and edge cases leading to security issues",
+      "detection_patterns": [
+        "Unhandled exceptions expose stack traces",
+        "Error messages reveal sensitive information",
+        "Missing validation for edge cases",
+        "Resource exhaustion from exception handling",
+        "Fail-open behavior instead of fail-closed"
+      ],
+      "prevention": [
+        "Implement consistent error handling",
+        "Generic error messages to users (detailed logs internal)",
+        "Fail-closed (deny on error)",
+        "Graceful degradation under failure",
+        "Circuit breakers for external dependencies",
+        "Test exception paths explicitly"
+      ]
+    }
+  ],
+  "mapping_to_cwe_top_25": {
+    "A01": ["CWE-862", "CWE-863", "CWE-352", "CWE-918"],
+    "A02": ["CWE-798"],
+    "A03": ["CWE-502", "CWE-829"],
+    "A04": ["CWE-79", "CWE-89", "CWE-78", "CWE-77", "CWE-94"],
+    "A05": [],
+    "A06": ["CWE-276"],
+    "A07": [],
+    "A08": ["CWE-287", "CWE-306"],
+    "A09": [],
+    "A10": []
+  },
+  "cross_references": {
+    "owasp_api_2023": "reference/security/owasp/top10-api-2023.json",
+    "owasp_llm_2025": "reference/security/owasp/top10-llm-2025.json",
+    "owasp_mobile_2024": "reference/security/owasp/top10-mobile-2024.json"
+  }
+}

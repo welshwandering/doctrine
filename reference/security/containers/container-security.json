@@ -1,0 +1,316 @@
+{
+  "name": "Container and Kubernetes Security Reference",
+  "version": "2025.01",
+  "sources": [
+    "CIS Docker Benchmark",
+    "CIS Kubernetes Benchmark",
+    "NIST SP 800-190",
+    "NSA/CISA Kubernetes Hardening Guide"
+  ],
+  "description": "Security patterns for containerized and orchestrated workloads",
+  "container_images": {
+    "base_image_selection": {
+      "recommended": {
+        "distroless": {
+          "provider": "Google",
+          "images": ["gcr.io/distroless/static", "gcr.io/distroless/base", "gcr.io/distroless/java", "gcr.io/distroless/nodejs", "gcr.io/distroless/python3"],
+          "pros": ["Minimal attack surface", "No shell", "No package manager"],
+          "cons": ["Harder to debug", "Limited to specific languages"],
+          "recommendation": "PREFERRED for production"
+        },
+        "chainguard": {
+          "provider": "Chainguard",
+          "images": ["cgr.dev/chainguard/static", "cgr.dev/chainguard/python", "cgr.dev/chainguard/node"],
+          "pros": ["Zero CVEs at build time", "Signed with Sigstore", "SBOM included"],
+          "cons": ["Newer ecosystem"],
+          "recommendation": "RECOMMENDED"
+        },
+        "alpine": {
+          "images": ["alpine:3.19"],
+          "pros": ["Small size (~5MB)", "Widely supported", "Package manager available"],
+          "cons": ["musl libc can cause compatibility issues", "Has shell (attack surface)"],
+          "recommendation": "ACCEPTABLE for non-sensitive workloads"
+        },
+        "slim_variants": {
+          "images": ["python:3.12-slim", "node:20-slim", "ruby:3.3-slim"],
+          "pros": ["Smaller than full images", "Better compatibility than Alpine"],
+          "cons": ["Still larger than distroless", "Contains unnecessary packages"],
+          "recommendation": "ACCEPTABLE when distroless not feasible"
+        }
+      },
+      "avoid": {
+        "latest_tags": {
+          "example": "node:latest",
+          "reason": "Non-deterministic builds, may pull vulnerable versions",
+          "fix": "Pin to specific version: node:20.11.0-alpine3.19"
+        },
+        "full_os_images": {
+          "example": "ubuntu:22.04",
+          "reason": "Large attack surface, many unnecessary packages",
+          "fix": "Use distroless or slim variants"
+        },
+        "outdated_images": {
+          "example": "node:16",
+          "reason": "Past end-of-life, no security updates",
+          "fix": "Use supported versions"
+        }
+      }
+    },
+    "dockerfile_security": {
+      "must": [
+        {
+          "rule": "Run as non-root user",
+          "dockerfile": "USER nonroot:nonroot",
+          "why": "Container escape impacts limited to user privileges"
+        },
+        {
+          "rule": "Use specific image digest",
+          "dockerfile": "FROM node:20.11.0-alpine@sha256:abc123...",
+          "why": "Tags can be mutated; digests are immutable"
+        },
+        {
+          "rule": "Don't store secrets in image",
+          "dockerfile": "# NEVER: ENV API_KEY=secret",
+          "why": "Secrets visible in image layers and history"
+        },
+        {
+          "rule": "Use COPY instead of ADD",
+          "dockerfile": "COPY package.json .",
+          "why": "ADD can auto-extract archives, potential for zip slip"
+        },
+        {
+          "rule": "Minimize layers with sensitive operations",
+          "dockerfile": "RUN apt-get update && apt-get install -y pkg && rm -rf /var/lib/apt/lists/*",
+          "why": "Each layer is preserved; cleanup in same layer"
+        }
+      ],
+      "should": [
+        {
+          "rule": "Use multi-stage builds",
+          "benefit": "Build dependencies not in final image"
+        },
+        {
+          "rule": "Set HEALTHCHECK",
+          "benefit": "Orchestrator can detect unhealthy containers"
+        },
+        {
+          "rule": "Use .dockerignore",
+          "benefit": "Prevent secrets, git history from entering build context"
+        }
+      ],
+      "example_secure_dockerfile": "# Build stage\nFROM node:20.11.0-alpine AS builder\nWORKDIR /app\nCOPY package*.json ./\nRUN npm ci --only=production\nCOPY . .\nRUN npm run build\n\n# Production stage\nFROM gcr.io/distroless/nodejs20-debian12\nWORKDIR /app\nCOPY --from=builder /app/dist ./dist\nCOPY --from=builder /app/node_modules ./node_modules\nUSER nonroot\nEXPOSE 3000\nCMD [\"dist/server.js\"]"
+    },
+    "image_scanning": {
+      "tools": {
+        "trivy": {
+          "command": "trivy image myapp:latest",
+          "coverage": "OS packages, language deps, misconfigurations",
+          "integration": "GitHub Actions, GitLab CI, Jenkins"
+        },
+        "grype": {
+          "command": "grype myapp:latest",
+          "coverage": "OS packages, language dependencies"
+        },
+        "snyk": {
+          "command": "snyk container test myapp:latest",
+          "coverage": "Vulnerabilities + license compliance"
+        }
+      },
+      "ci_cd_gates": {
+        "block_on": ["Critical CVEs", "High CVEs with exploit available", "KEV matches"],
+        "warn_on": ["High CVEs", "Medium CVEs"],
+        "example_github_action": "- uses: aquasecurity/trivy-action@master\n  with:\n    image-ref: 'myapp:${{ github.sha }}'\n    severity: 'CRITICAL,HIGH'\n    exit-code: '1'"
+      }
+    }
+  },
+  "kubernetes_security": {
+    "pod_security_standards": {
+      "restricted": {
+        "level": "Most restrictive",
+        "use_case": "Production workloads",
+        "enforces": [
+          "runAsNonRoot: true",
+          "allowPrivilegeEscalation: false",
+          "capabilities: drop ALL",
+          "readOnlyRootFilesystem: true",
+          "seccompProfile: RuntimeDefault"
+        ]
+      },
+      "baseline": {
+        "level": "Moderate restrictions",
+        "use_case": "Default for most workloads",
+        "enforces": [
+          "No hostNetwork, hostPID, hostIPC",
+          "No privileged containers",
+          "No hostPath volumes"
+        ]
+      },
+      "privileged": {
+        "level": "No restrictions",
+        "use_case": "System-level workloads only",
+        "warning": "MUST have explicit justification"
+      }
+    },
+    "security_context": {
+      "recommended_pod_spec": {
+        "securityContext": {
+          "runAsNonRoot": true,
+          "runAsUser": 65534,
+          "runAsGroup": 65534,
+          "fsGroup": 65534,
+          "seccompProfile": {
+            "type": "RuntimeDefault"
+          }
+        },
+        "containers": [{
+          "securityContext": {
+            "allowPrivilegeEscalation": false,
+            "readOnlyRootFilesystem": true,
+            "capabilities": {
+              "drop": ["ALL"]
+            }
+          }
+        }]
+      }
+    },
+    "network_policies": {
+      "default_deny": {
+        "description": "Block all traffic by default, allow explicitly",
+        "ingress_deny": {
+          "apiVersion": "networking.k8s.io/v1",
+          "kind": "NetworkPolicy",
+          "metadata": {"name": "default-deny-ingress"},
+          "spec": {
+            "podSelector": {},
+            "policyTypes": ["Ingress"]
+          }
+        },
+        "egress_deny": {
+          "apiVersion": "networking.k8s.io/v1",
+          "kind": "NetworkPolicy",
+          "metadata": {"name": "default-deny-egress"},
+          "spec": {
+            "podSelector": {},
+            "policyTypes": ["Egress"]
+          }
+        }
+      },
+      "namespace_isolation": {
+        "description": "Pods can only communicate within namespace",
+        "example": "Allow same-namespace ingress only"
+      },
+      "egress_restrictions": {
+        "dns_only": "Allow egress to kube-dns only",
+        "internet_allowlist": "Explicit list of allowed external endpoints"
+      }
+    },
+    "rbac": {
+      "principles": [
+        "Least privilege: Only grant required permissions",
+        "Namespace scoping: Prefer Roles over ClusterRoles",
+        "Service account per workload: Don't share service accounts",
+        "No cluster-admin for workloads: Almost never needed"
+      ],
+      "dangerous_permissions": [
+        {"permission": "* on *", "risk": "Full cluster access"},
+        {"permission": "create pods", "risk": "Can run arbitrary containers"},
+        {"permission": "create secrets", "risk": "Can access sensitive data"},
+        {"permission": "exec into pods", "risk": "Can access running workloads"},
+        {"permission": "patch/update deployments", "risk": "Can modify running workloads"}
+      ],
+      "audit_command": "kubectl auth can-i --list --as system:serviceaccount:default:myapp"
+    },
+    "secrets_management": {
+      "kubernetes_secrets": {
+        "limitations": [
+          "Base64 encoded, not encrypted",
+          "Stored in etcd (should be encrypted at rest)",
+          "Accessible to anyone with secret read permissions"
+        ],
+        "minimum_security": "Enable etcd encryption at rest"
+      },
+      "recommended_solutions": {
+        "external_secrets_operator": {
+          "description": "Sync secrets from external providers",
+          "providers": ["AWS Secrets Manager", "HashiCorp Vault", "GCP Secret Manager"]
+        },
+        "sealed_secrets": {
+          "description": "Encrypt secrets for Git storage",
+          "use_case": "GitOps workflows"
+        },
+        "csi_secrets_store": {
+          "description": "Mount secrets as volumes from external stores"
+        }
+      }
+    },
+    "admission_control": {
+      "recommended_controllers": {
+        "kyverno": {
+          "description": "Policy engine for Kubernetes",
+          "use_cases": ["Enforce security policies", "Mutate resources", "Generate resources"]
+        },
+        "opa_gatekeeper": {
+          "description": "Open Policy Agent for Kubernetes",
+          "use_cases": ["Policy as code", "Constraint templates"]
+        }
+      },
+      "example_policies": [
+        "Block privileged containers",
+        "Require resource limits",
+        "Enforce image registry allowlist",
+        "Require labels/annotations"
+      ]
+    },
+    "runtime_security": {
+      "tools": {
+        "falco": {
+          "description": "Runtime threat detection",
+          "detects": ["Shell spawned in container", "Sensitive file access", "Unusual network activity"]
+        },
+        "tetragon": {
+          "description": "eBPF-based security observability",
+          "capabilities": ["Process execution tracking", "Network monitoring", "File access monitoring"]
+        }
+      }
+    }
+  },
+  "supply_chain": {
+    "image_signing": {
+      "sigstore_cosign": {
+        "sign": "cosign sign --key cosign.key myregistry/myapp:v1.0.0",
+        "verify": "cosign verify --key cosign.pub myregistry/myapp:v1.0.0",
+        "keyless": "cosign sign myregistry/myapp:v1.0.0 (uses OIDC)"
+      },
+      "admission_enforcement": {
+        "description": "Only allow signed images",
+        "tools": ["Kyverno", "Connaisseur", "Portieris"]
+      }
+    },
+    "sbom": {
+      "generation": {
+        "syft": "syft myapp:latest -o spdx-json > sbom.json",
+        "trivy": "trivy image --format spdx-json myapp:latest"
+      },
+      "attestation": {
+        "cosign_attest": "cosign attest --predicate sbom.json myregistry/myapp:v1.0.0"
+      }
+    }
+  },
+  "agent_integration": {
+    "infrastructure_security": {
+      "scan": "Dockerfile and Kubernetes manifests",
+      "check": "CIS benchmark compliance"
+    },
+    "supply_chain_auditor": {
+      "scan": "Container image dependencies",
+      "verify": "Image signatures and attestations"
+    },
+    "security_posture_score": {
+      "metrics": [
+        "Percentage of non-root containers",
+        "Images with zero critical CVEs",
+        "NetworkPolicy coverage"
+      ]
+    }
+  }
+}

@@ -1,0 +1,249 @@
+{
+  "name": "OWASP API Security Top 10 2023",
+  "version": "2023",
+  "source": "https://owasp.org/API-Security/",
+  "license": "CC-BY-SA-4.0",
+  "risks": [
+    {
+      "id": "API1:2023",
+      "name": "Broken Object Level Authorization",
+      "severity": "critical",
+      "description": "APIs expose endpoints handling object identifiers, creating wide attack surface for Object Level Access Control issues",
+      "detection_patterns": [
+        "GET /api/users/{id} returns other users' data",
+        "Object IDs in URLs without ownership validation",
+        "Predictable/sequential IDs",
+        "Missing per-object authorization checks"
+      ],
+      "prevention": [
+        "Implement authorization checks for every function that accesses data using user input",
+        "Use random, unpredictable IDs (UUIDs)",
+        "Write tests specifically for authorization checks"
+      ],
+      "attack_examples": [
+        "Change user ID in request to access other accounts",
+        "Enumerate document IDs to download all documents"
+      ]
+    },
+    {
+      "id": "API2:2023",
+      "name": "Broken Authentication",
+      "severity": "critical",
+      "description": "Authentication mechanisms implemented incorrectly, allowing attackers to compromise authentication tokens",
+      "detection_patterns": [
+        "Weak password requirements",
+        "Credential stuffing possible",
+        "Missing rate limiting on auth endpoints",
+        "JWT validation issues",
+        "Long-lived tokens without rotation"
+      ],
+      "prevention": [
+        "Implement robust authentication across all endpoints",
+        "Use standard authentication mechanisms",
+        "Implement rate limiting for auth endpoints",
+        "Use short-lived access tokens",
+        "Validate JWT correctly"
+      ],
+      "attack_examples": [
+        "Brute force API key or password",
+        "JWT none algorithm attack",
+        "JWT secret brute force"
+      ]
+    },
+    {
+      "id": "API3:2023",
+      "name": "Broken Object Property Level Authorization",
+      "severity": "high",
+      "description": "Lack of proper authorization validation at object property level leading to data exposure or manipulation",
+      "detection_patterns": [
+        "API returns more properties than needed",
+        "Mass assignment vulnerabilities",
+        "Updating fields user shouldn't modify",
+        "Exposing internal object properties"
+      ],
+      "prevention": [
+        "Return only necessary data for each API response",
+        "Avoid generic methods like to_json()",
+        "Define allowed property schemas for each endpoint",
+        "Validate incoming data against allowed properties"
+      ],
+      "attack_examples": [
+        "Change isAdmin:true in profile update",
+        "Access internal_id, created_by fields in response"
+      ]
+    },
+    {
+      "id": "API4:2023",
+      "name": "Unrestricted Resource Consumption",
+      "severity": "high",
+      "description": "API requests consume resources like network, CPU, memory, storage without limits",
+      "detection_patterns": [
+        "Missing rate limiting",
+        "No pagination limits",
+        "Unlimited file upload sizes",
+        "Missing execution timeouts",
+        "No query complexity limits"
+      ],
+      "prevention": [
+        "Implement rate limiting",
+        "Limit payload sizes",
+        "Limit query depth/complexity (GraphQL)",
+        "Implement proper pagination with max page size",
+        "Set execution timeouts"
+      ],
+      "attack_examples": [
+        "GraphQL nested query DoS",
+        "Large file upload",
+        "Requesting millions of records"
+      ]
+    },
+    {
+      "id": "API5:2023",
+      "name": "Broken Function Level Authorization",
+      "severity": "critical",
+      "description": "Access control policies at function level not enforced properly",
+      "detection_patterns": [
+        "Regular users accessing admin endpoints",
+        "Changing HTTP method bypasses auth (GET vs PUT)",
+        "Admin functions accessible without auth",
+        "Horizontal privilege escalation"
+      ],
+      "prevention": [
+        "Deny all by default",
+        "Review all endpoints for function-level authorization",
+        "Ensure administrative controllers check admin group membership",
+        "Implement consistent authorization logic"
+      ],
+      "attack_examples": [
+        "Regular user calls /admin/users endpoint",
+        "Change GET to DELETE to remove resource"
+      ]
+    },
+    {
+      "id": "API6:2023",
+      "name": "Unrestricted Access to Sensitive Business Flows",
+      "severity": "high",
+      "description": "APIs that expose business flows without compensating controls to protect from excessive automated access",
+      "detection_patterns": [
+        "High-value transactions without rate limiting",
+        "Automated purchasing/booking possible",
+        "Scalping/bot automation vulnerabilities",
+        "No CAPTCHA on sensitive flows"
+      ],
+      "prevention": [
+        "Identify sensitive business flows",
+        "Implement device fingerprinting",
+        "Use CAPTCHA for automated attack prevention",
+        "Detect and block non-human patterns",
+        "Rate limit by business context"
+      ],
+      "attack_examples": [
+        "Automated ticket scalping",
+        "Bot purchasing limited inventory",
+        "Referral abuse"
+      ]
+    },
+    {
+      "id": "API7:2023",
+      "name": "Server Side Request Forgery",
+      "severity": "high",
+      "description": "SSRF flaws occur when an API fetches a remote resource without validating user-supplied URL",
+      "detection_patterns": [
+        "Fetching URL from user input",
+        "Webhook endpoints accepting arbitrary URLs",
+        "File import from URLs",
+        "PDF generation from URLs"
+      ],
+      "prevention": [
+        "Validate and sanitize all user-supplied URLs",
+        "Use allowlist for permitted destinations",
+        "Disable HTTP redirections",
+        "Block access to internal resources (169.254.169.254)"
+      ],
+      "attack_examples": [
+        "Fetch cloud metadata service",
+        "Port scanning internal network",
+        "Read local files via file://"
+      ]
+    },
+    {
+      "id": "API8:2023",
+      "name": "Security Misconfiguration",
+      "severity": "medium",
+      "description": "APIs with insecure default configurations, incomplete configurations, or misconfigured HTTP headers",
+      "detection_patterns": [
+        "Unnecessary HTTP methods enabled",
+        "Missing security headers (CORS, CSP)",
+        "Detailed error messages with stack traces",
+        "Default credentials",
+        "Debug features in production"
+      ],
+      "prevention": [
+        "Implement hardening process",
+        "Review configuration across environments",
+        "Restrict CORS appropriately",
+        "Implement proper error handling without stack traces",
+        "Remove unused features and frameworks"
+      ],
+      "attack_examples": [
+        "Exploit verbose error messages",
+        "Use debug endpoint in production",
+        "Exploit permissive CORS"
+      ]
+    },
+    {
+      "id": "API9:2023",
+      "name": "Improper Inventory Management",
+      "severity": "medium",
+      "description": "APIs with outdated, undocumented, or shadow endpoints that increase attack surface",
+      "detection_patterns": [
+        "Undocumented API endpoints",
+        "Multiple API versions running",
+        "Beta/test endpoints in production",
+        "No API inventory",
+        "Exposed debug endpoints"
+      ],
+      "prevention": [
+        "Inventory all API endpoints and hosts",
+        "Document all APIs with OpenAPI spec",
+        "Integrate API discovery into CI/CD",
+        "Retire old API versions",
+        "Separate production from non-production"
+      ],
+      "attack_examples": [
+        "Discover old unpatched API version",
+        "Access undocumented beta endpoint",
+        "Exploit shadow API"
+      ]
+    },
+    {
+      "id": "API10:2023",
+      "name": "Unsafe Consumption of APIs",
+      "severity": "high",
+      "description": "Developers trust third-party APIs more than user input, adopting weaker security standards",
+      "detection_patterns": [
+        "No input validation on third-party API responses",
+        "Following redirects blindly",
+        "No timeout on third-party calls",
+        "No rate limiting on third-party requests"
+      ],
+      "prevention": [
+        "Validate data from third-party APIs",
+        "Use allowlist for redirect destinations",
+        "Implement timeouts for external calls",
+        "Rate limit calls to third-party services",
+        "Use TLS for all third-party communications"
+      ],
+      "attack_examples": [
+        "Compromised third-party returns malicious payload",
+        "Supply chain attack via API dependency",
+        "SSRF via redirect from trusted API"
+      ]
+    }
+  ],
+  "changes_from_2019": {
+    "new": ["API6:2023 - Unrestricted Access to Sensitive Business Flows", "API10:2023 - Unsafe Consumption of APIs"],
+    "merged": ["Mass Assignment merged into API3:2023", "Security Misconfiguration now API8:2023"],
+    "removed": ["Insufficient Logging and Monitoring - moved to cross-cutting concern"]
+  }
+}

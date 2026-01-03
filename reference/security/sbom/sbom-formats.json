@@ -1,0 +1,304 @@
+{
+  "name": "Software Bill of Materials (SBOM) Formats",
+  "version": "2025.01",
+  "updated": "2025-01-02",
+  "description": "Reference for SBOM formats, standards, and tooling",
+  "regulatory_drivers": [
+    {
+      "name": "US Executive Order 14028",
+      "date": "2021-05-12",
+      "requirement": "SBOM required for software sold to federal government"
+    },
+    {
+      "name": "EU Cyber Resilience Act",
+      "date": "2024",
+      "requirement": "SBOM required for products with digital elements"
+    },
+    {
+      "name": "NIST SSDF",
+      "requirement": "SBOM as part of secure software development"
+    }
+  ],
+  "formats": {
+    "cyclonedx": {
+      "name": "CycloneDX",
+      "version": "1.6.1",
+      "released": "2024-11-13",
+      "organization": "OWASP",
+      "license": "Apache-2.0",
+      "specification": "https://cyclonedx.org/specification/overview/",
+      "description": "Lightweight SBOM standard designed for application security",
+      "features": [
+        "Bill of Materials (BOM) for software, hardware, services",
+        "Vulnerability Disclosure Report (VDR)",
+        "Vulnerability Exploitability eXchange (VEX)",
+        "Cryptographic Bill of Materials (CBOM)",
+        "Manufacturing BOM (MBOM)",
+        "SaaSBOM for cloud services",
+        "AI/ML BOM support"
+      ],
+      "supported_types": [
+        "applications",
+        "containers",
+        "firmware",
+        "hardware",
+        "machine-learning",
+        "services"
+      ],
+      "serialization": ["JSON", "XML", "Protocol Buffers"],
+      "example_structure": {
+        "bomFormat": "CycloneDX",
+        "specVersion": "1.6",
+        "version": 1,
+        "metadata": {
+          "timestamp": "2025-01-02T00:00:00Z",
+          "tools": [],
+          "component": {}
+        },
+        "components": [
+          {
+            "type": "library",
+            "name": "example-lib",
+            "version": "1.0.0",
+            "purl": "pkg:npm/example-lib@1.0.0",
+            "hashes": [{"alg": "SHA-256", "content": "..."}]
+          }
+        ],
+        "vulnerabilities": [],
+        "annotations": []
+      },
+      "tools": {
+        "generation": [
+          {"name": "cdxgen", "languages": "Multi-language", "url": "https://github.com/CycloneDX/cdxgen"},
+          {"name": "cyclonedx-cli", "purpose": "Conversion, validation", "url": "https://github.com/CycloneDX/cyclonedx-cli"},
+          {"name": "syft", "purpose": "Container scanning", "url": "https://github.com/anchore/syft"}
+        ],
+        "validation": {
+          "schema": "https://cyclonedx.org/schema/bom-1.6.schema.json",
+          "cli": "cyclonedx validate --input-file bom.json"
+        }
+      },
+      "vex_support": {
+        "description": "Vulnerability Exploitability eXchange embedded in SBOM",
+        "status_values": ["not_affected", "affected", "fixed", "under_investigation"],
+        "justification": "Explains why vulnerability does not affect this deployment"
+      }
+    },
+    "spdx": {
+      "name": "SPDX (Software Package Data Exchange)",
+      "version": "3.0.1",
+      "released": "2024-10-10",
+      "organization": "Linux Foundation",
+      "license": "CC0-1.0",
+      "iso_standard": "ISO/IEC 5962:2021",
+      "specification": "https://spdx.github.io/spdx-spec/v3.0.1/",
+      "description": "ISO standard for communicating software bill of materials",
+      "features": [
+        "License compliance tracking",
+        "Security vulnerability tracking",
+        "Build information",
+        "AI/ML model support (SPDX 3.0)",
+        "Dataset representation (SPDX 3.0)",
+        "Service representation"
+      ],
+      "spdx_3_changes": [
+        "Complete redesign with profiles",
+        "Core profile for base elements",
+        "Software profile for packages",
+        "Security profile for vulnerabilities",
+        "AI profile for ML models",
+        "Dataset profile for training data",
+        "Build profile for provenance",
+        "Licensing profile for legal"
+      ],
+      "serialization": ["JSON-LD", "RDF/XML", "Tag-Value", "Spreadsheet"],
+      "example_structure": {
+        "@context": "https://spdx.org/rdf/3.0.0/spdx-context.jsonld",
+        "@graph": [
+          {
+            "type": "SpdxDocument",
+            "spdxId": "SPDXRef-DOCUMENT",
+            "name": "example-sbom",
+            "element": ["SPDXRef-Package-1"]
+          },
+          {
+            "type": "software_Package",
+            "spdxId": "SPDXRef-Package-1",
+            "name": "example-lib",
+            "packageVersion": "1.0.0",
+            "downloadLocation": "https://example.com/lib.tar.gz"
+          }
+        ]
+      },
+      "tools": {
+        "generation": [
+          {"name": "spdx-sbom-generator", "url": "https://github.com/opensbom-generator/spdx-sbom-generator"},
+          {"name": "syft", "url": "https://github.com/anchore/syft"},
+          {"name": "ort", "name_full": "OSS Review Toolkit", "url": "https://github.com/oss-review-toolkit/ort"}
+        ],
+        "validation": {
+          "tool": "spdx-tools",
+          "url": "https://github.com/spdx/tools-java"
+        }
+      },
+      "license_list": {
+        "url": "https://spdx.org/licenses/",
+        "note": "Canonical list of open source licenses with identifiers"
+      }
+    },
+    "swid": {
+      "name": "SWID (Software Identification Tags)",
+      "standard": "ISO/IEC 19770-2:2015",
+      "organization": "ISO/IEC",
+      "description": "ISO standard for software identification and inventory",
+      "use_cases": [
+        "Software asset management (SAM)",
+        "Enterprise software inventory",
+        "License compliance",
+        "Integration with configuration management"
+      ],
+      "tag_types": [
+        {"type": "Primary", "description": "Created by software publisher"},
+        {"type": "Corpus", "description": "Pre-installation reference"},
+        {"type": "Patch", "description": "For software patches"},
+        {"type": "Supplemental", "description": "Additional metadata from third parties"}
+      ],
+      "serialization": ["XML"],
+      "example_structure": {
+        "SoftwareIdentity": {
+          "name": "example-software",
+          "tagId": "com.example.software-1.0.0",
+          "version": "1.0.0",
+          "Entity": {
+            "name": "Example Corp",
+            "role": "softwareCreator tagCreator"
+          }
+        }
+      },
+      "tools": {
+        "generation": [
+          {"name": "swid-generator", "url": "https://github.com/labs64/swid-generator"},
+          {"name": "swidval", "purpose": "Validation", "url": "https://github.com/usnistgov/swid-tools"}
+        ]
+      },
+      "nist_guidance": "https://csrc.nist.gov/projects/Software-Identification-SWID"
+    }
+  },
+  "comparison": {
+    "summary": {
+      "cyclonedx": {
+        "strengths": ["Security focus", "VEX support", "Lightweight", "Active development"],
+        "best_for": "Application security, vulnerability management"
+      },
+      "spdx": {
+        "strengths": ["ISO standard", "License compliance", "Comprehensive", "Legal acceptance"],
+        "best_for": "License compliance, legal requirements, enterprise"
+      },
+      "swid": {
+        "strengths": ["Asset management", "Enterprise tooling", "ISO standard"],
+        "best_for": "Software asset management, enterprise inventory"
+      }
+    },
+    "feature_matrix": {
+      "license_tracking": {"cyclonedx": true, "spdx": true, "swid": true},
+      "vulnerability_tracking": {"cyclonedx": true, "spdx": true, "swid": false},
+      "vex_support": {"cyclonedx": true, "spdx": true, "swid": false},
+      "ai_ml_support": {"cyclonedx": true, "spdx": true, "swid": false},
+      "build_provenance": {"cyclonedx": true, "spdx": true, "swid": false},
+      "iso_standard": {"cyclonedx": false, "spdx": true, "swid": true}
+    }
+  },
+  "purl": {
+    "name": "Package URL (PURL)",
+    "specification": "https://github.com/package-url/purl-spec",
+    "description": "Standard for identifying software packages across ecosystems",
+    "format": "pkg:type/namespace/name@version?qualifiers#subpath",
+    "examples": [
+      "pkg:npm/%40angular/core@16.0.0",
+      "pkg:pypi/requests@2.31.0",
+      "pkg:maven/org.apache.logging.log4j/log4j-core@2.20.0",
+      "pkg:docker/library/nginx@1.25.0",
+      "pkg:github/owner/repo@v1.0.0"
+    ],
+    "ecosystems": ["npm", "pypi", "maven", "nuget", "cargo", "gem", "golang", "docker", "oci", "github"]
+  },
+  "vex": {
+    "name": "Vulnerability Exploitability eXchange (VEX)",
+    "description": "Machine-readable statement about vulnerability applicability",
+    "purpose": "Reduce noise by indicating when vulnerabilities don't apply",
+    "formats": [
+      {"name": "CycloneDX VEX", "embedded": true},
+      {"name": "CSAF VEX", "standard": "OASIS CSAF"},
+      {"name": "OpenVEX", "url": "https://github.com/openvex/spec"}
+    ],
+    "status_values": {
+      "not_affected": "Vulnerability does not affect this product",
+      "affected": "Vulnerability affects this product",
+      "fixed": "Vulnerability has been remediated",
+      "under_investigation": "Status being determined"
+    },
+    "justifications": [
+      "component_not_present",
+      "vulnerable_code_not_present",
+      "vulnerable_code_not_in_execute_path",
+      "vulnerable_code_cannot_be_controlled_by_adversary",
+      "inline_mitigations_already_exist"
+    ]
+  },
+  "generation_tools": {
+    "multi_format": [
+      {
+        "name": "Syft",
+        "url": "https://github.com/anchore/syft",
+        "formats": ["CycloneDX", "SPDX"],
+        "sources": ["containers", "filesystems", "archives"]
+      },
+      {
+        "name": "Trivy",
+        "url": "https://github.com/aquasecurity/trivy",
+        "formats": ["CycloneDX", "SPDX"],
+        "features": ["SBOM generation", "Vulnerability scanning"]
+      }
+    ],
+    "by_ecosystem": {
+      "npm": "npm sbom --format cyclonedx",
+      "python": "cyclonedx-py, pip-audit",
+      "java": "cyclonedx-maven-plugin, spdx-maven-plugin",
+      "go": "cyclonedx-gomod, spdx-sbom-generator",
+      "rust": "cargo-sbom, cargo-cyclonedx",
+      "dotnet": "CycloneDX .NET"
+    }
+  },
+  "ci_cd_integration": {
+    "github_actions": {
+      "generate": "uses: anchore/sbom-action@v0\nwith:\n  format: cyclonedx-json",
+      "attest": "uses: actions/attest-sbom@v1\nwith:\n  subject-path: ./my-artifact"
+    },
+    "gitlab_ci": {
+      "feature": "Built-in SBOM generation for container scanning"
+    }
+  },
+  "ntia_minimum_elements": {
+    "description": "NTIA minimum elements for SBOM as per Executive Order 14028",
+    "required_fields": [
+      "Supplier Name",
+      "Component Name",
+      "Version",
+      "Unique Identifier (PURL recommended)",
+      "Dependency Relationship",
+      "Author of SBOM",
+      "Timestamp"
+    ],
+    "reference": "https://www.ntia.gov/page/software-bill-materials"
+  },
+  "agent_usage": {
+    "dependency_analysis": "Parse SBOM to enumerate all dependencies",
+    "vulnerability_correlation": "Match SBOM components against CVE databases",
+    "license_compliance": "Extract license information for legal review",
+    "supply_chain_audit": "Verify component provenance and integrity"
+  },
+  "cross_references": {
+    "slsa": "reference/security/slsa/slsa-levels.json",
+    "supply_chain": "reference/security/owasp/top10-web-2025.json (A03)"
+  }
+}
